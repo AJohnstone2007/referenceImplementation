@@ -12,7 +12,7 @@ public class LexerLM extends ReferenceLexer {
   public int[] positions;
 
   public void lex(String inputString, LKind[] kinds, String[] strings, LKind[] whitespaces, boolean suppressEcho) {
-    this.inputString = inputString;
+    this.inputString = inputString + "\0";
     this.kinds = kinds;
     this.strings = strings;
     this.whitespaces = whitespaces;

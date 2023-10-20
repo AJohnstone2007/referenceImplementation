@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GElement;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GNode;
@@ -16,8 +17,7 @@ public class OSBRDGenerator {
     try {
       text = new PrintWriter(new File(className + ".java"));
     } catch (FileNotFoundException e) {
-      System.out.println("Unable to open output file " + className + ".java");
-      System.exit(1);
+      Reference.fatal("Unable to open output file " + className + ".java");
     }
 
     System.out.println(grammar);

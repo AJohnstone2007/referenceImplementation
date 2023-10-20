@@ -16,7 +16,6 @@ import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GIFTKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GNode;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
-import uk.ac.rhul.cs.csle.art.core.ARTUncheckedException;
 
 public class GLLBL extends ReferenceParser {
   @Override
@@ -313,7 +312,7 @@ private String constructorOf(SPPFN sppfn, GNode gn) {
   if (gn.elm.kind == GKind.B) switch (gn.elm.str) {
   case "ID": {
     int right = positions[sppfn.li];
-    while (Character.isAlphabetic(inputString.charAt(right)) || Character.isDigit(inputString.charAt(right))|| inputString.charAt(right)=='_') right++;
+    while (right< inputString.length() &&( Character.isAlphabetic(inputString.charAt(right)) || Character.isDigit(inputString.charAt(right))|| inputString.charAt(right)=='_')) right++;
 
     return inputString.substring(positions[sppfn.li],right) ;
   }
@@ -329,8 +328,8 @@ private String constructorOf(SPPFN sppfn, GNode gn) {
 }
 
 private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFromParent, GNode gn) {
-  // System.out.println("\nEntering derivationAsTermRec() at node " + sppfn + " instance " + gn);
-  if (visited.contains(sppfn)) throw new ARTUncheckedException("ArtDerivationAsTermRec() found cycle in derivation");
+   System.out.println("\nEntering derivationAsTermRec() at node " + sppfn + " instance " + gn);
+  if (visited.contains(sppfn)) Reference.fatal("ArtDerivationAsTermRec() found cycle in derivation");
   visited.add(sppfn);
 
   LinkedList<Integer> children = (gn.giftKind == GIFTKind.OVER || gn.giftKind == GIFTKind.UNDER) ? childrenFromParent : new LinkedList<>();

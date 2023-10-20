@@ -73,11 +73,9 @@ public class ReferenceLexer {
       match_COMMENT_NEST_ART();
       break;
     default:
-      System.out.println("Unknown builtin " + b);
-      System.exit(1);
+      Reference.fatal("Unknown builtin " + b);
       break;
     }
-
   }
 
   protected void lexicalError(String msg) {

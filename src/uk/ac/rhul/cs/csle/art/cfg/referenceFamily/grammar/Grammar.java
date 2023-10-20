@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.term.ITerms;
 import uk.ac.rhul.cs.csle.art.term.TermTraverser;
 
@@ -36,6 +37,9 @@ public class Grammar {
   private int nextFreeEnumerationElement = 0;
 
   public Grammar(String grammarName, ITerms iTerms, int scriptDerivationTerm) {
+    if (iTerms == null) Reference.fatal("Grammar constructor called with null iTerms argument");
+    if (scriptDerivationTerm == 0) Reference.fatal("Grammar constructor called with null scriptDerivationTermArgument");
+
     whitespaces.add(LKind.SIMPLE_WHITESPACE);
     whitespaces.add(LKind.COMMENT_LINE_C);
     whitespaces.add(LKind.COMMENT_NEST_ART); // Debug
@@ -127,11 +131,11 @@ public class Grammar {
       if (e.kind == GKind.N && rules.get(e) == null) tmp.add(e);
 
     if (tmp.size() > 0) {
-      System.out.print("*** Context Free Grammar error - nonterminal" + (tmp.size() == 1 ? " " : "s ") + "used but not defined: ");
+      StringBuilder sb = new StringBuilder();
+      sb.append("*** Context Free Grammar error - nonterminal" + (tmp.size() == 1 ? " " : "s ") + "used but not defined: ");
       for (GElement n : tmp)
-        System.out.print(n.str + " ");
-      System.out.println();
-      System.exit(1);
+        sb.append(n.str + " ");
+      Reference.fatal(sb.toString());
     }
 
     // reachable nonterminal test

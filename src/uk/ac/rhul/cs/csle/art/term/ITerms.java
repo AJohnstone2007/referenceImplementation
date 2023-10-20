@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.rhul.cs.csle.art.core.ARTUncheckedException;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 
 public abstract class ITerms {
   private final TermTraverserText tt = new TermTraverserText(this, "iTerms traverser"); // This is intended for debugging - show the term without any
@@ -222,14 +222,7 @@ public abstract class ITerms {
   }
 
   public void syntaxError(String s) {
-    System.out.println(echo(s, cp, input));
-    // !!!
-    // System.out.println("** " + s);
-    // System.out.println(input);
-    // for (int i = 0; i < cp - 1; i++)
-    // System.out.print("-");
-    // System.out.println("^");
-    System.exit(1);
+    Reference.fatal("Term parser syntax error: " + echo(s, cp, input));
   }
 
   public int term() {
@@ -373,7 +366,7 @@ public abstract class ITerms {
       if (c == '\\') {
         i++;
         c = string.charAt(i);
-        if (!metaCharacters.contains(c)) throw new ARTUncheckedException("iTerms.unescapeMeta found escaped non-meta character");
+        if (!metaCharacters.contains(c)) Reference.fatal("iTerms.unescapeMeta found escaped non-meta character" + c);
       }
       sb.append(c);
       i++;

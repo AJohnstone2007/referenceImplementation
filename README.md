@@ -5,8 +5,8 @@ Our goals are (a) to provide a 'programmer friendly' route into GLL and (b) to p
 
 The initial version of this project was presented at the Software Language Engineering 2023 conference near Lisbon. You can read the associated paper [here](https://pure.royalholloway.ac.uk/en/publications/a-reference-gll-implementation)
 
-We continue to extend the code and the associated test corprora. Please read the Technical Report 'The GLL algorithm and its variants - 
-a reference implementation' which you will find in ReferenceImplementationReport.pdf
+We continue to extend the code and the associated test corprora. Please read the Technical Report _The GLL algorithm and its variants - 
+a reference implementation_ which you will find in __referenceImplementationReport.pdf__
 
 
 Adrian Johnstone, October 2023 

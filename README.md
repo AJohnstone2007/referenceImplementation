@@ -8,6 +8,13 @@ The initial version of this work was presented at the Software Language Engineer
 We continue to extend the code and the associated grammars and test corprora. For a current account of this work, please read the Technical Report _The GLL algorithm and its variants - 
 a reference implementation_ which you will find in __referenceImplementationReport.pdf__
 
+You may also find the following pages useful.
+
+Our reference programming language grammars and test strings at https://github.com/AJohnstone2007/referenceCorpora
+
+Our production tool Ambiguity Retained Translation (ART) at https://github.com/AJohnstone2007/ART
+
+Our research papers at https://pure.royalholloway.ac.uk/en/persons/adrian-johnstone/publications
 
 Adrian Johnstone, October 2023 
 

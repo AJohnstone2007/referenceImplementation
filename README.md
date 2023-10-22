@@ -10,9 +10,9 @@ a reference implementation_ which you will find in __referenceImplementationRepo
 
 You may also find the following pages useful.
 
-Our reference programming language grammars and test strings at https://github.com/AJohnstone2007/referenceCorpora
+Our reference programming language exmples at https://github.com/AJohnstone2007/referenceCorpora
 
-Our production tool Ambiguity Retained Translation (ART) at https://github.com/AJohnstone2007/ART
+Our production tool _Ambiguity Retained Translation_ (ART) at https://github.com/AJohnstone2007/ART
 
 Our research papers at https://pure.royalholloway.ac.uk/en/persons/adrian-johnstone/publications
 

@@ -1,0 +1,5 @@
+digraph "SPPF" {
+graph[ordering=out ranksep=0.1]
+ node[fontname=Helvetica fontsize=9 shape=box height=0 width=0 margin=0.04 color=gray]
+edge[arrowsize=0.1 color=gray]
+}

@@ -37,11 +37,12 @@ public abstract class ReferenceParser {
 
   public void report(boolean outcome) {
     System.out.println((!inadmissable && accepted == outcome ? "Good: " : "Bad: ") + this.getClass().getSimpleName() + " " + grammar.grammarName + " "
-        + (inadmissable ? "Inadmissable" : (input == null ? "Lexical error" : accepted ? "Accept" : "Reject")) + " '" + inputString + "'");
+        + (inadmissable ? "Inadmissable" : (input == null ? "Lexical error" : accepted ? "Accept" : "Reject")) + " '"
+        + inputString.substring(inputString.length() < 10 ? inputString.length() : 10) + "'");
   }
 
   public void statistics(boolean outcome) {
-    if (accepted) System.out.println(timestamp() + "," + this.getClass().getSimpleName() + "," + grammar.grammarName + "," + title + ",'"
+    System.out.println(timestamp() + "," + this.getClass().getSimpleName() + "," + grammar.grammarName + "," + title + ",'"
         + inputString.substring(0, Math.min(10, inputString.length())).replace("\n", "\\n").replace("\r", "\\r") + "'," + inputString.length() + ","
         + input.length + "," + (inadmissable ? "Inadmissable" : accepted ? "Accept" : "Reject") + ","
         + (!inadmissable && accepted == outcome ? "Good," : "Bad,") + intervalAsSeconds() + "," + input.length / intervalAsSeconds() + "," + subStatistics());

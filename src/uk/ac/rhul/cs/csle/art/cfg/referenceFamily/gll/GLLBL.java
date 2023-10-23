@@ -204,14 +204,14 @@ void call(GNode gn) {
 }
 
 void ret() {
- if (sn.equals(gssRoot)) {
+ if (sn.equals(gssRoot)) { // Stack base
   if (accepting(gn) && (i == input.length - 1)) {
     sppfRootNode = sppf.get(new SPPFN(grammar.rules.get(grammar.startNonterminal), 0, input.length - 1));
     accepted = true;
   } else {
     rightmostParseIndex = sppfWidestIndex();
   }
-  return;
+  return; // End of parse
  }
  sn.pops.add(dn);
  for (GSSE e : sn.edges)
@@ -328,7 +328,7 @@ private String constructorOf(SPPFN sppfn, GNode gn) {
 }
 
 private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFromParent, GNode gn) {
-   System.out.println("\nEntering derivationAsTermRec() at node " + sppfn + " instance " + gn);
+//   System.out.println("\nEntering derivationAsTermRec() at node " + sppfn + " instance " + gn);
   if (visited.contains(sppfn)) Reference.fatal("ArtDerivationAsTermRec() found cycle in derivation");
   visited.add(sppfn);
 

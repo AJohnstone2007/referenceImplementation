@@ -1,5 +1,7 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.gll;
 
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.hashpool.ParserHashPool;
+
 public class GLLHP extends ParserHashPool {
   @Override
   protected String subStatistics() {

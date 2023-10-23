@@ -65,28 +65,22 @@ public class Reference {
   public Reference(String[] args) {
     scriptParser.grammar = new Grammar("ART V4 script", iTerms, iTerms.findTerm(scriptTermString));
     for (String a : args) {
-      String[] parts = a.split("\\.");
-      if (parts.length == 2) {
-        if (parts[1].equals("art"))
-          grammar = new Grammar(a, iTerms, parseScriptFile(a));
-        else {
-          try {
-            parseString("", Files.readString(Paths.get(a)), true, grammar, parser, lexer, true);
-          } catch (IOException e) {
-            fatal("unable to open string file " + a);
-          }
+      if (a.endsWith(".art"))
+        grammar = new Grammar(a, iTerms, parseScriptFile(a));
+      else if (a.indexOf(".") != -1)
+        try {
+          parseString("", Files.readString(Paths.get(a)), true, grammar, parser, lexer, false);
+        } catch (IOException e) {
+          fatal("unable to open string file " + a);
         }
-      } else
+
+      else
         switch (a) {
         case "!builtinTests":
           builtinTests();
           break;
         case "!torture":
           torture();
-          break;
-        case "!statisticsTitle":
-          System.out.println(
-              "Timestamp,Algorithm,Grammar,String name,String,Characters,Tokens,Outcome,Status,CPUs,Tok/s,Desc,GSS N,GSS E,Pop,SPPF S/I,SPPF P,SPPF E,Ambig,Heap,Heap/tok,Exact,Exact/tok,Tables,Tables/tok,Pool,Pool/tok,H0,H1,H2,H3,H4+");
           break;
         case "!gllhp":
           parser = new GLLHP();
@@ -112,6 +106,10 @@ public class Reference {
           GNode.caseSensitiveTerminalStrop = "";
           parser.visualise();
           break;
+        case "!statisticsTitle":
+          System.out.println(
+              "Timestamp,Algorithm,Grammar,String name,String,Characters,Tokens,Outcome,Status,CPUs,Tok/s,Desc,GSS N,GSS E,Pop,SPPF S/I,SPPF P,SPPF E,Ambig,Heap,Heap/tok,Exact,Exact/tok,Tables,Tables/tok,Pool,Pool/tok,H0,H1,H2,H3,H4+");
+          break;
         case "!statistics":
           parser.statistics(true);
           break;
@@ -119,6 +117,7 @@ public class Reference {
           fatal("unknown option " + a);
         }
     }
+
   }
 
   /* Support for echoing the current line */
@@ -201,14 +200,14 @@ public class Reference {
     System.exit(1);
   }
 
-  private void parseString(String title, String inputString, boolean outcome, Grammar grammar, ReferenceParser parser, LexerLM lexer, boolean suppressEcho) {
+  private void parseString(String title, String inputString, boolean outcome, Grammar grammar, ReferenceParser parser, LexerLM lexer, boolean suppressOutput) {
     parser.traceLevel = traceLevel;
     parser.inputString = inputString;
-    parser.suppressEcho = suppressEcho;
+    parser.suppressEcho = suppressOutput;
     parser.accepted = false;
     parser.setGrammar(grammar);
     parser.title = title;
-    lexer.lex(inputString, grammar.lexicalKindsArray(), grammar.lexicalStringsArray(), grammar.whitespacesArray(), suppressEcho);
+    lexer.lex(inputString, grammar.lexicalKindsArray(), grammar.lexicalStringsArray(), grammar.whitespacesArray(), suppressOutput);
     parser.input = lexer.tokens;
     parser.positions = lexer.positions;
     if (parser.input != null) parser.parse();
@@ -218,9 +217,10 @@ public class Reference {
       good++;
     else
       bad++;
-    parser.report(outcome);
-    // derivationTerm = parser.accepted ? parser.derivationTerm() : 0;
-    // System.out.println("Derivation term:\n" + grammar.iTerms.toString(derivationTerm, false, -1, null));
+    if (!suppressOutput) {
+      // derivationTerm = parser.accepted ? parser.derivationTerm() : 0;
+      // System.out.println("Derivation term:\n" + grammar.iTerms.toString(derivationTerm, false, -1, null));
+    }
   }
 
   private void reportSummary() {
@@ -228,31 +228,31 @@ public class Reference {
   }
 
   private void builtinTests() {
-    grammar = new Grammar("a", iTerms, parseScript("S ::= 'a' "));
+    grammar = new Grammar("a", iTerms, parseScript("S ::= 'a'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
     parseString("", "aa", false, grammar, parser, lexer, true);
     parseString("", "b", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa", iTerms, parseScript("S ::= 'a' 'a' "));
+    grammar = new Grammar("aa", iTerms, parseScript("S ::= 'a' 'a'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
     parseString("", "a", false, grammar, parser, lexer, true);
     parseString("", "aaa", false, grammar, parser, lexer, true);
     parseString("", "b", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa", iTerms, parseScript("S ::= 'a' 'a' 'a' "));
+    grammar = new Grammar("aaa", iTerms, parseScript("S ::= 'a' 'a' 'a'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
     parseString("", "a", false, grammar, parser, lexer, true);
     parseString("", "aa", false, grammar, parser, lexer, true);
     parseString("", "b", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | b", iTerms, parseScript("S ::= 'a' | 'b' "));
+    grammar = new Grammar("a | b", iTerms, parseScript("S ::= 'a' | 'b'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
     parseString("", "aa", false, grammar, parser, lexer, true);
     parseString("", "bb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | b", iTerms, parseScript("S ::= 'a' 'a' | 'b' "));
+    grammar = new Grammar("aa | b", iTerms, parseScript("S ::= 'a' 'a' | 'b'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -263,7 +263,7 @@ public class Reference {
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | b", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' "));
+    grammar = new Grammar("aaa | b", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -274,7 +274,7 @@ public class Reference {
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | bb", iTerms, parseScript("S ::= 'a' | 'b' 'b' "));
+    grammar = new Grammar("a | bb", iTerms, parseScript("S ::= 'a' | 'b' 'b'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -285,7 +285,7 @@ public class Reference {
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | bb", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' "));
+    grammar = new Grammar("aa | bb", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -296,7 +296,7 @@ public class Reference {
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | bb", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' "));
+    grammar = new Grammar("aaa | bb", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -307,7 +307,7 @@ public class Reference {
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | bbb", iTerms, parseScript("S ::= 'a' | 'b' 'b' 'b' "));
+    grammar = new Grammar("a | bbb", iTerms, parseScript("S ::= 'a' | 'b' 'b' 'b'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -318,7 +318,7 @@ public class Reference {
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | bbb", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' "));
+    grammar = new Grammar("aa | bbb", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' 'b'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -329,7 +329,7 @@ public class Reference {
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | bbb", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' "));
+    grammar = new Grammar("aaa | bbb", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -340,7 +340,7 @@ public class Reference {
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | c", iTerms, parseScript("S ::= 'a' | 'c' "));
+    grammar = new Grammar("a | c", iTerms, parseScript("S ::= 'a' | 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -351,7 +351,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | c", iTerms, parseScript("S ::= 'a' 'a' | 'c' "));
+    grammar = new Grammar("aa | c", iTerms, parseScript("S ::= 'a' 'a' | 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -362,7 +362,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | c", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'c' "));
+    grammar = new Grammar("aaa | c", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -373,7 +373,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | b | c", iTerms, parseScript("S ::= 'a' | 'b' | 'c' "));
+    grammar = new Grammar("a | b | c", iTerms, parseScript("S ::= 'a' | 'b' | 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
@@ -384,7 +384,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | b | c", iTerms, parseScript("S ::= 'a' 'a' | 'b' | 'c' "));
+    grammar = new Grammar("aa | b | c", iTerms, parseScript("S ::= 'a' 'a' | 'b' | 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
@@ -395,7 +395,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | b | c", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c' "));
+    grammar = new Grammar("aaa | b | c", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
@@ -406,7 +406,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | bb | c", iTerms, parseScript("S ::= 'a' | 'b' 'b' | 'c' "));
+    grammar = new Grammar("a | bb | c", iTerms, parseScript("S ::= 'a' | 'b' 'b' | 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
@@ -417,7 +417,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | bb | c", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c' "));
+    grammar = new Grammar("aa | bb | c", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
@@ -428,7 +428,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | bb | c", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' "));
+    grammar = new Grammar("aaa | bb | c", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
@@ -439,7 +439,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | bbb | c", iTerms, parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c' "));
+    grammar = new Grammar("a | bbb | c", iTerms, parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
@@ -450,7 +450,7 @@ public class Reference {
     parseString("", "bb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | bbb | c", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' "));
+    grammar = new Grammar("aa | bbb | c", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
@@ -461,7 +461,7 @@ public class Reference {
     parseString("", "bb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | bbb | c", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' "));
+    grammar = new Grammar("aaa | bbb | c", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "c", true, grammar, parser, lexer, true);
@@ -472,7 +472,7 @@ public class Reference {
     parseString("", "bb", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | cc", iTerms, parseScript("S ::= 'a' | 'c' 'c' "));
+    grammar = new Grammar("a | cc", iTerms, parseScript("S ::= 'a' | 'c' 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -483,7 +483,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | cc", iTerms, parseScript("S ::= 'a' 'a' | 'c' 'c' "));
+    grammar = new Grammar("aa | cc", iTerms, parseScript("S ::= 'a' 'a' | 'c' 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -494,7 +494,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | cc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'c' 'c' "));
+    grammar = new Grammar("aaa | cc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'c' 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -505,7 +505,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | b | cc", iTerms, parseScript("S ::= 'a' | 'b' | 'c' 'c' "));
+    grammar = new Grammar("a | b | cc", iTerms, parseScript("S ::= 'a' | 'b' | 'c' 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
@@ -516,7 +516,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | b | cc", iTerms, parseScript("S ::= 'a' 'a' | 'b' | 'c' 'c' "));
+    grammar = new Grammar("aa | b | cc", iTerms, parseScript("S ::= 'a' 'a' | 'b' | 'c' 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
@@ -527,7 +527,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | b | cc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c' 'c' "));
+    grammar = new Grammar("aaa | b | cc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c' 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
@@ -538,7 +538,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | bb | cc", iTerms, parseScript("S ::= 'a' | 'b' 'b' | 'c' 'c' "));
+    grammar = new Grammar("a | bb | cc", iTerms, parseScript("S ::= 'a' | 'b' 'b' | 'c' 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
@@ -549,7 +549,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | bb | cc", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c' 'c' "));
+    grammar = new Grammar("aa | bb | cc", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c' 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
@@ -560,7 +560,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | bb | cc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' 'c' "));
+    grammar = new Grammar("aaa | bb | cc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
@@ -571,7 +571,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | bbb | cc", iTerms, parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c' 'c' "));
+    grammar = new Grammar("a | bbb | cc", iTerms, parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c' 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
@@ -582,7 +582,7 @@ public class Reference {
     parseString("", "bb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | bbb | cc", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' "));
+    grammar = new Grammar("aa | bbb | cc", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
@@ -593,7 +593,7 @@ public class Reference {
     parseString("", "bb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | bbb | cc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' "));
+    grammar = new Grammar("aaa | bbb | cc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "cc", true, grammar, parser, lexer, true);
@@ -604,7 +604,7 @@ public class Reference {
     parseString("", "bb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "ccc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | ccc", iTerms, parseScript("S ::= 'a' | 'c' 'c' 'c' "));
+    grammar = new Grammar("a | ccc", iTerms, parseScript("S ::= 'a' | 'c' 'c' 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -615,7 +615,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | ccc", iTerms, parseScript("S ::= 'a' 'a' | 'c' 'c' 'c' "));
+    grammar = new Grammar("aa | ccc", iTerms, parseScript("S ::= 'a' 'a' | 'c' 'c' 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -626,7 +626,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | ccc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'c' 'c' 'c' "));
+    grammar = new Grammar("aaa | ccc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'c' 'c' 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
     parseString("", "", false, grammar, parser, lexer, true);
@@ -637,7 +637,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | b | ccc", iTerms, parseScript("S ::= 'a' | 'b' | 'c' 'c' 'c' "));
+    grammar = new Grammar("a | b | ccc", iTerms, parseScript("S ::= 'a' | 'b' | 'c' 'c' 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
@@ -648,7 +648,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | b | ccc", iTerms, parseScript("S ::= 'a' 'a' | 'b' | 'c' 'c' 'c' "));
+    grammar = new Grammar("aa | b | ccc", iTerms, parseScript("S ::= 'a' 'a' | 'b' | 'c' 'c' 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
@@ -659,7 +659,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | b | ccc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c' 'c' 'c' "));
+    grammar = new Grammar("aaa | b | ccc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c' 'c' 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "b", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
@@ -670,7 +670,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | bb | ccc", iTerms, parseScript("S ::= 'a' | 'b' 'b' | 'c' 'c' 'c' "));
+    grammar = new Grammar("a | bb | ccc", iTerms, parseScript("S ::= 'a' | 'b' 'b' | 'c' 'c' 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
@@ -681,7 +681,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | bb | ccc", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c' 'c' 'c' "));
+    grammar = new Grammar("aa | bb | ccc", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c' 'c' 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
@@ -692,7 +692,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | bb | ccc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' 'c' 'c' "));
+    grammar = new Grammar("aaa | bb | ccc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' 'c' 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "bb", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
@@ -703,7 +703,7 @@ public class Reference {
     parseString("", "bbb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("a | bbb | ccc", iTerms, parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c' 'c' 'c' "));
+    grammar = new Grammar("a | bbb | ccc", iTerms, parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'"));
     parseString("", "a", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
@@ -714,7 +714,7 @@ public class Reference {
     parseString("", "bb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aa | bbb | ccc", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' 'c' "));
+    grammar = new Grammar("aa | bbb | ccc", iTerms, parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'"));
     parseString("", "aa", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
@@ -725,7 +725,7 @@ public class Reference {
     parseString("", "bb", false, grammar, parser, lexer, true);
     parseString("", "c", false, grammar, parser, lexer, true);
     parseString("", "cc", false, grammar, parser, lexer, true);
-    grammar = new Grammar("aaa | bbb | ccc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' 'c' "));
+    grammar = new Grammar("aaa | bbb | ccc", iTerms, parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'"));
     parseString("", "aaa", true, grammar, parser, lexer, true);
     parseString("", "bbb", true, grammar, parser, lexer, true);
     parseString("", "ccc", true, grammar, parser, lexer, true);
@@ -741,7 +741,7 @@ public class Reference {
     parseString("", "a", false, grammar, parser, lexer, true);
     parseString("", "aa", false, grammar, parser, lexer, true);
 
-    grammar = new Grammar("deliberatelyBad", iTerms, parseScript("S ::= 'a' 'b' | 'c' 'd' "));
+    grammar = new Grammar("deliberatelyBad", iTerms, parseScript("S ::= 'a' 'b' | 'c' 'd'"));
     parseString("", "acd", true, grammar, parser, lexer, true);
     parseString("", "cd", false, grammar, parser, lexer, true);
 

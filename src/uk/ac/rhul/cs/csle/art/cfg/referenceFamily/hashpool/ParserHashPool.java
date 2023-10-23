@@ -1,4 +1,4 @@
-package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.gll;
+package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.hashpool;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
@@ -375,7 +375,7 @@ public abstract class ParserHashPool extends ReferenceParser {
     return;
   }
 
-  int cardinality(int[] hashBuckets) {
+  protected int cardinality(int[] hashBuckets) {
     int count = 0;
     for (int bucket : hashBuckets)
       for (int chain = bucket; chain != 0; chain = poolGet(chain))
@@ -386,7 +386,7 @@ public abstract class ParserHashPool extends ReferenceParser {
 
   private int[] occupancies;
 
-  void occupancyReset() {
+  protected void occupancyReset() {
     occupancies = new int[5];
   }
 
@@ -411,7 +411,7 @@ public abstract class ParserHashPool extends ReferenceParser {
     return res;
   }
 
-  String totalOccupancy() {
+  protected String totalOccupancy() {
     occupancyReset();
     accumulateOccupancy(descriptorBuckets);
     accumulateOccupancy(gssNodeBuckets);
@@ -421,7 +421,7 @@ public abstract class ParserHashPool extends ReferenceParser {
     return accumulateOccupancy(sppfPackNodeBuckets);
   }
 
-  int sppfEdgeCount() {
+  protected int sppfEdgeCount() {
     int count = 0;
     for (int bucket : sppfNodeBuckets)
       for (int chain = bucket; chain != 0; chain = poolGet(chain))
@@ -433,7 +433,7 @@ public abstract class ParserHashPool extends ReferenceParser {
     return count;
   }
 
-  int sppfAmbiguityCount() {
+  protected int sppfAmbiguityCount() {
     int count = 0;
     for (int bucket : sppfNodeBuckets)
       for (int chain = bucket; chain != 0; chain = poolGet(chain))

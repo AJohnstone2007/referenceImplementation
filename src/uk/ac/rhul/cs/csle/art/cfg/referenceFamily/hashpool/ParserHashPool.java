@@ -11,6 +11,7 @@ public abstract class ParserHashPool extends ReferenceParser {
   protected int startNonterminalNodeNi;
   protected int kindOf[];
   protected int altOf[][];
+  protected int seqOf[];
   protected int targetOf[];
   protected int elementOf[];
   protected final int T = 1; // This is a bit weird - these constants must be compile time, and GKind.T.ordinal() is runtime, so we hardcode and check bellow
@@ -25,6 +26,7 @@ public abstract class ParserHashPool extends ReferenceParser {
     startNonterminalNodeNi = grammar.rules.get(grammar.startNonterminal).num;
     kindOf = grammar.makeKindsArray();
     altOf = grammar.makeAltsArray();
+    seqOf = grammar.makeSeqsArray();
     targetOf = grammar.makeCallTargetsArray();
     elementOf = grammar.makeElementOfArray();
     // Defensive programming - make sure we've not messed up the enumeration value
@@ -424,12 +426,17 @@ public abstract class ParserHashPool extends ReferenceParser {
   protected int sppfEdgeCount() {
     int count = 0;
     for (int bucket : sppfNodeBuckets)
-      for (int chain = bucket; chain != 0; chain = poolGet(chain))
+      for (int chain = bucket; chain != 0; chain = poolGet(chain)) {
         for (int packNode = poolGet(chain + sppfNode_packNodeList); packNode != 0; packNode = poolGet(packNode + sppfPackNode_packNodeList)) {
           count++; // Inedge
-          if (poolGet(packNode + sppfPackNode_leftChild) == 0) count++;
-          if (poolGet(packNode + sppfPackNode_rightChild) == 0) count++;
+          if (poolGet(packNode + sppfPackNode_leftChild) != 0) count++;
+          if (poolGet(packNode + sppfPackNode_rightChild) != 0) count++;
+          // System.out.println("SPPF node " + toStringSPPFNode(chain) + " pack node " + toStringSPPFPackNode(packNode) + ": " + "["
+          // + toStringSPPFNode(poolGet(packNode + sppfPackNode_leftChild)) + "] " + "[" + toStringSPPFNode(poolGet(packNode + sppfPackNode_rightChild))
+          // + "]");
+
         }
+      }
     return count;
   }
 
@@ -439,5 +446,22 @@ public abstract class ParserHashPool extends ReferenceParser {
       for (int chain = bucket; chain != 0; chain = poolGet(chain))
         if (poolGet(poolGet(chain + sppfNode_packNodeList) + sppfPackNode_packNodeList) != 0) count++;
     return count;
+  }
+
+  protected String toStringSPPFNode(int n) {
+    if (n == 0) return "null SPPF node";
+    int gn = poolGet(n + sppfNode_gn);
+    int leftExtent = poolGet(n + sppfNode_leftExt);
+    int rightExtent = poolGet(n + sppfNode_rightExt);
+
+    return grammar.nodesByNumber.get(gn).toStringAsProduction() + ", " + leftExtent + ", " + rightExtent;
+  }
+
+  protected String toStringSPPFPackNode(int n) {
+    if (n == 0) return "null SPPF pack node";
+    int gn = poolGet(n + sppfPackNode_gn);
+    int pivot = poolGet(n + sppfPackNode_pivot);
+
+    return grammar.nodesByNumber.get(gn).toStringAsProduction() + ", " + pivot;
   }
 }

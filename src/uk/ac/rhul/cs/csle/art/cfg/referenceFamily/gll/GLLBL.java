@@ -49,6 +49,10 @@ public class GLLBL extends ReferenceParser {
         sppfEdgeCount++; // inedge
         if (p.leftChild != null) sppfEdgeCount++;
         if (p.rightChild != null) sppfEdgeCount++;
+        // System.out.println("SPPF node " + s.gn.toStringAsProduction() + ", " + s.li + ", " + s.ri + " pack node " + p.gn.toStringAsProduction() + ", " +
+        // p.pivot
+        // + ": " + "[" + (p.leftChild == null ? "null SPPF node" : (p.leftChild.gn.toStringAsProduction()) + ", " + p.leftChild.li + ", " + p.leftChild.ri)
+        // + "] [" + p.rightChild.gn.toStringAsProduction() + ", " + p.rightChild.li + ", " + p.rightChild.ri + "]");
       }
     }
 

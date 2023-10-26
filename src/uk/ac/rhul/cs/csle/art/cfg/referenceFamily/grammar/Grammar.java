@@ -354,6 +354,15 @@ public class Grammar {
     return ret;
   }
 
+  public int[] makeSeqsArray() {
+    int ret[] = new int[nextFreeEnumerationElement];
+    for (int ni : nodesByNumber.keySet()) {
+      GNode sn = nodesByNumber.get(ni).seq;
+      ret[ni] = sn == null ? 0 : sn.num;
+    }
+    return ret;
+  }
+
   public int[] makeCallTargetsArray() {
     int[] ret = new int[nextFreeEnumerationElement];
     for (int ni : nodesByNumber.keySet()) {

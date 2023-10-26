@@ -1,5 +1,0 @@
-digraph "GSS" {
-node[fontname=Helvetica fontsize=9 shape=box height = 0 width = 0 margin= 0.04  color=gray]
-graph[ordering=out ranksep=0.1]
-edge[arrowsize = 0.3  color=gray]
-}

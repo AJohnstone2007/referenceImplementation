@@ -63,10 +63,13 @@ public class GLLHP extends ParserHashPool {
   }
 
   private int derivationUpdate(int gni, int leftChild, int rightChild) {
-    int symbolNode = derivationFindNode(kindOf[gni] == END ? gni + 1 : gni,
+    int symbolNode = derivationFindNode(kindOf[gni] == END ? seqOf[gni] : gni,
         leftChild == 0 ? poolGet(rightChild + sppfNode_leftExt) : poolGet(leftChild + sppfNode_leftExt), poolGet(rightChild + sppfNode_rightExt));
-    find(sppfPackNodeBuckets, sppfPackNodeBucketCount, sppfPackNode_SIZE, gni,
-        leftChild == 0 ? poolGet(rightChild + sppfNode_leftExt) : poolGet(leftChild + sppfNode_rightExt), leftChild, rightChild);
+
+    find(sppfPackNodeBuckets, sppfPackNodeBucketCount, sppfPackNode_SIZE, // Parent for uniqueness because there is a single set of packed nodes?
+        symbolNode, gni, leftChild == 0 ? poolGet(rightChild + sppfNode_leftExt) : poolGet(leftChild + sppfNode_rightExt)); /* pivot */
+    poolSet(findIndex + sppfPackNode_leftChild, leftChild);
+    poolSet(findIndex + sppfPackNode_rightChild, rightChild);
     if (findMadeNew) { // New packed node: add to this SPPFnode's packed node list
       poolSet(findIndex + sppfPackNode_packNodeList, poolGet(symbolNode + sppfNode_packNodeList));
       poolSet(symbolNode + sppfNode_packNodeList, findIndex);

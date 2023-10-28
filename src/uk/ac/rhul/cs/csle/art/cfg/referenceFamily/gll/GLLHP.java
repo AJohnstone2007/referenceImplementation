@@ -17,9 +17,10 @@ public class GLLHP extends ParserHashPool {
     long poolSize = 4 * getFirstUnusedElement();
 
     return descriptorCount + "," + gssNodeCount + "," + gssEdgeCount + "," + popElementCount + "," + sppfNodeCount + "," + sppfPackNodeCount + ","
-        + sppfEdgeCount() + "," + sppfAmbiguityCount() + "," + (endMemory - startMemory) + "," + ((double) (endMemory - startMemory) / input.length) + ","
-        + exactSize + "," + (double) exactSize / input.length + "," + tableSize + "," + (double) tableSize / input.length + "," + poolSize + ","
-        + (double) poolSize / input.length + "," + totalOccupancy();
+        + sppfEdgeCount() + "," + sppfAmbiguityCount() + "," + (endMemory - startMemory) + ","
+        + String.format("%.2f", ((double) (endMemory - startMemory) / input.length)) + "," + exactSize + ","
+        + String.format("%.2f", (double) exactSize / input.length) + "," + tableSize + "," + String.format("%.2f", (double) tableSize / input.length) + ","
+        + poolSize + "," + String.format("%.2f", (double) poolSize / input.length) + "," + totalOccupancy();
   }
 
   /* Stack handling **********************************************************/

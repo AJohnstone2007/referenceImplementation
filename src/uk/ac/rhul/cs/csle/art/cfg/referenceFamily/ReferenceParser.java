@@ -10,7 +10,7 @@ public abstract class ReferenceParser {
   public int traceLevel = 0;
   public Grammar grammar;
   public String inputString;
-  public String title = "";
+  public String inputStringName = "";
   public int[] input;
   public int[] positions;
   protected int i;
@@ -42,10 +42,10 @@ public abstract class ReferenceParser {
   }
 
   public void statistics(boolean outcome) {
-    System.out.println(timestamp() + "," + this.getClass().getSimpleName() + "," + grammar.grammarName + "," + title + ",'"
+    System.out.println(timestamp() + "," + this.getClass().getSimpleName() + "," + grammar.grammarName + "," + inputStringName + ",'"
         + inputString.substring(0, Math.min(10, inputString.length())).replace("\n", "\\n").replace("\r", "\\r") + "'," + inputString.length() + ","
         + input.length + "," + (inadmissable ? "Inadmissable" : accepted ? "Accept" : "Reject") + ","
-        + (!inadmissable && accepted == outcome ? "Good," : "Bad,") + intervalAsSeconds() + "," + input.length / intervalAsSeconds() + "," + subStatistics());
+        + (!inadmissable && accepted == outcome ? "Good," : "Bad,") + "," + String.format("%.2f", input.length / intervalAsSeconds()) + "," + subStatistics());
   }
 
   protected String subStatistics() {

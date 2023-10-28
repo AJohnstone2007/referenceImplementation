@@ -69,7 +69,7 @@ public class Reference {
         grammar = new Grammar(a, iTerms, parseScriptFile(a));
       else if (a.indexOf(".") != -1)
         try {
-          parseString("", Files.readString(Paths.get(a)), true, grammar, parser, lexer, false);
+          parseString(a, Files.readString(Paths.get(a)), true, grammar, parser, lexer, false);
         } catch (IOException e) {
           fatal("unable to open string file " + a);
         }
@@ -200,13 +200,14 @@ public class Reference {
     System.exit(1);
   }
 
-  private void parseString(String title, String inputString, boolean outcome, Grammar grammar, ReferenceParser parser, LexerLM lexer, boolean suppressOutput) {
+  private void parseString(String inputStringName, String inputString, boolean outcome, Grammar grammar, ReferenceParser parser, LexerLM lexer,
+      boolean suppressOutput) {
     parser.traceLevel = traceLevel;
     parser.inputString = inputString;
     parser.suppressEcho = suppressOutput;
     parser.accepted = false;
     parser.setGrammar(grammar);
-    parser.title = title;
+    parser.inputStringName = inputStringName;
     lexer.lex(inputString, grammar.lexicalKindsArray(), grammar.lexicalStringsArray(), grammar.whitespacesArray(), suppressOutput);
     parser.input = lexer.tokens;
     parser.positions = lexer.positions;

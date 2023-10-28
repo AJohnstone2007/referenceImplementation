@@ -57,7 +57,7 @@ public class GLLBL extends ReferenceParser {
     }
 
     return descriptorCount + "," + gssNodeCount + "," + gssEdgeCount + "," + popCount + "," + sppfNodeCount + "," + sppfPCount + "," + sppfEdgeCount + ","
-        + sppfAmbiguityCount + "," + (endMemory - startMemory) + "," + (double) (endMemory - startMemory) / input.length;
+        + sppfAmbiguityCount + "," + (endMemory - startMemory) + "," + String.format("%.2f", (double) (endMemory - startMemory) / input.length);
   }
 
   private void sppfClearSelected() {

@@ -95,5 +95,4 @@ public class TermTraverser {
     builder.append("]");
     return builder.toString();
   }
-
 }

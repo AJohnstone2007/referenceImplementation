@@ -1,8 +1,17 @@
 !whitespace &SIMPLE_WHITESPACE
 !whitespace &COMMENT_NEST_ART 
 !whitespace &COMMENT_LINE_C 
- 
-cfgRules ::= cfgRule^^ | cfgRule cfgRules^
+
+text ::= directive^^ | directive text^ | cfgRule^^ | cfgRule text^
+
+directive ::= 
+  '!selfTest' | '!tortureTest' 
+| '!gllBaseLine' | '!gllHashPool' | '!gllBitArray'
+| '!rdsobFunction' | '!rdsobExplicitStack' | '!rdsobGenerator'
+| '!report' | '!show' | '!statisticsHeader' | '!statistics'
+| '!whitespace' cfgCaseSensitiveTerminal
+| '!whitespace' cfgBuiltinTerminal
+
 cfgRule  ::= cfgLHS '::='^ cfgAlts^
 cfgLHS ::= &ID
 

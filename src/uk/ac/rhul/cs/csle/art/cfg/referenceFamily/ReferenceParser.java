@@ -19,10 +19,6 @@ public abstract class ReferenceParser {
   public int rightmostParseIndex;
   public boolean suppressEcho;
 
-  protected void trace(int level, String msg) {
-    if (level <= traceLevel) System.out.println(msg);
-  }
-
   protected boolean match(GNode gn) {
     return input[i] == gn.elm.ei;
   }
@@ -35,21 +31,9 @@ public abstract class ReferenceParser {
     System.out.println("Visualisation not available");
   }
 
-  public void report(boolean outcome) {
-    System.out.println((!inadmissable && accepted == outcome ? "Good: " : "Bad: ") + this.getClass().getSimpleName() + " " + grammar.grammarName + " "
-        + (inadmissable ? "Inadmissable" : (input == null ? "Lexical error" : accepted ? "Accept" : "Reject")) + " '"
-        + inputString.substring(inputString.length() < 10 ? inputString.length() : 10) + "'");
-  }
-
-  public void statistics(boolean outcome) {
-    System.out.println(timestamp() + "," + this.getClass().getSimpleName() + "," + grammar.grammarName + "," + inputStringName + ",'"
-        + inputString.substring(0, Math.min(10, inputString.length())).replace("\n", "\\n").replace("\r", "\\r") + "'," + inputString.length() + ","
-        + input.length + "," + (inadmissable ? "Inadmissable" : accepted ? "Accept" : "Reject") + ","
-        + (!inadmissable && accepted == outcome ? "Good," : "Bad,") + "," + String.format("%.2f", input.length / intervalAsSeconds()) + "," + subStatistics());
-  }
-
-  protected String subStatistics() {
-    return "";
+  public int derivationAsTerm() {
+    System.out.println("derivationTerm() not implemented for parser class " + this.getClass().getSimpleName());
+    return 0;
   }
 
   protected GNode lhs(GNode gn) {
@@ -87,13 +71,25 @@ public abstract class ReferenceParser {
     return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
   }
 
-  public int derivationTerm() {
-    System.out.println("derivationTerm() not implemented for parser class " + this.getClass().getSimpleName());
-    return 0;
+  public void report(boolean outcome) {
+    System.out.println((!inadmissable && accepted == outcome ? "Good: " : "Bad: ") + this.getClass().getSimpleName() + " " + grammar.grammarName + " "
+        + (inadmissable ? "Inadmissable" : (input == null ? "Lexical error" : accepted ? "Accept" : "Reject")) + " '"
+        + inputString.substring(inputString.length() < 10 ? inputString.length() : 10) + "'");
   }
 
-  protected void setGrammar(Grammar grammar) {
-    this.grammar = grammar;
+  public void statistics(boolean outcome) {
+    System.out.println(timestamp() + "," + this.getClass().getSimpleName() + "," + grammar.grammarName + "," + inputStringName + ",'"
+        + inputString.substring(0, Math.min(10, inputString.length())).replace("\n", "\\n").replace("\r", "\\r") + "'," + inputString.length() + ","
+        + input.length + "," + (inadmissable ? "Inadmissable" : accepted ? "Accept" : "Reject") + ","
+        + (!inadmissable && accepted == outcome ? "Good," : "Bad,") + String.format("%.2f", intervalAsSeconds()) + ","
+        + String.format("%.2f", input.length / intervalAsSeconds()) + "," + subStatistics());
   }
 
+  protected String subStatistics() {
+    return "";
+  }
+
+  protected void trace(int level, String msg) {
+    if (level <= traceLevel) System.out.println(msg);
+  }
 }

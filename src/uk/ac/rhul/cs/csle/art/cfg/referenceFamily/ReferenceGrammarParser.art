@@ -4,13 +4,7 @@
 
 text ::= directive^^ | directive text^ | cfgRule^^ | cfgRule text^
 
-directive ::= 
-  '!selfTest' | '!tortureTest' 
-| '!gllBaseLine' | '!gllHashPool' | '!gllBitArray'
-| '!rdsobFunction' | '!rdsobExplicitStack' | '!rdsobGenerator'
-| '!report' | '!show' | '!statisticsHeader' | '!statistics'
-| '!whitespace' cfgCaseSensitiveTerminal
-| '!whitespace' cfgBuiltinTerminal
+directive ::= '!'^ term | '!whitespace' cfgBuiltinTerminal
 
 cfgRule  ::= cfgLHS '::='^ cfgAlts^
 cfgLHS ::= &ID

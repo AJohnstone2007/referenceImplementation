@@ -8,15 +8,13 @@ import java.util.function.Consumer;
 
 public class TermTraverser {
   protected final ITerms iTerms;
-  protected final String name;
   protected final Map<Integer, Consumer<Integer>> opsPreorder = new HashMap<>();
   protected final Map<Integer, Consumer<Integer>> opsInorder = new HashMap<>();
   protected final Map<Integer, Consumer<Integer>> opsPostorder = new HashMap<>();
   protected final Set<Integer> breakSet = new HashSet<>();
 
-  public TermTraverser(ITerms iTerms, String name) {
+  public TermTraverser(ITerms iTerms) {
     this.iTerms = iTerms;
-    this.name = name;
   }
 
   public void addBreak(Integer... term) {
@@ -83,7 +81,7 @@ public class TermTraverser {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("TermTraverser " + name + "[opsPreorder=");
+    builder.append("TermTraverser " + "[opsPreorder=");
     for (int i : opsPreorder.keySet())
       builder.append(iTerms.getString(i) + "\n");
     builder.append("\nopsInorder=");

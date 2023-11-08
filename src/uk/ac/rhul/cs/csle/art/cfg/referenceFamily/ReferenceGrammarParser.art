@@ -1,10 +1,8 @@
-!whitespace &SIMPLE_WHITESPACE
-!whitespace &COMMENT_NEST_ART 
-!whitespace &COMMENT_LINE_C 
+!whitespace (&SIMPLE_WHITESPACE, &COMMENT_NEST_ART, &COMMENT_LINE_C) 
 
 text ::= directive^^ | directive text^ | cfgRule^^ | cfgRule text^
 
-directive ::= '!'^ term | '!whitespace' cfgBuiltinTerminal
+directive ::= '!'^ term
 
 cfgRule  ::= cfgLHS '::='^ cfgAlts^
 cfgLHS ::= &ID
@@ -45,6 +43,6 @@ cfgAttribute ::= &ID '.'^ &ID
 cfgSeq ::= #^ // Dirty trick: both cfgAlt and cfgAltNoAction promote cfgSeq to achieve gather operation
 cfgSlot ::= #^
 
-term ::= cfgAttribute^^ | &INTEGER^^ | &REAL^^ | &STRING_DQ^^ | &ID^^ '('^ ')'^ | &ID^^ '('^ arguments ')'^
+term ::= cfgAttribute^^ | &INTEGER^^ | &REAL^^ | &STRING_DQ^^ | cfgBuiltinTerminal^^ | &ID^^ | &ID^^ '('^ ')'^ | &ID^^ '('^ arguments^ ')'^
 arguments ::= term | term ','^ arguments^
 

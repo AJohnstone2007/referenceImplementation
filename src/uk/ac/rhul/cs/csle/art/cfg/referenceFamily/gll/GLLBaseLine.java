@@ -337,6 +337,13 @@ private String constructorOf(SPPFN sppfn, GNode gn) {
     return inputString.substring(positions[sppfn.li],right+1) ;
   }
 
+  case "STRING_DQ":{
+    int right = positions[sppfn.li]+1;
+    while (inputString.charAt(right) != '\"') right++;
+
+    return inputString.substring(positions[sppfn.li],right+1) ;
+  }
+
   }
   return gn.elm.str;
 }
@@ -351,13 +358,13 @@ private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFrom
 
   if (sppfn.packNS.size() != 0) { // Non leaf symbol nodes
     SPPFPN sppfpn = firstSelectedPackNode(sppfn);
-    GNode cgn = sppfpn.gn.alt.seq;
+    GNode childgn = sppfpn.gn.alt.seq;
     LinkedList<SPPFN> childSymbolNodes = new LinkedList<>();
     collectChildNodesRec(sppfpn, childSymbolNodes);
     for (SPPFN s : childSymbolNodes) {
-      String newConstructor = derivationAsTermRec(s, children, cgn);
+      String newConstructor = derivationAsTermRec(s, children, childgn);
       if (newConstructor != null) constructor = newConstructor; // Update on every ^^ child so that the last one wins
-      cgn = cgn.seq; // Step to next child grammar node
+      childgn = childgn.seq; // Step to next child grammar node
     }
   }
 

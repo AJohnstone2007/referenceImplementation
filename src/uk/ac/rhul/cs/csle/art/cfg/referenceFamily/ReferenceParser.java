@@ -72,17 +72,19 @@ public abstract class ReferenceParser {
   }
 
   public void report(boolean outcome) {
-    System.out.println((!inadmissable && accepted == outcome ? "Good: " : "Bad: ") + this.getClass().getSimpleName() + " " + grammar.grammarName + " "
+    System.out.println((!inadmissable && accepted == outcome ? "Good: " : "Bad: ") + this.getClass().getSimpleName() + " " + grammar.name + " "
         + (inadmissable ? "Inadmissable" : (input == null ? "Lexical error" : accepted ? "Accept" : "Reject")) + " '"
         + inputString.substring(inputString.length() < 10 ? inputString.length() : 10) + "'");
   }
 
+  final int displayPrefixLength = 20;
+
   public void statistics(boolean outcome) {
-    System.out.println(timestamp() + "," + this.getClass().getSimpleName() + "," + grammar.grammarName + "," + inputStringName + ",'"
-        + inputString.substring(0, Math.min(10, inputString.length())).replace("\n", "\\n").replace("\r", "\\r") + "'," + inputString.length() + ","
-        + input.length + "," + (inadmissable ? "Inadmissable" : accepted ? "Accept" : "Reject") + ","
-        + (!inadmissable && accepted == outcome ? "Good," : "Bad,") + String.format("%.2f", intervalAsSeconds()) + ","
-        + String.format("%.2f", input.length / intervalAsSeconds()) + "," + subStatistics());
+    System.out.println(timestamp() + "," + this.getClass().getSimpleName() + "," + grammar.name + "," + inputStringName + ",'"
+        + inputString.substring(0, Math.min(displayPrefixLength, inputString.length())).replace("\n", "\\n").replace("\r", "\\r")
+        + (displayPrefixLength < inputString.length() ? "...'" : "'") + "," + inputString.length() + "," + input.length + ","
+        + (inadmissable ? "Inadmissable" : accepted ? "Accept" : "Reject") + "," + (!inadmissable && accepted == outcome ? "Good," : "Bad,")
+        + String.format("%.2f", intervalAsSeconds()) + "," + String.format("%.2f", input.length / intervalAsSeconds()) + "," + subStatistics());
   }
 
   protected String subStatistics() {

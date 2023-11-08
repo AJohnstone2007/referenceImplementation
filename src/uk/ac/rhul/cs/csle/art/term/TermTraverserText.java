@@ -13,8 +13,8 @@ public class TermTraverserText extends TermTraverser {
   private int depthLimit = -1;
   private boolean indent = false;
 
-  public TermTraverserText(ITerms iTerms, String name) {
-    super(iTerms, name);
+  public TermTraverserText(ITerms iTerms) {
+    super(iTerms);
   }
 
   //@formatter:off

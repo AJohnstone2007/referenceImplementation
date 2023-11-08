@@ -10,8 +10,7 @@ import java.util.Set;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 
 public abstract class ITerms {
-  private final TermTraverserText tt = new TermTraverserText(this, "iTerms traverser"); // This is intended for debugging - show the term without any
-                                                                                        // translations
+  private final TermTraverserText tt = new TermTraverserText(this); // This is intended for debugging - show the term without any translations
   public static int variableCount = 20;
   public static int sequenceVariableCount = 10;
 

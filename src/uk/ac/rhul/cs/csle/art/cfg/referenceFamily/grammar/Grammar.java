@@ -13,18 +13,16 @@ import java.util.TreeSet;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.term.ITerms;
-import uk.ac.rhul.cs.csle.art.term.TermTraverser;
 
 public class Grammar {
-  public String grammarName = null;
+  public String name = "";
   public final ITerms iTerms;
-
-  public Map<GElement, GElement> elements = new TreeMap<>();
-  public Map<Integer, GElement> elementsByNumber = new TreeMap<>();
+  public final Map<GElement, GElement> elements = new TreeMap<>();
+  public final Map<Integer, GElement> elementsByNumber = new TreeMap<>();
   public int lexSize;
-  public Map<Integer, GNode> nodesByNumber = new TreeMap<>();
-  Set<LKind> whitespaces = new HashSet<>();
-  public Map<GElement, GNode> rules = new TreeMap<>(); // Map from nonterminals to list of productions represented by their LHS node
+  public final Map<Integer, GNode> nodesByNumber = new TreeMap<>();
+  public final Set<LKind> whitespaces = new HashSet<>();
+  public final Map<GElement, GNode> rules = new TreeMap<>(); // Map from nonterminals to list of productions represented by their LHS node
   public final GNode endOfStringNode;
 
   private LKind[] lexicalKindsArray;
@@ -36,48 +34,26 @@ public class Grammar {
 
   private int nextFreeEnumerationElement = 0;
 
-  public Grammar(String grammarName, ITerms iTerms, int scriptDerivationTerm) {
-    if (iTerms == null) Reference.fatal("Grammar constructor called with null iTerms argument");
-    if (scriptDerivationTerm == 0) Reference.fatal("Grammar constructor called with null scriptDerivationTermArgument");
-
-    whitespaces.add(LKind.SIMPLE_WHITESPACE);
-    whitespaces.add(LKind.COMMENT_LINE_C);
-    whitespaces.add(LKind.COMMENT_NEST_ART); // Debug
-    this.grammarName = grammarName;
+  public Grammar(String name, ITerms iTerms) {
+    this.name = name;
     this.iTerms = iTerms;
     endOfStringNode = new GNode(GKind.EOS, "$", this); // Note that this first GNode to be created fills in static grammar field
     endOfStringNode.seq = endOfStringNode; // trick to ensure initial call collects rootNode
+    whitespaces.add(LKind.SIMPLE_WHITESPACE); // default whitespace if non declared
+  }
 
-    TermTraverser grammarTraverser = new TermTraverser(iTerms, grammarName);
-    grammarTraverser.addActionBreak("cfgLHS", (Integer t) -> lhsAction(childSymbolString(t)), null, null);
-    grammarTraverser.addAction("cfgSeq", (Integer t) -> altAction(), null, (Integer t) -> endAction(""));
-
-    grammarTraverser.addAction("cfgEpsilon", (Integer t) -> updateWorkingNode(GKind.EPS, "#"), null, null);
-    grammarTraverser.addActionBreak("cfgNonterminal", (Integer t) -> updateWorkingNode(GKind.N, childSymbolString(t)), null, null);
-    grammarTraverser.addActionBreak("cfgCaseSensitiveTerminal", (Integer t) -> updateWorkingNode(GKind.T, childSymbolStringStrip(t)), null, null);
-    grammarTraverser.addActionBreak("cfgBuiltinTerminal", (Integer t) -> updateWorkingNode(GKind.B, childSymbolString(t)), null, null);
-
-    grammarTraverser.addAction("cfgDoFirst", (Integer t) -> updateWorkingNode(GKind.DO, ""), null, null);
-    grammarTraverser.addAction("cfgOptional", (Integer t) -> updateWorkingNode(GKind.OPT, ""), null, null);
-    grammarTraverser.addAction("cfgKleene", (Integer t) -> updateWorkingNode(GKind.KLN, ""), null, null);
-    grammarTraverser.addAction("cfgPositive", (Integer t) -> updateWorkingNode(GKind.POS, ""), null, null);
-
-    grammarTraverser.addAction("cfgFoldNone", (Integer t) -> workingFold = GIFTKind.NONE, null, null);
-    grammarTraverser.addAction("cfgFoldUnder", (Integer t) -> workingFold = GIFTKind.UNDER, null, null);
-    grammarTraverser.addAction("cfgFoldOver", (Integer t) -> workingFold = GIFTKind.OVER, null, null);
-    grammarTraverser.addAction("cfgFoldTear", (Integer t) -> workingFold = GIFTKind.TEAR, null, null);
-
-    grammarTraverser.addAction("cfgSlot", (Integer t) -> workingAction = t, null, null);
-
-    grammarTraverser.traverse(scriptDerivationTerm); // Construct the GNodes and GElements by walking the script term
-
+  public void normalise() {
     numberElementsAndNodes();
+
     setEndNodeLinks();
+
     checkRules();
+
     computeAttributes();
 
     // System.out.println(this.toStringDot());
     // System.out.println(this.toString());
+    // System.out.println("Grammar " + name + " has whitespace elements: " + whitespaces);
   }
 
   private void numberElementsAndNodes() {
@@ -193,22 +169,13 @@ public class Grammar {
   }
 
   // Atttribute-action functions from ReferenceGrammarParser.art below this line
-  GNode workingNode;
-  GIFTKind workingFold = GIFTKind.NONE;
-  int workingAction = 0;
+  public GNode workingNode;
+  public GIFTKind workingFold = GIFTKind.NONE;
+  public int workingAction = 0;
 
   GNode mostRecentLHS;
 
-  String childSymbolStringStrip(int t) {
-    String tmp = childSymbolString(t);
-    return tmp.substring(1, tmp.length() - 1);
-  }
-
-  String childSymbolString(int t) {
-    return iTerms.getTermSymbolString(iTerms.getSubterm(t, 0));
-  }
-
-  /* Action routines called from attribute-action parser */
+  /* Action routines called from the script term traverser */
   public GElement findElement(GKind kind, String s) {
     GElement candidate = new GElement(kind, s);
     if (elements.get(candidate) == null) elements.put(candidate, candidate);
@@ -239,7 +206,7 @@ public class Grammar {
     workingNode = stack.pop();
   }
 
-  private GNode updateWorkingNode(GKind kind, String str) {
+  public GNode updateWorkingNode(GKind kind, String str) {
     workingNode = new GNode(kind, str, workingAction, workingFold, workingNode, null);
     workingAction = 0;
     workingFold = GIFTKind.NONE;

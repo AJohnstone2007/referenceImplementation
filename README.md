@@ -16,7 +16,7 @@ Our production tool _Ambiguity Retained Translation_ (ART) at https://github.com
 
 Our research papers at https://pure.royalholloway.ac.uk/en/persons/adrian-johnstone/publications
 
-The code and other material in this repository \copyright 2023 by Adrian Johnstone is licensed under CC BY 4.0
+The code and other material in this repository &copy; 2023 by Adrian Johnstone is licensed under CC BY 4.0
 
 Adrian Johnstone, October 2023 
 

@@ -16,6 +16,7 @@ import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GIFTKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GNode;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.LKind;
 
 public class GLLBaseLine extends ReferenceParser {
   @Override
@@ -323,27 +324,58 @@ private int[] intListToArray(LinkedList<Integer> children) {
 }
 
 private String constructorOf(SPPFN sppfn, GNode gn) {
-  if (gn.elm.kind == GKind.B) switch (gn.elm.str) {
-  case "ID": {
+  if (gn.elm.kind == GKind.B) switch (LKind.valueOf(gn.elm.str)) {
+  case ID: {
     int right = positions[sppfn.li];
     while (right< inputString.length() &&( Character.isAlphabetic(inputString.charAt(right)) || Character.isDigit(inputString.charAt(right))|| inputString.charAt(right)=='_')) right++;
 
     return inputString.substring(positions[sppfn.li],right) ;
   }
-  case "STRING_PLAIN_SQ":{
+  case CHARACTER:
+    break;
+  case CHAR_BQ:
+    break;
+  case COMMENT_BLOCK_C:
+    break;
+  case COMMENT_LINE_C:
+    break;
+  case COMMENT_NEST_ART:
+    break;
+  case INTEGER:
+    break;
+  case REAL:
+    break;
+  case SIGNED_INTEGER:
+    break;
+  case SIGNED_REAL:
+    break;
+  case SIMPLE_WHITESPACE:
+    break;
+  case SINGLETON_CASE_INSENSITIVE:
+    break;
+  case SINGLETON_CASE_SENSITIVE:
+    break;
+  case STRING_PLAIN_SQ:{
     int right = positions[sppfn.li]+1;
     while (inputString.charAt(right) != '\'') right++;
 
     return inputString.substring(positions[sppfn.li],right+1) ;
   }
 
-  case "STRING_DQ":{
+  case STRING_DQ:{
     int right = positions[sppfn.li]+1;
     while (inputString.charAt(right) != '\"') right++;
 
     return inputString.substring(positions[sppfn.li],right+1) ;
   }
-
+  case STRING_BRACE_NEST:
+    break;
+  case STRING_BRACKET_NEST:
+    break;
+  case STRING_DOLLAR:
+    break;
+  case STRING_SQ:
+    break;
   }
   return gn.elm.str;
 }

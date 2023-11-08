@@ -18,6 +18,4 @@ Our research papers at https://pure.royalholloway.ac.uk/en/persons/adrian-johnst
 
 The code and other material in this repository &copy; 2023 by Adrian Johnstone is licensed under CC BY 4.0
 
-Adrian Johnstone, October 2023 
-
-a.johnstone@rhul.ac.uk
+Adrian Johnstone, a.johnstone@rhul.ac.uk

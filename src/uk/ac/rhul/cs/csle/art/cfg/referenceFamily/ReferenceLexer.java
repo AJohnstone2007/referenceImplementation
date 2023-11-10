@@ -628,7 +628,10 @@ public class ReferenceLexer {
     int nestingLevel = 0;
 
     do {
-      if (peekCh() == '\0') lexicalError("Unterminated nestable (* ... *) comment");
+      if (peekCh() == '\0') {
+        lexicalError("Unterminated nestable (* ... *) comment");
+        return;
+      }
 
       if (peekCh() == '(' && peekOneCh() == '*') {
         getCh();

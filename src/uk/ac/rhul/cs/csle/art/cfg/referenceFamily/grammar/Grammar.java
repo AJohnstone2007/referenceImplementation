@@ -131,7 +131,11 @@ public class Grammar {
       // System.out.println("Computing lexical arrays for " + e);
       switch (e.kind) {
       case B:
-        lexicalKindsArray[token] = LKind.valueOf(e.str);
+        try {
+          lexicalKindsArray[token] = LKind.valueOf(e.str);
+        } catch (IllegalArgumentException ex) {
+          Reference.fatal("Unknown builtin &" + e.str);
+        }
         lexicalStringsArray[token] = e.str;
         break;
       case C:

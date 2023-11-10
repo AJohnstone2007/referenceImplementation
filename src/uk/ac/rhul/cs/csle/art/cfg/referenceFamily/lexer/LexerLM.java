@@ -66,7 +66,6 @@ public class LexerLM extends ReferenceLexer {
       tokens[i] = tokenList.get(i);
       positions[i] = positionList.get(i);
     }
-
   }
 
   private void checkLongestMatch(int token) {
@@ -80,8 +79,9 @@ public class LexerLM extends ReferenceLexer {
   public void report() {
     System.out.println("String: " + inputString);
     System.out.print("Token names: ");
+    int index = 0;
     for (int i : tokenList)
-      System.out.print(strings[i] + " ");
+      System.out.print((index++) + ":" + strings[i] + " ");
     System.out.println();
 
     System.out.print("Tokens: ");

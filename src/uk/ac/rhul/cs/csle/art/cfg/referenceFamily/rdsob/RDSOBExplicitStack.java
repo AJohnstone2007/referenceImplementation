@@ -23,7 +23,6 @@ public class RDSOBExplicitStack extends RDSOBParser {
   GNode gn;
 
   boolean rdsobExplicitStack() {
-    initialise();
     while (true)
       switch (gn.elm.kind) {
       case T:
@@ -46,13 +45,6 @@ public class RDSOBExplicitStack extends RDSOBParser {
       case ALT, B, C, DO, EOS, KLN, OPT, POS, TI:
         Reference.fatal("internal error - unexpected grammar node in rdsobExplicitStack");
       }
-  }
-
-  void initialise() {
-    gn = grammar.rules.get(grammar.startNonterminal).alt.seq;
-    i = 0;
-    dnRoot = dn = new DNode(grammar.endOfStringNode, null);
-    sn = new SNode(grammar.endOfStringNode, 0, null, dn);
   }
 
   void call(GNode caller) {
@@ -85,6 +77,10 @@ public class RDSOBExplicitStack extends RDSOBParser {
 
   @Override
   public void parse() {
+    gn = grammar.rules.get(grammar.startNonterminal).alt.seq;
+    i = 0;
+    dnRoot = dn = new DNode(grammar.endOfStringNode, null);
+    sn = new SNode(grammar.endOfStringNode, 0, null, dn);
     accepted = rdsobExplicitStack() && input[i] == 0;
   }
 }

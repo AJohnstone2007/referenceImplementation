@@ -79,7 +79,7 @@ public class RDSOBExplicitStack extends RDSOBParser {
   public void parse() {
     gn = grammar.rules.get(grammar.startNonterminal).alt.seq;
     i = 0;
-    dnRoot = dn = new DerivationNode(grammar.endOfStringNode, null);
+    dn = new DerivationNode(grammar.endOfStringNode, null);
     sn = new SNode(grammar.endOfStringNode, 0, null, dn);
     accepted = rdsobExplicitStack() && input[i] == 0;
   }

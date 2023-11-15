@@ -69,7 +69,6 @@ public class RDSOBFunction extends RDSOBParser {
     dn = new DerivationNode(grammar.endOfStringNode, null);
     accepted = rdsobFunction(grammar.rules.get(grammar.startNonterminal)) && input[i] == 0;
     if (!accepted) Reference.echo("Syntax error at location " + i, Reference.lineNumber(i, inputString), inputString);
-    dnRoot = dn;
   }
 
 }

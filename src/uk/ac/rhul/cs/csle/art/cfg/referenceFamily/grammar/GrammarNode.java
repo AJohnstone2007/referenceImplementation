@@ -2,7 +2,7 @@ package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 
-public class GNode {
+public class GrammarNode {
   public static String caseSensitiveTerminalStrop = "'";
   public static String caseInsensitiveTerminalStrop = "\"";
   public static String characterTerminalStrop = "`";
@@ -10,9 +10,9 @@ public class GNode {
 
   static Grammar grammar;
   public int num;
-  public final GElement elm; // Grammar element
-  public GNode seq; // sequence link
-  public GNode alt; // alternate link
+  public final GrammarElement elm; // Grammar element
+  public GrammarNode seq; // sequence link
+  public GrammarNode alt; // alternate link
   public GIFTKind giftKind = GIFTKind.NONE;
   public int action; // Holds an action term used by attribute evaluators
 
@@ -26,14 +26,14 @@ public class GNode {
    * compute as gn.prev != null && gn.prev.prev == null && gn.seq.kind != gnKind.END && (gn.prev.kind == gn.Kind.TERMINALLC || (gn.prev.kind ==
    * gn.Kind.NONTERMINAL && gn.prev.isNullable))
    */
-  public GNode(GKind kind, String str, Grammar grammar) {
-    GNode.grammar = grammar;
-    elm = GNode.grammar.findElement(kind, "");
+  public GrammarNode(GrammarKind kind, String str, Grammar grammar) {
+    GrammarNode.grammar = grammar;
+    elm = GrammarNode.grammar.findElement(kind, "");
   }
 
-  public GNode(GKind kind, String str, int action, GIFTKind fold, GNode previous, GNode parent) {
+  public GrammarNode(GrammarKind kind, String str, int action, GIFTKind fold, GrammarNode previous, GrammarNode parent) {
     super();
-    this.elm = GNode.grammar.findElement(kind, str);
+    this.elm = GrammarNode.grammar.findElement(kind, str);
     this.action = action;
     this.giftKind = fold;
     if (previous != null) previous.seq = this;
@@ -56,7 +56,7 @@ public class GNode {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    GNode other = (GNode) obj;
+    GrammarNode other = (GrammarNode) obj;
     if (num != other.num) return false;
     if (elm == null) {
       if (other.elm != null) return false;
@@ -81,7 +81,7 @@ public class GNode {
 
   public String toStringDot() {
     String ret = num + " ";
-    if (action != 0) ret += action + " ";
+    if (action != 0) ret += /* action + */ " ";
     switch (elm.kind) {
     case EOS, ALT, DO, KLN, OPT, POS:
       return ret + elm.kind;
@@ -131,39 +131,38 @@ public class GNode {
   }
 
   public String toStringAsProduction(String rewritesDenotation, String slotDenotation) { // Print a node in the context of its production
-    // System.out.println("toStringAsProduction called on " + ni + ":" + this);
+    // System.out.println("toStringAsProduction called on " + num + ": " + this);
     StringBuilder sb = new StringBuilder();
 
     if (Grammar.isLHS(this))
       sb.append(elm.str);
-    else if (seq.elm.kind == GKind.EOS)
+    else if (seq.elm.kind == GrammarKind.EOS)
       sb.append(seq);
     else {
-      GNode tmp;
-      for (tmp = this; !(tmp.elm.kind == GKind.END && Grammar.isLHS(tmp.seq)); tmp = tmp.seq) // Locate the end of this production
-        // System.out.println("toStringAsProduction at " + tmp + " with next-in-sequence element " + tmp.seq.el)
-        ;
-
-      // System.out.println("toStringAsProduction rendering LHS");
+      GrammarNode tmp;
+      for (tmp = this; !(tmp.elm.kind == GrammarKind.END && Grammar.isLHS(tmp.seq)); tmp = tmp.seq) {// Locate the end of this production
+        // System.out.println("toStringAsProduction at " + tmp + " with next-in-sequence element " + tmp.seq.elm);
+      }
       sb.append(tmp.seq.elm.str + rewritesDenotation); // Render LHS
+
       toStringAsSequenceRec(sb, tmp.alt, slotDenotation, this); // Render RHS
     }
     return sb.toString();
   }
 
-  private void toStringAsSequenceRec(StringBuilder sb, GNode alt, String slotDenotation, GNode targetNode) {
+  private void toStringAsSequenceRec(StringBuilder sb, GrammarNode alt, String slotDenotation, GrammarNode targetNode) {
     // System.out.println("toStringAsSequenceRec called on " + this.instanceNumber + ":" + this);
-    if (alt.elm.kind != GKind.ALT) Reference.fatal("toStringAsSequenceRe()c called on node " + alt.num + " which is not not an ALT node");
-    for (GNode tmpSeq = alt.seq;; tmpSeq = tmpSeq.seq) { // run down this sequence
+    if (alt.elm.kind != GrammarKind.ALT) Reference.fatal("toStringAsSequenceRe()c called on node " + alt.num + " which is not not an ALT node");
+    for (GrammarNode tmpSeq = alt.seq;; tmpSeq = tmpSeq.seq) { // run down this sequence
       if (tmpSeq == targetNode) sb.append(slotDenotation);
-      if (tmpSeq.elm.kind != GKind.END && tmpSeq.alt != null) { // If this element has an alt, then recursively process it first
+      if (tmpSeq.elm.kind != GrammarKind.END && tmpSeq.alt != null) { // If this element has an alt, then recursively process it first
         sb.append(" (");
-        for (GNode tmpAlt = tmpSeq.alt; tmpAlt != null; tmpAlt = tmpAlt.alt) {
+        for (GrammarNode tmpAlt = tmpSeq.alt; tmpAlt != null; tmpAlt = tmpAlt.alt) {
           toStringAsSequenceRec(sb, tmpAlt, slotDenotation, targetNode);
           if (tmpAlt.alt != null) sb.append(" |"); // Closing parethesis supplied by next level up
         }
       }
-      if (tmpSeq.elm.kind == GKind.END) return;
+      if (tmpSeq.elm.kind == GrammarKind.END) return;
       sb.append(" " + tmpSeq);
     }
   }

@@ -1,7 +1,7 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GNode;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
 
 public class RDSOBFunction extends RDSOBParser {
 
@@ -16,16 +16,16 @@ public class RDSOBFunction extends RDSOBParser {
     System.out.println(msg);
   }
 
-  boolean rdsobFunction(GNode lhs) {
+  boolean rdsobFunction(GrammarNode lhs) {
     level++;
 
     if (traceLevel > 0) trace("LHS GNode " + lhs);
     int i_entry = i;
-    DNode dn_entry = dn;
-    altLoop: for (GNode tmp = lhs.alt; tmp != null; tmp = tmp.alt) {
+    DerivationNode dn_entry = dn;
+    altLoop: for (GrammarNode tmp = lhs.alt; tmp != null; tmp = tmp.alt) {
       i = i_entry;
       dn = dn_entry;
-      GNode gn = tmp.seq;
+      GrammarNode gn = tmp.seq;
       if (traceLevel > 0) trace("Alternate " + tmp.toStringAsProduction());
       while (true) {
         switch (gn.elm.kind) {
@@ -66,8 +66,10 @@ public class RDSOBFunction extends RDSOBParser {
   public void parse() {
     level = 0;
     i = 0;
-    dnRoot = dn = new DNode(grammar.endOfStringNode, null);
+    dn = new DerivationNode(grammar.endOfStringNode, null);
     accepted = rdsobFunction(grammar.rules.get(grammar.startNonterminal)) && input[i] == 0;
     if (!accepted) Reference.echo("Syntax error at location " + i, Reference.lineNumber(i, inputString), inputString);
+    dnRoot = dn;
   }
+
 }

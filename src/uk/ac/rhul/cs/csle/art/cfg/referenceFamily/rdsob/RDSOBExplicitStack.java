@@ -1,17 +1,17 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GKind;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GNode;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
 
 public class RDSOBExplicitStack extends RDSOBParser {
   class SNode {
-    GNode returnNode;
+    GrammarNode returnNode;
     int i_entry;
-    DNode dn_entry;
+    DerivationNode dn_entry;
     SNode next;
 
-    public SNode(GNode returnNode, int i, SNode next, DNode dn) {
+    public SNode(GrammarNode returnNode, int i, SNode next, DerivationNode dn) {
       this.returnNode = returnNode;
       this.i_entry = i;
       this.next = next;
@@ -20,7 +20,7 @@ public class RDSOBExplicitStack extends RDSOBParser {
   }
 
   SNode sn;
-  GNode gn;
+  GrammarNode gn;
 
   boolean rdsobExplicitStack() {
     while (true)
@@ -47,20 +47,20 @@ public class RDSOBExplicitStack extends RDSOBParser {
       }
   }
 
-  void call(GNode caller) {
+  void call(GrammarNode caller) {
     sn = new SNode(caller.seq, i, sn, dn);
     gn = lhs(gn).alt.seq;
   }
 
-  GNode retrn() {
-    GNode tmp = sn.returnNode;
+  GrammarNode retrn() {
+    GrammarNode tmp = sn.returnNode;
     sn = sn.next;
     return tmp;
   }
 
   boolean backtrack() { // return true if no backtrack target found
     while (true) {
-      while (gn.elm.kind != GKind.END)
+      while (gn.elm.kind != GrammarKind.END)
         gn = gn.seq;
       if (gn.alt.alt == null) {
         gn = retrn();
@@ -79,7 +79,7 @@ public class RDSOBExplicitStack extends RDSOBParser {
   public void parse() {
     gn = grammar.rules.get(grammar.startNonterminal).alt.seq;
     i = 0;
-    dnRoot = dn = new DNode(grammar.endOfStringNode, null);
+    dnRoot = dn = new DerivationNode(grammar.endOfStringNode, null);
     sn = new SNode(grammar.endOfStringNode, 0, null, dn);
     accepted = rdsobExplicitStack() && input[i] == 0;
   }

@@ -1,7 +1,7 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.gll;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GKind;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.hashpool.HashPool;
 
 public class GLLHashPool extends HashPool {
@@ -265,10 +265,10 @@ public class GLLHashPool extends HashPool {
     targetOf = grammar.makeCallTargetsArray();
     elementOf = grammar.makeElementOfArray();
     // Defensive programming - make sure we've not messed up the enumeration value
-    if (T != GKind.T.ordinal()) Reference.fatal("Enumeration mismatch for T - check ParserHashPool.java for consistency with Kind enumeration");
-    if (EPS != GKind.EPS.ordinal()) Reference.fatal("Enumeration mismatch for EPS - check ParserHashPool.java for consistency with Kind enumeration");
-    if (N != GKind.N.ordinal()) Reference.fatal("Enumeration mismatch for N - check ParserHashPool.java for consistency with Kind enumeration");
-    if (END != GKind.END.ordinal()) Reference.fatal("Enumeration mismatch for END - check ParserHashPool.java for consistency with Kind enumeration");
+    if (T != GrammarKind.T.ordinal()) Reference.fatal("Enumeration mismatch for T - check ParserHashPool.java for consistency with Kind enumeration");
+    if (EPS != GrammarKind.EPS.ordinal()) Reference.fatal("Enumeration mismatch for EPS - check ParserHashPool.java for consistency with Kind enumeration");
+    if (N != GrammarKind.N.ordinal()) Reference.fatal("Enumeration mismatch for N - check ParserHashPool.java for consistency with Kind enumeration");
+    if (END != GrammarKind.END.ordinal()) Reference.fatal("Enumeration mismatch for END - check ParserHashPool.java for consistency with Kind enumeration");
 
     // 1a. (Debug): print precomputed tables
     // System.out.println(grammar);

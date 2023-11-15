@@ -13,14 +13,14 @@ import java.util.Set;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GIFTKind;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GKind;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GNode;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.LKind;
 
 public class GLLBaseLine extends ReferenceParser {
   @Override
-  public void visualise() {
+  public void show() {
     new GSS2Dot(gss, "gssA.dot");
     new SPPF2Dot(sppf, sppfRootNode, "sppf_full.dot", SPPF2DotKind.FULL, true, true);
     new SPPF2Dot(sppf, sppfRootNode, "sppf_core.dot", SPPF2DotKind.CORE, true, true);
@@ -83,11 +83,11 @@ public class GLLBaseLine extends ReferenceParser {
     sppfRootNode.selectLastRec();
   }
 
-  private GNode rules(GNode gn) {
+  private GrammarNode rules(GrammarNode gn) {
     return grammar.rules.get(gn.elm);
   }
 
-  private boolean accepting(GNode gn) {
+  private boolean accepting(GrammarNode gn) {
     return grammar.acceptingNodeNumbers.contains(gn.num);
   }
 
@@ -127,7 +127,7 @@ public class GLLBaseLine extends ReferenceParser {
           trace(1, "Index " + i + " Node " + gn.num + " End of alternate under bracket - continue thread with successor of bracket");
           break;
         case ALT:
-          for (GNode tmp = gn; tmp != null; tmp = tmp.alt)
+          for (GrammarNode tmp = gn; tmp != null; tmp = tmp.alt)
             queueDesc(tmp.seq, i, sn, dn);
           trace(1, "Index " + i + " Node " + gn.num + " Alternates queued - end of thread");
           continue nextDescriptor;
@@ -170,11 +170,11 @@ public class GLLBaseLine extends ReferenceParser {
 /* Thread handling *********************************************************/
 Set<Desc> descS;
 Deque<Desc> descQ;
-GNode gn;
+GrammarNode gn;
 GSSN sn;
 SPPFN dn;
 
-void queueDesc(GNode gn, int i, GSSN gssN, SPPFN sppfN) {
+void queueDesc(GrammarNode gn, int i, GSSN gssN, SPPFN sppfN) {
   Desc tmp = new Desc(gn, i, gssN, sppfN);
   if (descS.add(tmp)) descQ.addFirst(tmp);
  }
@@ -190,13 +190,13 @@ boolean dequeueDesc() {
 Map<GSSN, GSSN> gss;
 GSSN gssRoot;
 
-GSSN gssFind(GNode gn, int i) {
+GSSN gssFind(GrammarNode gn, int i) {
  GSSN gssN = new GSSN(gn, i);
  if (gss.get(gssN) == null) gss.put(gssN, gssN);
  return gss.get(gssN);
 }
 
-void call(GNode gn) {
+void call(GrammarNode gn) {
  GSSN gssN = gssFind(gn.seq, i);
  GSSE gssE = new GSSE(sn, dn);
  if (!gssN.edges.contains(gssE)) {
@@ -204,7 +204,7 @@ void call(GNode gn) {
   for (SPPFN rc : gssN.pops)
    queueDesc(gn.seq, rc.ri, sn, sppfUpdate(gn.seq, dn, rc));
  }
- for (GNode p = rules(gn).alt; p != null; p = p.alt)
+ for (GrammarNode p = rules(gn).alt; p != null; p = p.alt)
   queueDesc(p.seq, i, gssN, null);
 }
 
@@ -227,14 +227,14 @@ void ret() {
 Map<SPPFN, SPPFN> sppf;
 SPPFN sppfRootNode;
 
-SPPFN sppfFind(GNode dn, int li, int ri) {
+SPPFN sppfFind(GrammarNode dn, int li, int ri) {
  SPPFN tmp = new SPPFN(dn, li, ri);
  if (!sppf.containsKey(tmp)) sppf.put(tmp, tmp);
  return sppf.get(tmp);
 }
 
-SPPFN sppfUpdate(GNode gn, SPPFN ln, SPPFN rn) {
- SPPFN ret = sppfFind(gn.elm.kind == GKind.END ? gn.seq : gn,
+SPPFN sppfUpdate(GrammarNode gn, SPPFN ln, SPPFN rn) {
+ SPPFN ret = sppfFind(gn.elm.kind == GrammarKind.END ? gn.seq : gn,
                  ln == null ? rn.li : ln.li,
                  rn.ri);
  ret.packNS.add(
@@ -259,7 +259,7 @@ void initialise() {
  gssRoot = new GSSN(grammar.endOfStringNode, 0);
  gss.put(gssRoot, gssRoot);
  i = 0; sn = gssRoot; dn = null;
- for (GNode p = grammar.rules.get(grammar.startNonterminal).alt; p != null; p = p.alt)
+ for (GrammarNode p = grammar.rules.get(grammar.startNonterminal).alt; p != null; p = p.alt)
   queueDesc(p.seq, i, sn, dn);
  startMemory = memoryUsed();
  startTime = readClock();
@@ -282,7 +282,7 @@ void gllBL() {
 
    case DO: gn = gn.alt; break;
    case ALT:
-     for (GNode tmp = gn; tmp != null; tmp = tmp.alt)
+     for (GrammarNode tmp = gn; tmp != null; tmp = tmp.alt)
        queueDesc(tmp.seq, i, sn, dn);
      continue nextDescriptor;
   case EOS:
@@ -313,7 +313,7 @@ private SPPFPN firstSelectedPackNode(SPPFN sppfn) {
 }
 
 private boolean isSymbol(SPPFN sppfn) {
-  return sppfn.packNS.size() == 0 /* terminal or epsilon */ || (sppfn.gn.elm.kind == GKind.N && sppfn.gn.seq == null /* LHS */);
+  return sppfn.packNS.size() == 0 /* terminal or epsilon */ || (sppfn.gn.elm.kind == GrammarKind.N && sppfn.gn.seq == null /* LHS */);
 }
 
 private int[] intListToArray(LinkedList<Integer> children) {
@@ -323,8 +323,8 @@ private int[] intListToArray(LinkedList<Integer> children) {
   return ret;
 }
 
-private String constructorOf(SPPFN sppfn, GNode gn) {
-  if (gn.elm.kind == GKind.B) switch (LKind.valueOf(gn.elm.str)) {
+private String constructorOf(SPPFN sppfn, GrammarNode gn) {
+  if (gn.elm.kind == GrammarKind.B) switch (LKind.valueOf(gn.elm.str)) {
   case ID: {
     int right = positions[sppfn.li];
     while (right< inputString.length() &&( Character.isAlphabetic(inputString.charAt(right)) || Character.isDigit(inputString.charAt(right))|| inputString.charAt(right)=='_')) right++;
@@ -380,7 +380,7 @@ private String constructorOf(SPPFN sppfn, GNode gn) {
   return gn.elm.str;
 }
 
-private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFromParent, GNode gn) {
+private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFromParent, GrammarNode gn) {
 //   System.out.println("\nEntering derivationAsTermRec() at node " + sppfn + " instance " + gn);
   if (visited.contains(sppfn)) Reference.fatal("ArtDerivationAsTermRec() found cycle in derivation");
   visited.add(sppfn);
@@ -390,7 +390,7 @@ private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFrom
 
   if (sppfn.packNS.size() != 0) { // Non leaf symbol nodes
     SPPFPN sppfpn = firstSelectedPackNode(sppfn);
-    GNode childgn = sppfpn.gn.alt.seq;
+    GrammarNode childgn = sppfpn.gn.alt.seq;
     LinkedList<SPPFN> childSymbolNodes = new LinkedList<>();
     collectChildNodesRec(sppfpn, childSymbolNodes);
     for (SPPFN s : childSymbolNodes) {
@@ -434,12 +434,12 @@ public int derivationAsTerm() {
 }
 
 class Desc {
-  public GNode gn;
+  public GrammarNode gn;
   public int i;
   public GSSN sn;
   public SPPFN dn;
 
-  public Desc(GNode gn, int index, GSSN sn, SPPFN dn) {
+  public Desc(GrammarNode gn, int index, GSSN sn, SPPFN dn) {
     super();
     this.gn = gn;
     this.i = index;
@@ -494,12 +494,12 @@ class Desc {
 }
 
 class GSSN {
-  public final GNode gn;
+  public final GrammarNode gn;
   final int i;
   public final Set<GSSE> edges = new HashSet<>();
   public final Set<SPPFN> pops = new HashSet<>();
 
-  public GSSN(GNode gn, int i) {
+  public GSSN(GrammarNode gn, int i) {
     super();
     this.gn = gn;
     this.i = i;
@@ -569,12 +569,12 @@ class GSSE {
 }
 
 class SPPFN {
-  public final GNode gn;
+  public final GrammarNode gn;
   public final int li;
   public final int ri;
   public final Set<SPPFPN> packNS = new HashSet<>();
 
-  public SPPFN(GNode gn, int li, int ri) {
+  public SPPFN(GrammarNode gn, int li, int ri) {
     super();
     this.gn = gn;
     this.li = li;
@@ -650,14 +650,14 @@ class SPPFN {
 }
 
 class SPPFPN {
-  public final GNode gn;
+  public final GrammarNode gn;
   public final int pivot;
   public final SPPFN leftChild;
   public final SPPFN rightChild;
   public boolean suppressed = false;
   public boolean selected = false;
 
-  public SPPFPN(GNode gn, int pivot, SPPFN leftChild, SPPFN rightChild) {
+  public SPPFPN(GrammarNode gn, int pivot, SPPFN leftChild, SPPFN rightChild) {
     super();
     this.gn = gn;
     this.pivot = pivot;
@@ -749,9 +749,10 @@ class SPPF2Dot {
   }
 
   public SPPF2Dot(Map<SPPFN, SPPFN> sppf, SPPFN rootNode, String filename, SPPF2DotKind renderKind, boolean showIndicies, boolean showIntermediates) {
-    this.sppf = sppf;
+this.sppf = sppf;
     this.showIndicies = showIndicies;
     this.showIntermediates = showIntermediates;
+    if (sppf == null) return;
     try {
       sppfOut = new PrintStream(new File(filename));
       sppfOut.println("digraph \"SPPF\" {\n"
@@ -829,6 +830,7 @@ class SPPF2Dot {
 
 class GSS2Dot {
   public GSS2Dot(Map<GSSN, GSSN> gss, String filename) {
+    if (gss == null) return;
     PrintStream gssOut;
     try {
       gssOut = new PrintStream(new File(filename));

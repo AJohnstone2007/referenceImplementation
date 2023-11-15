@@ -17,32 +17,33 @@ import uk.ac.rhul.cs.csle.art.term.ITerms;
 public class Grammar {
   public String name = "";
   public final ITerms iTerms;
-  public final Map<GElement, GElement> elements = new TreeMap<>();
-  public final Map<Integer, GElement> elementsByNumber = new TreeMap<>();
+  public final Map<GrammarElement, GrammarElement> elements = new TreeMap<>();
+  public final Map<Integer, GrammarElement> elementsByNumber = new TreeMap<>();
   public int lexSize;
-  public final Map<Integer, GNode> nodesByNumber = new TreeMap<>();
+  public final Map<Integer, GrammarNode> nodesByNumber = new TreeMap<>();
   public final Set<LKind> whitespaces = new HashSet<>();
-  public final Map<GElement, GNode> rules = new TreeMap<>(); // Map from nonterminals to list of productions represented by their LHS node
-  public final GNode endOfStringNode;
+  public final Map<GrammarElement, GrammarNode> rules = new TreeMap<>(); // Map from nonterminals to list of productions represented by their LHS node
+  public final GrammarNode endOfStringNode;
 
   private LKind[] lexicalKindsArray;
   private String[] lexicalStringsArray;
   private LKind[] whitespacesArray;
 
-  public GElement startNonterminal;
+  public GrammarElement startNonterminal;
   public Set<Integer> acceptingNodeNumbers = new TreeSet<>(); // Set of nodes which are END nodes of the start production
 
-  private int nextFreeEnumerationElement = 0;
+  private int nextFreeEnumerationElement;
 
   public Grammar(String name, ITerms iTerms) {
     this.name = name;
     this.iTerms = iTerms;
-    endOfStringNode = new GNode(GKind.EOS, "$", this); // Note that this first GNode to be created fills in static grammar field
+    endOfStringNode = new GrammarNode(GrammarKind.EOS, "$", this); // Note that this first GNode to be created fills in static grammar field
     endOfStringNode.seq = endOfStringNode; // trick to ensure initial call collects rootNode
     whitespaces.add(LKind.SIMPLE_WHITESPACE); // default whitespace if non declared
   }
 
   public void normalise() {
+    nextFreeEnumerationElement = 0;
     numberElementsAndNodes();
 
     setEndNodeLinks();
@@ -57,22 +58,22 @@ public class Grammar {
   }
 
   private void numberElementsAndNodes() {
-    Set<GKind> lexKinds = Set.of(GKind.B, GKind.C, GKind.T, GKind.TI);
-    for (GElement s : elements.keySet()) {
+    Set<GrammarKind> lexKinds = Set.of(GrammarKind.B, GrammarKind.C, GrammarKind.T, GrammarKind.TI);
+    for (GrammarElement s : elements.keySet()) {
       s.ei = nextFreeEnumerationElement++;
       if (lexKinds.contains(s.kind)) lexSize = s.ei;
     }
     lexSize++;
 
     nodesByNumber.put(endOfStringNode.num = nextFreeEnumerationElement++, endOfStringNode);
-    for (GElement n : rules.keySet())
+    for (GrammarElement n : rules.keySet())
       numberElementsAndNodesRec(rules.get(n));
   }
 
-  private void numberElementsAndNodesRec(GNode node) {
+  private void numberElementsAndNodesRec(GrammarNode node) {
     if (node != null) {
       nodesByNumber.put(node.num = nextFreeEnumerationElement++, node);
-      if (node.elm.kind != GKind.END) {
+      if (node.elm.kind != GrammarKind.END) {
         numberElementsAndNodesRec(node.seq);
         numberElementsAndNodesRec(node.alt);
       }
@@ -80,18 +81,18 @@ public class Grammar {
   }
 
   private void setEndNodeLinks() {
-    for (GElement n : rules.keySet()) {
-      GNode lhs = rules.get(n);
-      for (GNode production = lhs.alt; production != null; production = production.alt)
+    for (GrammarElement n : rules.keySet()) {
+      GrammarNode lhs = rules.get(n);
+      for (GrammarNode production = lhs.alt; production != null; production = production.alt)
         setEndNodeLinksRec(lhs, production);
     }
   }
 
-  private void setEndNodeLinksRec(GNode parentNode, GNode altNode) {
-    GNode gn;
-    for (gn = altNode.seq; gn.elm.kind != GKind.END; gn = gn.seq) {
+  private void setEndNodeLinksRec(GrammarNode parentNode, GrammarNode altNode) {
+    GrammarNode gn;
+    for (gn = altNode.seq; gn.elm.kind != GrammarKind.END; gn = gn.seq) {
       // System.out.println("processEndNodes at " + gn.ni + " " + gn);
-      if (gn.alt != null) for (GNode alternate = gn.alt; alternate != null; alternate = alternate.alt)
+      if (gn.alt != null) for (GrammarNode alternate = gn.alt; alternate != null; alternate = alternate.alt)
         setEndNodeLinksRec(gn, alternate); // Recurse into brackets
     }
     // System.out.println("processEndNodes processing " + gn.ni + " " + gn);
@@ -102,14 +103,14 @@ public class Grammar {
   }
 
   void checkRules() {
-    Set<GElement> tmp = new HashSet<>();
-    for (GElement e : elements.keySet())
-      if (e.kind == GKind.N && rules.get(e) == null) tmp.add(e);
+    Set<GrammarElement> tmp = new HashSet<>();
+    for (GrammarElement e : elements.keySet())
+      if (e.kind == GrammarKind.N && rules.get(e) == null) tmp.add(e);
 
     if (tmp.size() > 0) {
       StringBuilder sb = new StringBuilder();
       sb.append("*** Context Free Grammar error - nonterminal" + (tmp.size() == 1 ? " " : "s ") + "used but not defined: ");
-      for (GElement n : tmp)
+      for (GrammarElement n : tmp)
         sb.append(n.str + " ");
       Reference.fatal(sb.toString());
     }
@@ -127,7 +128,7 @@ public class Grammar {
 
     int token = 0;
     lexicalStringsArray[0] = "EOS";
-    for (GElement e : elements.keySet()) {
+    for (GrammarElement e : elements.keySet()) {
       // System.out.println("Computing lexical arrays for " + e);
       switch (e.kind) {
       case B:
@@ -173,26 +174,26 @@ public class Grammar {
   }
 
   // Atttribute-action functions from ReferenceGrammarParser.art below this line
-  public GNode workingNode;
+  public GrammarNode workingNode;
   public GIFTKind workingFold = GIFTKind.NONE;
   public int workingAction = 0;
 
-  GNode mostRecentLHS;
+  GrammarNode mostRecentLHS;
 
   /* Action routines called from the script term traverser */
-  public GElement findElement(GKind kind, String s) {
-    GElement candidate = new GElement(kind, s);
+  public GrammarElement findElement(GrammarKind kind, String s) {
+    GrammarElement candidate = new GrammarElement(kind, s);
     if (elements.get(candidate) == null) elements.put(candidate, candidate);
     return elements.get(candidate);
   }
 
-  LinkedList<GNode> stack = new LinkedList<>();
+  LinkedList<GrammarNode> stack = new LinkedList<>();
 
   public void lhsAction(String id) {
-    GElement element = findElement(GKind.N, id);
+    GrammarElement element = findElement(GrammarKind.N, id);
     if (startNonterminal == null) startNonterminal = element;
     workingNode = rules.get(element);
-    if (workingNode == null) rules.put(element, updateWorkingNode(GKind.N, id));
+    if (workingNode == null) rules.put(element, updateWorkingNode(GrammarKind.N, id));
     mostRecentLHS = rules.get(element);
   }
 
@@ -200,18 +201,18 @@ public class Grammar {
     stack.push(workingNode);
     while (workingNode.alt != null) // Maintain specification order by adding new alternate at the end
       workingNode = workingNode.alt;
-    workingNode = new GNode(GKind.ALT, "", workingAction, workingFold, null, workingNode);
+    workingNode = new GrammarNode(GrammarKind.ALT, "", workingAction, workingFold, null, workingNode);
     workingAction = 0;
     workingFold = GIFTKind.NONE;
   }
 
   public void endAction(String actions) {
-    updateWorkingNode(GKind.END, "");
+    updateWorkingNode(GrammarKind.END, "");
     workingNode = stack.pop();
   }
 
-  public GNode updateWorkingNode(GKind kind, String str) {
-    workingNode = new GNode(kind, str, workingAction, workingFold, workingNode, null);
+  public GrammarNode updateWorkingNode(GrammarKind kind, String str) {
+    workingNode = new GrammarNode(kind, str, workingAction, workingFold, workingNode, null);
     workingAction = 0;
     workingFold = GIFTKind.NONE;
     return workingNode;
@@ -223,31 +224,31 @@ public class Grammar {
     sb.append("digraph \"Reference grammar\"\n" + "{\n" + "graph[ordering=out ranksep=0.1]\n"
         + "node[fontname=Helvetica fontsize=9 shape=box height = 0 width = 0 margin= 0.04 color=gray]\n"
         + "edge[fontname=Helvetica fontsize=9 arrowsize = 0.3 color=gray]\n\n");
-    for (GElement n : rules.keySet())
+    for (GrammarElement n : rules.keySet())
       toStringDotRec(sb, rules.get(n));
     sb.append("}\n");
     return sb.toString();
   }
 
-  private void toStringDotRec(StringBuilder sb, GNode cs) {
+  private void toStringDotRec(StringBuilder sb, GrammarNode cs) {
     sb.append("\"" + cs.num + "\"[label=\"" + cs.toStringDot() + "\"]\n");
-    if (cs.elm.kind == GKind.ALT) {
+    if (cs.elm.kind == GrammarKind.ALT) {
       seqArrow(sb, cs);
       altArrow(sb, cs);
-    } else if (cs.elm.kind != GKind.END) {
+    } else if (cs.elm.kind != GrammarKind.END) {
       altArrow(sb, cs);
       seqArrow(sb, cs);
     }
   }
 
-  private void altArrow(StringBuilder sb, GNode cs) {
+  private void altArrow(StringBuilder sb, GrammarNode cs) {
     if (cs.alt == null) return;
     sb.append(
         "\"" + cs.num + "\"->\"" + cs.alt.num + "\"" + "{rank = same; \"" + cs.num + "\"" + ";\"" + cs.alt.num + "\"" + ";" + "}" + "[label=\" a\"" + "]\n");
     if (!isLHS(cs.alt)) toStringDotRec(sb, cs.alt);
   }
 
-  private void seqArrow(StringBuilder sb, GNode cs) {
+  private void seqArrow(StringBuilder sb, GrammarNode cs) {
     if (cs.seq == null) return;
     sb.append("\"" + cs.num + "\"->\"" + cs.seq.num + "\"\n");
     toStringDotRec(sb, cs.seq);
@@ -257,29 +258,28 @@ public class Grammar {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("Grammar with start nonterminal " + startNonterminal.str + "\n");
+    sb.append("Grammar " + name + " with start nonterminal " + startNonterminal.str + "\n");
     sb.append("Grammar rules:\n");
-    for (GElement n : rules.keySet()) {
-      // sb.append("Rule " + n + "\n");
+    for (GrammarElement n : rules.keySet()) {
       boolean first = true;
-      for (GNode production = rules.get(n).alt; production != null; production = production.alt) {
-        // sb.append("alt " + production + "\n");
+      for (GrammarNode production = rules.get(n).alt; production != null; production = production.alt) {
         if (first) {
-          sb.append("  " + production.toStringAsProduction(" ::=\n    ", null) + "\n");
+          sb.append(" " + production.toStringAsProduction(" ::=\n ", null) + "\n");
           first = false;
         } else {
-          sb.append("  | " + production.toStringAsRHS(null) + "\n");
+          sb.append(" | " + production.toStringAsRHS(null) + "\n");
         }
       }
     }
 
     sb.append("Grammar elements:\n");
-    for (GElement s : elements.keySet())
-      sb.append("  " + s + "\n");
+    for (GrammarElement s : elements.keySet())
+      sb.append(" " + s + "\n");
 
     sb.append("Grammar nodes:\n");
     for (int i : nodesByNumber.keySet())
-      sb.append("  " + i + ": " + nodesByNumber.get(i).toStringAsProduction() + "\n");
+      sb.append(" " + i + ": " + nodesByNumber.get(i).toStringAsProduction() + "\n");
+
     sb.append("Accepting node" + (acceptingNodeNumbers.size() == 1 ? "" : "s") + ":");
     for (Integer a : acceptingNodeNumbers)
       sb.append(" " + a);
@@ -287,7 +287,7 @@ public class Grammar {
     return sb.toString();
   }
 
-  public void visualise(String filename) {
+  public void show(String filename) {
     PrintStream ps;
     try {
       ps = new PrintStream(new File(filename));
@@ -302,7 +302,7 @@ public class Grammar {
 
   public int[] makeKindsArray() {
     int ret[] = new int[nextFreeEnumerationElement];
-    for (GElement gs : elements.keySet())
+    for (GrammarElement gs : elements.keySet())
       ret[gs.ei] = gs.kind.ordinal();
     for (int ni : nodesByNumber.keySet())
       ret[ni] = nodesByNumber.get(ni).elm.kind.ordinal();
@@ -312,13 +312,13 @@ public class Grammar {
   public int[][] makeAltsArray() {
     int ret[][] = new int[nextFreeEnumerationElement][];
     for (int ni : nodesByNumber.keySet()) {
-      GNode gn = nodesByNumber.get(ni);
+      GrammarNode gn = nodesByNumber.get(ni);
       int altCount = 0;
-      for (GNode alt = gn.alt; alt != null; alt = alt.alt)
+      for (GrammarNode alt = gn.alt; alt != null; alt = alt.alt)
         altCount++;
       ret[ni] = new int[altCount + 1];
       altCount = 0;
-      for (GNode alt = gn.alt; alt != null; alt = alt.alt)
+      for (GrammarNode alt = gn.alt; alt != null; alt = alt.alt)
         ret[ni][altCount++] = alt.num;
       ret[ni][altCount] = 0;
     }
@@ -328,7 +328,7 @@ public class Grammar {
   public int[] makeSeqsArray() {
     int ret[] = new int[nextFreeEnumerationElement];
     for (int ni : nodesByNumber.keySet()) {
-      GNode sn = nodesByNumber.get(ni).seq;
+      GrammarNode sn = nodesByNumber.get(ni).seq;
       ret[ni] = sn == null ? 0 : sn.num;
     }
     return ret;
@@ -337,7 +337,7 @@ public class Grammar {
   public int[] makeCallTargetsArray() {
     int[] ret = new int[nextFreeEnumerationElement];
     for (int ni : nodesByNumber.keySet()) {
-      GNode lhs = rules.get(nodesByNumber.get(ni).elm);
+      GrammarNode lhs = rules.get(nodesByNumber.get(ni).elm);
       ret[ni] = (lhs == null ? 0 : lhs.num);
     }
     return ret;
@@ -346,7 +346,7 @@ public class Grammar {
   public int[] makeElementOfArray() {
     int[] ret = new int[nextFreeEnumerationElement];
     for (int ni : nodesByNumber.keySet()) {
-      GElement el = nodesByNumber.get(ni).elm;
+      GrammarElement el = nodesByNumber.get(ni).elm;
       ret[ni] = (el == null ? 0 : el.ei);
     }
     return ret;
@@ -354,7 +354,7 @@ public class Grammar {
 
   /** Static methods *********************************************************/
 
-  public static boolean isLHS(GNode gn) {
-    return gn.elm.kind == GKind.N && gn.seq == null;
+  public static boolean isLHS(GrammarNode gn) {
+    return gn.elm.kind == GrammarKind.N && gn.seq == null;
   }
 }

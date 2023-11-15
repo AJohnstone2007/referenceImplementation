@@ -1,15 +1,15 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GNode;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
 
 public class RDSOBParser extends ReferenceParser {
 
-  protected class DNode {
-    GNode gn;
-    DNode next;
+  protected class DerivationNode {
+    GrammarNode gn;
+    DerivationNode next;
 
-    public DNode(GNode gn, DNode next) {
+    public DerivationNode(GrammarNode gn, DerivationNode next) {
       super();
       this.gn = gn;
       this.next = next;
@@ -17,21 +17,36 @@ public class RDSOBParser extends ReferenceParser {
 
     @Override
     public String toString() {
-      return gn.num + (next == null ? "" : " " + next.toString());
+      return gn.toString();
     }
   }
 
-  protected DNode dnRoot, dn;
+  protected DerivationNode dnRoot, dn;
 
-  protected void dn_update(GNode gn) {
-    dn.next = new DNode(gn, dn);
-    dn = dn.next;
+  protected void dn_update(GrammarNode gn) {
+    dn = new DerivationNode(gn, dn);
   }
 
   @Override
-  public void visualise() {
+  public void show() {
     System.out.println("Left most derivation");
-    for (DNode tmp = dnRoot; tmp != null; tmp = tmp.next)
+    for (DerivationNode tmp = dnRoot; tmp != null; tmp = tmp.next)
       System.out.println(dn + " " + grammar == null ? "" : grammar.nodesByNumber.get(dn.gn.num).toStringAsProduction());
   }
+
+  @Override
+  public int derivationAsTerm() {
+    derivationAsTermRec(dn);
+
+    int element = 0;
+    for (DerivationNode tmp = dnRoot; tmp != null; tmp = tmp.next)
+      System.out.println(element++ + " " + tmp.gn.toStringAsProduction());
+    return 0;
+  }
+
+  private void derivationAsTermRec(DerivationNode dn) {
+    GrammarNode gn = dn.gn;
+
+  }
+
 }

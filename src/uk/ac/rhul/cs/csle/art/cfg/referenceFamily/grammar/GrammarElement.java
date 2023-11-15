@@ -1,11 +1,11 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar;
 
-public class GElement implements Comparable {
+public class GrammarElement implements Comparable {
   public int ei;
-  public final GKind kind;
+  public final GrammarKind kind;
   public final String str;
 
-  public GElement(GKind kind, String s) {
+  public GrammarElement(GrammarKind kind, String s) {
     super();
     this.kind = kind;
     this.str = s;
@@ -30,7 +30,7 @@ public class GElement implements Comparable {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    GElement other = (GElement) obj;
+    GrammarElement other = (GrammarElement) obj;
     if (kind != other.kind) return false;
     if (str == null) {
       if (other.str != null) return false;
@@ -41,7 +41,7 @@ public class GElement implements Comparable {
   @Override
   public int compareTo(Object o) {
     if (o == null) return 1;
-    GElement other = (GElement) o;
+    GrammarElement other = (GrammarElement) o;
     if (kind.ordinal() > other.kind.ordinal())
       return 1;
     else if (kind.ordinal() < other.kind.ordinal())
@@ -49,5 +49,4 @@ public class GElement implements Comparable {
     else
       return str.compareTo(other.str);
   }
-
 }

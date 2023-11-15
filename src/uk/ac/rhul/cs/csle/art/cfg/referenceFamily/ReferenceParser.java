@@ -3,8 +3,8 @@ package uk.ac.rhul.cs.csle.art.cfg.referenceFamily;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GNode;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
 
 public abstract class ReferenceParser {
   public int traceLevel = 0;
@@ -19,7 +19,7 @@ public abstract class ReferenceParser {
   public int rightmostParseIndex;
   public boolean suppressEcho;
 
-  protected boolean match(GNode gn) {
+  protected boolean match(GrammarNode gn) {
     return input[i] == gn.elm.ei;
   }
 
@@ -27,7 +27,7 @@ public abstract class ReferenceParser {
     System.out.println("Parse not available");
   }
 
-  public void visualise() {
+  public void show() {
     System.out.println("Visualisation not available");
   }
 
@@ -36,7 +36,7 @@ public abstract class ReferenceParser {
     return 0;
   }
 
-  protected GNode lhs(GNode gn) {
+  protected GrammarNode lhs(GrammarNode gn) {
     return grammar.rules.get(gn.elm);
   }
 

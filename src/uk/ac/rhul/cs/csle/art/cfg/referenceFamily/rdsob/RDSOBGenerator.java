@@ -5,9 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GElement;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GKind;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GNode;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarElement;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
 
 public class RDSOBGenerator {
@@ -21,15 +21,15 @@ public class RDSOBGenerator {
     }
 
     System.out.println(grammar);
-    grammar.visualise("grammar.dot");
+    grammar.show("grammar.dot");
     text.print(
         "import java.io.IOException;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\nimport uk.ac.rhul.cs.csle.art.v5.DNode;\nimport uk.ac.rhul.cs.csle.art.v5.grammar.Kind;\n"
             + "import uk.ac.rhul.cs.csle.art.v5.lexer.LexerLM;\n\n" + "class OSBRDG extends uk.ac.rhul.cs.csle.art.v5.osbrd.OSBRDParser {\n"
             + "String[] lexemes = {");
 
     boolean firstLexeme = true;
-    for (GElement s : grammar.elements.keySet()) {
-      if (s.kind != GKind.T) continue;
+    for (GrammarElement s : grammar.elements.keySet()) {
+      if (s.kind != GrammarKind.T) continue;
       if (firstLexeme)
         firstLexeme = false;
       else
@@ -39,16 +39,16 @@ public class RDSOBGenerator {
 
     text.println("};\n");
 
-    for (GElement s : grammar.rules.keySet()) {
+    for (GrammarElement s : grammar.rules.keySet()) {
       text.println("boolean p_" + s.str + "() {\n int eI = i; DNode eDN = dn;");
       boolean seenEpsilon = false, firstAlt = true;
-      for (GNode alt = grammar.rules.get(s).alt; alt != null; alt = alt.alt) {
+      for (GrammarNode alt = grammar.rules.get(s).alt; alt != null; alt = alt.alt) {
         int braceCount = 0;
         if (firstAlt)
           firstAlt = false;
         else
           text.print("\n i = eI; dn = eDN;");
-        seqLoop: for (GNode seq = alt.seq;; seq = seq.seq) {
+        seqLoop: for (GrammarNode seq = alt.seq;; seq = seq.seq) {
           switch (seq.elm.kind) {
           case T:
             text.print("\n if (input[i]==" + seq.elm.ei + "/*" + seq.elm.str + "*/) {i++;");

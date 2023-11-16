@@ -44,6 +44,8 @@ public abstract class ITerms {
 
   abstract public int findTerm(String symbolString, int... children);
 
+  abstract public int findTerm(String symbolString, LinkedList<Integer> children);
+
   abstract public int getTermSymbolIndex(int termIndex);
 
   abstract public String getTermSymbolString(int termIndex);

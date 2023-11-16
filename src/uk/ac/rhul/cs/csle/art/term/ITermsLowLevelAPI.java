@@ -2,6 +2,7 @@ package uk.ac.rhul.cs.csle.art.term;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /*
@@ -244,6 +245,18 @@ public class ITermsLowLevelAPI extends ITerms {
 
   @Override
   public int findTerm(String string, int... children) {
+    return findTerm(findString(string), children);
+  }
+
+  public int findTerm(int symbolStringIndex, LinkedList<Integer> children) {
+    int nc = 0, newChildren[] = new int[children.size()];
+    for (int i : children)
+      newChildren[nc++] = i;
+    return findTerm(symbolStringIndex, newChildren);
+  }
+
+  @Override
+  public int findTerm(String string, LinkedList<Integer> children) {
     return findTerm(findString(string), children);
   }
 

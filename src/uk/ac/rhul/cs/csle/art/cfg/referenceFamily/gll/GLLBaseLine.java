@@ -316,13 +316,6 @@ private boolean isSymbol(SPPFN sppfn) {
   return sppfn.packNS.size() == 0 /* terminal or epsilon */ || (sppfn.gn.elm.kind == GrammarKind.N && sppfn.gn.seq == null /* LHS */);
 }
 
-private int[] intListToArray(LinkedList<Integer> children) {
-  int i = 0, ret[] = new int[children.size()];
-  for (int c : children)
-    ret[i++] = c;
-  return ret;
-}
-
 private String constructorOf(SPPFN sppfn, GrammarNode gn) {
   if (gn.elm.kind == GrammarKind.B) switch (LKind.valueOf(gn.elm.str)) {
   case ID: {
@@ -401,7 +394,7 @@ private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFrom
   }
 
   if (constructor == null) constructor = constructorOf(sppfn, gn); // If there were no OVERs, then set the constructor to be our symbol
-  if (children != childrenFromParent) childrenFromParent.add(grammar.iTerms.findTerm(constructor, intListToArray(children)));
+  if (children != childrenFromParent) childrenFromParent.add(grammar.iTerms.findTerm(constructor, children));
 
   visited.remove(sppfn);
   return (gn.giftKind == GIFTKind.OVER) ? constructor : null;

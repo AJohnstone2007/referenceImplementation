@@ -1,5 +1,7 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob;
 
+import java.util.LinkedList;
+
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
@@ -30,10 +32,12 @@ public class RDSOBParser extends ReferenceParser {
     int element = 0;
     for (DerivationNode tmp = dnRoot; tmp != null; tmp = tmp.next)
       System.out.println(element++ + " " + tmp.gn.toStringAsProduction());
-    return derivationAsTermRec(dnRoot.next);
+    return derivationAsTermRec(dnRoot.next, null);
   }
 
-  private int derivationAsTermRec(DerivationNode dn) {
+  private int derivationAsTermRec(DerivationNode dn, LinkedList<Integer> children) {
+    if (children == null) children = new LinkedList<>(); // If we are not promoting, then make new children list
+
     GrammarNode lhs;
 
     // It would be useful for the grammar to know the LHS of each alternate
@@ -43,25 +47,18 @@ public class RDSOBParser extends ReferenceParser {
         break;
       }
 
-    // It would be useful for the grammar to know the lenth of each alternate
-    int length = 0;
-    for (GrammarNode s = dn.gn.seq; s.elm.kind != GrammarKind.END; s = s.seq)
-      length++;
-    int[] children = new int[length];
-
-    length = 0;
     for (GrammarNode s = dn.gn.seq; s.elm.kind != GrammarKind.END; s = s.seq)
       switch (s.elm.kind) {
       case B, C, T, TI, EPS:
-        children[length++] = grammar.iTerms.findTerm(s.elm.str);
+        children.add(grammar.iTerms.findTerm(s.elm.str));
         break;
 
       case N:
-        children[length++] = derivationAsTermRec(dn = dn.next);
+        children.add(derivationAsTermRec(dn = dn.next, null));
         break;
 
       case ALT, DO, END, EOS, KLN, OPT, POS:
-        Reference.fatal("Unexpected grammar node in RDSOB " + s);
+        Reference.fatal("Unexpected grammar node in RDSOB derivation builder " + s);
         break;
       }
     return grammar.iTerms.findTerm(lhs.elm.str, children);

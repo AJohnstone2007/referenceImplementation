@@ -38,7 +38,7 @@ public class RDSOBExplicitStack extends RDSOBParser {
         gn = gn.seq;
         break;
       case END:
-        dn_update(gn.alt);
+        // dn_update(gn.alt);
         gn = retrn();
         if (sn == null) return true;
         break;

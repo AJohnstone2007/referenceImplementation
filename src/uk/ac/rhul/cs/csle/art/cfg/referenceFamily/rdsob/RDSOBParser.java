@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarElement;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
 
 public class RDSOBParser extends ReferenceParser {
@@ -32,36 +32,40 @@ public class RDSOBParser extends ReferenceParser {
     int element = 0;
     for (DerivationNode tmp = dnRoot; tmp != null; tmp = tmp.next)
       System.out.println(element++ + " " + tmp.gn.toStringAsProduction());
-    return derivationAsTermRec(dnRoot.next, null);
+    LinkedList<Integer> tmp = new LinkedList<>();
+    derivationAsTermRec(false, grammar.startNonterminal, dnRoot.next, tmp);
+    return tmp.getFirst();
   }
 
-  private int derivationAsTermRec(DerivationNode dn, LinkedList<Integer> children) {
-    if (children == null) children = new LinkedList<>(); // If we are not promoting, then make new children list
+  private void derivationAsTermRec(boolean promoted, GrammarElement lhsNonterminal, DerivationNode dn, LinkedList<Integer> childrenFromParent) {
+    LinkedList<Integer> children = promoted ? childrenFromParent : new LinkedList<>(); // If we are not promoting, then make new children list
 
-    GrammarNode lhs;
-
-    // It would be useful for the grammar to know the LHS of each alternate
     for (GrammarNode s = dn.gn.seq;; s = s.seq)
-      if (s.elm.kind == GrammarKind.END) {
-        lhs = s.seq;
-        break;
-      }
-
-    for (GrammarNode s = dn.gn.seq; s.elm.kind != GrammarKind.END; s = s.seq)
       switch (s.elm.kind) {
       case B, C, T, TI, EPS:
         children.add(grammar.iTerms.findTerm(s.elm.str));
         break;
 
       case N:
-        children.add(derivationAsTermRec(dn = dn.next, null));
+        switch (s.giftKind) {
+        case OVER: // overwrite parent node label; note flowthrough to next case
+          lhsNonterminal = s.elm;
+        case UNDER: // add children onto our children idnicated by null lhs
+          derivationAsTermRec(true, null, dn = dn.next, children);
+          break;
+        default: // no promotion operators so make a complete new term and add to our children
+          derivationAsTermRec(false, s.elm, dn = dn.next, children);
+        }
         break;
 
-      case ALT, DO, END, EOS, KLN, OPT, POS:
+      case END:
+        if (!promoted) childrenFromParent.add(grammar.iTerms.findTerm(lhsNonterminal.str, children));
+        return;
+
+      case ALT, DO, EOS, KLN, OPT, POS:
         Reference.fatal("Unexpected grammar node in RDSOB derivation builder " + s);
         break;
       }
-    return grammar.iTerms.findTerm(lhs.elm.str, children);
   }
 
   @Override
@@ -70,5 +74,4 @@ public class RDSOBParser extends ReferenceParser {
     for (DerivationNode tmp = dnRoot; tmp != null; tmp = tmp.next)
       System.out.println(tmp + " " + grammar == null ? "" : grammar.nodesByNumber.get(tmp.gn.num).toStringAsProduction() + "..");
   }
-
 }

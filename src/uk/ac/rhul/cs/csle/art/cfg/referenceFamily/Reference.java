@@ -20,6 +20,14 @@ import uk.ac.rhul.cs.csle.art.term.ITermsLowLevelAPI;
 import uk.ac.rhul.cs.csle.art.term.TermTraverser;
 
 public class Reference {
+  //@formatter:off
+//final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTerminal(SIMPLE\\_WHITESPACE), cfgBuiltinTerminal(COMMENT\\_NEST\\_ART), cfgBuiltinTerminal(COMMENT\\_LINE\\_C))), cfgRule(cfgLHS(text), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(directive)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(directive), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgRule)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgRule), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot)), cfgRule(cfgLHS(directive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('!')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgRule), cfgSeq(cfgSlot, cfgNonterminal(cfgLHS), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:\\:=')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot)), cfgRule(cfgLHS(cfgLHS), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgAlts), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('|')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot)), cfgRule(cfgLHS(cfgAlt), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilonCarrier), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot)), cfgRule(cfgLHS(cfgEpsilonCarrier), cfgSeq(cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot)), cfgRule(cfgLHS(cfgAltNoAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot)), cfgRule(cfgLHS(cfgElems), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot)), cfgRule(cfgLHS(cfgExtended), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPrim)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgDoFirst)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgOptional)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgKleene)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPositive)), cfgSlot)), cfgRule(cfgLHS(cfgAnnotation), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldUnder)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldOver)), cfgSlot)), cfgRule(cfgLHS(cfgFoldUnder), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^')), cfgSlot)), cfgRule(cfgLHS(cfgFoldOver), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^^')), cfgSlot)), cfgRule(cfgLHS(cfgDoFirst), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot)), cfgRule(cfgLHS(cfgOptional), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot)), cfgRule(cfgLHS(cfgPositive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot)), cfgRule(cfgLHS(cfgKleene), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot)), cfgRule(cfgLHS(cfgPrim), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgNonterminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgCaseSensitiveTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot)), cfgRule(cfgLHS(cfgNonterminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgCaseSensitiveTerminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(STRING\\_PLAIN\\_SQ), cfgSlot)), cfgRule(cfgLHS(cfgBuiltinTerminal), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('&')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgEpsilon), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('#')), cfgSlot)), cfgRule(cfgLHS(cfgActions), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot)), cfgRule(cfgLHS(cfgActionSeq), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot)), cfgRule(cfgLHS(cfgAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgEquation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAssignment)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgInsert), cfgSlot)), cfgRule(cfgLHS(cfgEquation), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('=')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgAssignment), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:=')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgInsert), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^+')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgAttribute), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('.')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgSeq), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), cfgRule(cfgLHS(cfgSlot), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), cfgRule(cfgLHS(term), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAttribute)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(INTEGER)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(REAL)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(STRING\\_DQ)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot)), cfgLHS(arguments), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\,')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot))";
+//final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTerminal(SIMPLE\\_WHITESPACE), cfgBuiltinTerminal(COMMENT\\_NEST\\_ART), cfgBuiltinTerminal(COMMENT\\_LINE\\_C))), cfgRule(cfgLHS(text), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(directive)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(directive), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgRule)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgRule), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot)), cfgRule(cfgLHS(directive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('!')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgRule), cfgSeq(cfgSlot, cfgNonterminal(cfgLHS), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:\\:=')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot)), cfgRule(cfgLHS(cfgLHS), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgAlts), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('|')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot)), cfgRule(cfgLHS(cfgAlt), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilonCarrier), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot)), cfgRule(cfgLHS(cfgEpsilonCarrier), cfgSeq(cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot)), cfgRule(cfgLHS(cfgAltNoAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot)), cfgRule(cfgLHS(cfgElems), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot)), cfgRule(cfgLHS(cfgExtended), cfgSeq(cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPrim)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgOptional)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgKleene)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPositive)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgDoFirst)), cfgSlot)), cfgRule(cfgLHS(cfgAnnotation), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldUnder)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldOver)), cfgSlot)), cfgRule(cfgLHS(cfgFoldUnder), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^')), cfgSlot)), cfgRule(cfgLHS(cfgFoldOver), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^^')), cfgSlot)), cfgRule(cfgLHS(cfgDoFirst), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot)), cfgRule(cfgLHS(cfgOptional), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot)), cfgRule(cfgLHS(cfgPositive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot)), cfgRule(cfgLHS(cfgKleene), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot)), cfgRule(cfgLHS(cfgPrim), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgNonterminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgCaseSensitiveTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot)), cfgRule(cfgLHS(cfgNonterminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgCaseSensitiveTerminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(STRING\\_PLAIN\\_SQ), cfgSlot)), cfgRule(cfgLHS(cfgBuiltinTerminal), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('&')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgEpsilon), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('#')), cfgSlot)), cfgRule(cfgLHS(cfgActions), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot)), cfgRule(cfgLHS(cfgActionSeq), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot)), cfgRule(cfgLHS(cfgAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgEquation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAssignment)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgInsert), cfgSlot)), cfgRule(cfgLHS(cfgEquation), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('=')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgAssignment), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:=')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgInsert), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^+')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgAttribute), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('.')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgSeq), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), cfgRule(cfgLHS(cfgSlot), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), cfgRule(cfgLHS(term), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAttribute)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(INTEGER)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(REAL)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(STRING\\_DQ)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot)), cfgLHS(arguments), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\,')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot))";
+final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTerminal(SIMPLE\\_WHITESPACE), cfgBuiltinTerminal(COMMENT\\_NEST\\_ART), cfgBuiltinTerminal(COMMENT\\_LINE\\_C))), cfgRule(cfgLHS(text), cfgSeq(cfgSlot, cfgNonterminal(directive), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(directive), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgRule), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgRule), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot)), cfgRule(cfgLHS(directive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('!')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgRule), cfgSeq(cfgSlot, cfgNonterminal(cfgLHS), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:\\:=')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot)), cfgRule(cfgLHS(cfgLHS), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgAlts), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('|')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot)), cfgRule(cfgLHS(cfgAlt), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilonCarrier), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot)), cfgRule(cfgLHS(cfgEpsilonCarrier), cfgSeq(cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot)), cfgRule(cfgLHS(cfgAltNoAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot)), cfgRule(cfgLHS(cfgElems), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot)), cfgRule(cfgLHS(cfgExtended), cfgSeq(cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPrim)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgOptional)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgKleene)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPositive)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgDoFirst)), cfgSlot)), cfgRule(cfgLHS(cfgAnnotation), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldUnder)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldOver)), cfgSlot)), cfgRule(cfgLHS(cfgFoldUnder), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^')), cfgSlot)), cfgRule(cfgLHS(cfgFoldOver), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^^')), cfgSlot)), cfgRule(cfgLHS(cfgDoFirst), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot)), cfgRule(cfgLHS(cfgOptional), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot)), cfgRule(cfgLHS(cfgPositive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot)), cfgRule(cfgLHS(cfgKleene), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot)), cfgRule(cfgLHS(cfgPrim), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgNonterminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgCaseSensitiveTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot)), cfgRule(cfgLHS(cfgNonterminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgCaseSensitiveTerminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(STRING\\_PLAIN\\_SQ), cfgSlot)), cfgRule(cfgLHS(cfgBuiltinTerminal), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('&')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgEpsilon), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('#')), cfgSlot)), cfgRule(cfgLHS(cfgActions), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot)), cfgRule(cfgLHS(cfgActionSeq), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot)), cfgRule(cfgLHS(cfgAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgEquation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAssignment)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgInsert), cfgSlot)), cfgRule(cfgLHS(cfgEquation), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('=')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgAssignment), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:=')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgInsert), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^+')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgAttribute), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('.')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgSeq), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), cfgRule(cfgLHS(cfgSlot), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), cfgRule(cfgLHS(term), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAttribute)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(INTEGER)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(REAL)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(STRING\\_DQ)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot)), cfgRule(cfgLHS(arguments), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\,')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot)))  ";
+//@formatter:on
+
+  final int scriptParserTerm;
+
   private int good = 0;
   private int bad = 0;
   private int inadmissableCount = 0;
@@ -83,15 +91,8 @@ public class Reference {
     // 3. Build the script parser's grammar by traversing the scriptParserTerm
     final GLLBaseLine scriptParser = new GLLBaseLine();
     final LexerLM scriptLexer = new LexerLM();
-  //@formatter:off
-//    final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTerminal(SIMPLE\\_WHITESPACE), cfgBuiltinTerminal(COMMENT\\_NEST\\_ART), cfgBuiltinTerminal(COMMENT\\_LINE\\_C))), cfgRule(cfgLHS(text), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(directive)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(directive), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgRule)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgRule), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot)), cfgRule(cfgLHS(directive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('!')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgRule), cfgSeq(cfgSlot, cfgNonterminal(cfgLHS), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:\\:=')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot)), cfgRule(cfgLHS(cfgLHS), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgAlts), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('|')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot)), cfgRule(cfgLHS(cfgAlt), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilonCarrier), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot)), cfgRule(cfgLHS(cfgEpsilonCarrier), cfgSeq(cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot)), cfgRule(cfgLHS(cfgAltNoAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot)), cfgRule(cfgLHS(cfgElems), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot)), cfgRule(cfgLHS(cfgExtended), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPrim)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgDoFirst)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgOptional)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgKleene)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPositive)), cfgSlot)), cfgRule(cfgLHS(cfgAnnotation), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldUnder)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldOver)), cfgSlot)), cfgRule(cfgLHS(cfgFoldUnder), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^')), cfgSlot)), cfgRule(cfgLHS(cfgFoldOver), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^^')), cfgSlot)), cfgRule(cfgLHS(cfgDoFirst), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot)), cfgRule(cfgLHS(cfgOptional), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot)), cfgRule(cfgLHS(cfgPositive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot)), cfgRule(cfgLHS(cfgKleene), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot)), cfgRule(cfgLHS(cfgPrim), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgNonterminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgCaseSensitiveTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot)), cfgRule(cfgLHS(cfgNonterminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgCaseSensitiveTerminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(STRING\\_PLAIN\\_SQ), cfgSlot)), cfgRule(cfgLHS(cfgBuiltinTerminal), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('&')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgEpsilon), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('#')), cfgSlot)), cfgRule(cfgLHS(cfgActions), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot)), cfgRule(cfgLHS(cfgActionSeq), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot)), cfgRule(cfgLHS(cfgAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgEquation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAssignment)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgInsert), cfgSlot)), cfgRule(cfgLHS(cfgEquation), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('=')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgAssignment), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:=')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgInsert), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^+')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgAttribute), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('.')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgSeq), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), cfgRule(cfgLHS(cfgSlot), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), cfgRule(cfgLHS(term), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAttribute)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(INTEGER)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(REAL)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(STRING\\_DQ)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot)), cfgLHS(arguments), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\,')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot))";
-//    final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTerminal(SIMPLE\\_WHITESPACE), cfgBuiltinTerminal(COMMENT\\_NEST\\_ART), cfgBuiltinTerminal(COMMENT\\_LINE\\_C))), cfgRule(cfgLHS(text), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(directive)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(directive), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgRule)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgRule), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot)), cfgRule(cfgLHS(directive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('!')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgRule), cfgSeq(cfgSlot, cfgNonterminal(cfgLHS), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:\\:=')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot)), cfgRule(cfgLHS(cfgLHS), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgAlts), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('|')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot)), cfgRule(cfgLHS(cfgAlt), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilonCarrier), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot)), cfgRule(cfgLHS(cfgEpsilonCarrier), cfgSeq(cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot)), cfgRule(cfgLHS(cfgAltNoAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot)), cfgRule(cfgLHS(cfgElems), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot)), cfgRule(cfgLHS(cfgExtended), cfgSeq(cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPrim)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgOptional)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgKleene)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPositive)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgDoFirst)), cfgSlot)), cfgRule(cfgLHS(cfgAnnotation), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldUnder)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldOver)), cfgSlot)), cfgRule(cfgLHS(cfgFoldUnder), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^')), cfgSlot)), cfgRule(cfgLHS(cfgFoldOver), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^^')), cfgSlot)), cfgRule(cfgLHS(cfgDoFirst), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot)), cfgRule(cfgLHS(cfgOptional), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot)), cfgRule(cfgLHS(cfgPositive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot)), cfgRule(cfgLHS(cfgKleene), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot)), cfgRule(cfgLHS(cfgPrim), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgNonterminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgCaseSensitiveTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot)), cfgRule(cfgLHS(cfgNonterminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgCaseSensitiveTerminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(STRING\\_PLAIN\\_SQ), cfgSlot)), cfgRule(cfgLHS(cfgBuiltinTerminal), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('&')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgEpsilon), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('#')), cfgSlot)), cfgRule(cfgLHS(cfgActions), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot)), cfgRule(cfgLHS(cfgActionSeq), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot)), cfgRule(cfgLHS(cfgAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgEquation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAssignment)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgInsert), cfgSlot)), cfgRule(cfgLHS(cfgEquation), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('=')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgAssignment), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:=')), cfgSlot, cfgNonterminal(term), cfgSlot)), cfgRule(cfgLHS(cfgInsert), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^+')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgAttribute), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('.')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), cfgRule(cfgLHS(cfgSeq), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), cfgRule(cfgLHS(cfgSlot), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), cfgRule(cfgLHS(term), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAttribute)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(INTEGER)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(REAL)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(STRING\\_DQ)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot)), cfgLHS(arguments), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\,')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot))";
-    final String scriptParserTermString = "text(directive(rdsobFunction), directive(whitespace(cfgBuiltinTerminal(SIMPLE\\_WHITESPACE), cfgBuiltinTerminal(COMMENT\\_NEST\\_ART), cfgBuiltinTerminal(COMMENT\\_LINE\\_C))), cfgRule(cfgLHS(text), cfgSeq(cfgSlot, cfgNonterminal(directive), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgRule), cfgSlot, cfgFoldUnder(cfgNonterminal(text)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(directive)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgRule)), cfgSlot)), directive(nop), cfgRule(cfgLHS(directive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('!')), cfgSlot, cfgNonterminal(term), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgRule), cfgSeq(cfgSlot, cfgNonterminal(cfgLHS), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:\\:=')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgLHS), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgAlts), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('|')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAlt), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgAlt), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilonCarrier), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot, cfgNonterminal(cfgActions), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgEpsilonCarrier), cfgSeq(cfgSlot, cfgNonterminal(cfgEpsilon), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgAltNoAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSeq)), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgNonterminal(cfgSlot), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgElems), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgElems)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgActions), cfgSlot, cfgNonterminal(cfgExtended), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgExtended), cfgSeq(cfgSlot, cfgNonterminal(cfgPrim), cfgSlot, cfgFoldOver(cfgNonterminal(cfgAnnotation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPrim)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgOptional)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgKleene)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgPositive)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgDoFirst)), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgAnnotation), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldUnder)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgFoldOver)), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgFoldUnder), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^')), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgFoldOver), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^^')), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgDoFirst), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgOptional), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('?')), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgPositive), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('+')), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgKleene), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgAlts)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAltNoAction), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\*')), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgPrim), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgNonterminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgCaseSensitiveTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgNonterminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgCaseSensitiveTerminal), cfgSeq(cfgSlot, cfgBuiltinTerminal(STRING\\_PLAIN\\_SQ), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgBuiltinTerminal), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('&')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgEpsilon), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('#')), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgActions), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgSlot)), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgActionSeq), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot, cfgFoldUnder(cfgNonterminal(cfgActionSeq)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgAction), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgAction), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgEquation)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAssignment)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(cfgInsert), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgEquation), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('=')), cfgSlot, cfgNonterminal(term), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgAssignment), cfgSeq(cfgSlot, cfgNonterminal(cfgAttribute), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\:=')), cfgSlot, cfgNonterminal(term), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgInsert), cfgSeq(cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('^+')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgAttribute), cfgSeq(cfgSlot, cfgBuiltinTerminal(ID), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('.')), cfgSlot, cfgBuiltinTerminal(ID), cfgSlot)), directive(nop), cfgRule(cfgLHS(cfgSeq), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), directive(nop), cfgRule(cfgLHS(cfgSlot), cfgSeq(cfgSlot, cfgFoldUnder(cfgEpsilon))), directive(nop), cfgRule(cfgLHS(term), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgAttribute)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(INTEGER)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(REAL)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(STRING\\_DQ)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgNonterminal(cfgBuiltinTerminal)), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\(')), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\)')), cfgSlot), cfgSeq(cfgSlot, cfgFoldOver(cfgBuiltinTerminal(ID)), cfgSlot)), directive(nop), cfgLHS(arguments), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot, cfgFoldUnder(cfgCaseSensitiveTerminal('\\,')), cfgSlot, cfgFoldUnder(cfgNonterminal(arguments)), cfgSlot), cfgSeq(cfgSlot, cfgNonterminal(term), cfgSlot))";
-    //@formatter:on
-
-    final int scriptParserTerm = iTerms.findTerm(scriptParserTermString);
-
     scriptParser.grammar = workingGrammar = new Grammar("Script grammar", iTerms);
+    scriptParserTerm = iTerms.findTerm(scriptParserTermString);
     scriptTraverser.traverse(scriptParserTerm); // Construct the scipt parser grammar by walking the script parser term
     workingGrammar.normalise();
     // System.out.println("Working grammar " + workingGrammar);
@@ -117,10 +118,6 @@ public class Reference {
     // 6. Execute the script by traversing the script term
     workingGrammar = new Grammar("Working grammar", iTerms);
     scriptTraverser.traverse(scriptTerm);
-
-    // 7. (Development only) Show the working derivation and check bootstrap condition
-    System.out.println("Working derivation term:\n" + iTerms.toString(workingDerivationTerm, false, -1, null));
-    if (scriptParserTerm == workingDerivationTerm) System.out.println("Bootstrap achieved: script parser term and working derivation term identical");
   }
 
   private String childSymbolStringStrip(int t) {
@@ -165,33 +162,57 @@ public class Reference {
     case "torture":
       torture();
       break;
-    case "gllhp":
-      workingParser = new GLLHashPool();
+    case "lexer":
       break;
-    case "gllbl":
-      workingParser = new GLLBaseLine();
+    case "parser":
+      for (int i = 0; i < iTerms.getTermArity(iTerms.getSubterm(term, 0)); i++)
+        switch (iTerms.getTermSymbolString(iTerms.getSubterm(term, 0, i))) {
+        case "gllhp":
+          workingParser = new GLLHashPool();
+          break;
+        case "gllbl":
+          workingParser = new GLLBaseLine();
+          break;
+        case "rdsobgenerator":
+          new RDSOBGenerator(workingGrammar, "OSBRDG");
+          return;
+        case "rdsobFunction":
+          workingParser = new RDSOBFunction();
+          break;
+        case "rdsobExplicitStack":
+          workingParser = new RDSOBExplicitStack();
+          break;
+        default:
+          Reference.fatal("Unexpected !parser argument " + iTerms.toString(iTerms.getSubterm(term, 0, i)));
+        }
       break;
-    case "rdsobgenerator":
-      new RDSOBGenerator(workingGrammar, "OSBRDG");
-      return;
-    case "rdsobFunction":
-      workingParser = new RDSOBFunction();
-      break;
-    case "rdsobExplicitStack":
-      workingParser = new RDSOBExplicitStack();
-      break;
+
     case "report":
       workingParser.report(true);
       break;
     case "show":
-      workingGrammar.normalise();
-      workingGrammar.show("grammar.dot");
+      for (int i = 0; i < iTerms.getTermArity(iTerms.getSubterm(term, 0)); i++)
+        switch (iTerms.getTermSymbolString(iTerms.getSubterm(term, 0, i))) {
+        case "grammar":
+          workingGrammar.normalise();
+          workingGrammar.show("grammar.dot");
+          break;
+        }
       GrammarNode.caseSensitiveTerminalStrop = "";
       workingParser.show();
       break;
     case "print":
-      workingGrammar.normalise();
-      System.out.println("Working Grammr: " + workingGrammar);
+      for (int i = 0; i < iTerms.getTermArity(iTerms.getSubterm(term, 0)); i++)
+        switch (iTerms.getTermSymbolString(iTerms.getSubterm(term, 0, i))) {
+        case "grammar":
+          workingGrammar.normalise();
+          System.out.println("Working Grammar: " + workingGrammar);
+          break;
+
+        case "derivation":
+          System.out.println("Working derivation term:\n" + iTerms.toString(workingDerivationTerm, false, -1, null));
+          if (scriptParserTerm == workingDerivationTerm) System.out.println("Bootstrap achieved: script parser term and working derivation term identical");
+        }
       break;
     case "statisticsTitle":
       System.out.println(
@@ -204,13 +225,16 @@ public class Reference {
       String inputString = "a b";
       String tryOp = iTerms.getTermSymbolString(iTerms.getSubterm(term, 0, 0));
       String tryOperand = iTerms.getTermSymbolString(iTerms.getSubterm(term, 0, 0, 0));
-      System.out.println("try " + tryOp + " on " + tryOperand);
+      // System.out.println("try " + tryOp + " on " + tryOperand);
       if (tryOp.equals("file")) try {
         inputString = Files.readString(Paths.get(strip(tryOperand)));
       } catch (IOException e) {
         fatal("Unable to open try file '" + tryOperand);
       }
       workingDerivationTerm = doTry("try", inputString, true, workingGrammar, workingParser, workingLexer, false);
+      break;
+    case "bootstrapTest":
+      // Add code to test bootstrapTest.art against itself
       break;
     case "nop": // No operation
       break;
@@ -322,206 +346,526 @@ public class Reference {
   }
 
   private void builtinTests() {
-    /*
-     * grammar = new Grammar("a", parseScript("S ::= 'a'")); doTry("", "a", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer,
-     * true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); grammar = new Grammar("aa",
-     * parseScript("S ::= 'a' 'a'")); doTry("", "aa", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a",
-     * false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); grammar
-     * = new Grammar("aaa", parseScript("S ::= 'a' 'a' 'a'")); doTry("", "aaa", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser,
-     * lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar,
-     * parser, lexer, true); grammar = new Grammar("a | b", parseScript("S ::= 'a' | 'b'")); doTry("", "a", true, grammar, parser, lexer, true); doTry("", "b",
-     * true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("",
-     * "bb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); grammar = new Grammar("aa | b",
-     * parseScript("S ::= 'a' 'a' | 'b'")); doTry("", "aa", true, grammar, parser, lexer, true); doTry("", "b", true, grammar, parser, lexer, true); doTry("",
-     * "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true);
-     * doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser,
-     * lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("aaa | b", parseScript("S ::= 'a' 'a' 'a' | 'b'")); doTry("", "aaa", true, grammar, parser, lexer, true); doTry("", "b", true, grammar, parser,
-     * lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar,
-     * parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false,
-     * grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("a | bb", parseScript("S ::= 'a' | 'b' 'b'")); doTry("", "a", true, grammar, parser, lexer, true); doTry("", "bb", true, grammar, parser, lexer,
-     * true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser,
-     * lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar,
-     * parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("aa | bb", parseScript("S ::= 'a' 'a' | 'b' 'b'")); doTry("", "aa", true, grammar, parser, lexer, true); doTry("", "bb", true, grammar, parser,
-     * lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar,
-     * parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false,
-     * grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("aaa | bb", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b'")); doTry("", "aaa", true, grammar, parser, lexer, true); doTry("", "bb", true, grammar,
-     * parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false,
-     * grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c",
-     * false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true);
-     * grammar = new Grammar("a | bbb", parseScript("S ::= 'a' | 'b' 'b' 'b'")); doTry("", "a", true, grammar, parser, lexer, true); doTry("", "bbb", true,
-     * grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "aaa",
-     * false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true);
-     * doTry("", "c", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser,
-     * lexer, true); grammar = new Grammar("aa | bbb", parseScript("S ::= 'a' 'a' | 'b' 'b' 'b'")); doTry("", "aa", true, grammar, parser, lexer, true);
-     * doTry("", "bbb", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer,
-     * true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar,
-     * parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false,
-     * grammar, parser, lexer, true); grammar = new Grammar("aaa | bbb", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b'")); doTry("", "aaa", true, grammar,
-     * parser, lexer, true); doTry("", "bbb", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false,
-     * grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb",
-     * false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true);
-     * doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("a | c", parseScript("S ::= 'a' | 'c'")); doTry("", "a", true, grammar,
-     * parser, lexer, true); doTry("", "c", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa", false,
-     * grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("",
-     * "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true);
-     * doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("aa | c", parseScript("S ::= 'a' 'a' | 'c'")); doTry("", "aa", true,
-     * grammar, parser, lexer, true); doTry("", "c", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a",
-     * false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true);
-     * doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser,
-     * lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("aaa | c", parseScript("S ::= 'a' 'a' 'a' | 'c'")); doTry("",
-     * "aaa", true, grammar, parser, lexer, true); doTry("", "c", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true);
-     * doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer,
-     * true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar,
-     * parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("a | b | c", parseScript("S ::= 'a' | 'b' | 'c'"));
-     * doTry("", "a", true, grammar, parser, lexer, true); doTry("", "b", true, grammar, parser, lexer, true); doTry("", "c", true, grammar, parser, lexer,
-     * true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser,
-     * lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "cc", false,
-     * grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("aa | b | c",
-     * parseScript("S ::= 'a' 'a' | 'b' | 'c'")); doTry("", "aa", true, grammar, parser, lexer, true); doTry("", "b", true, grammar, parser, lexer, true);
-     * doTry("", "c", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer,
-     * true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar,
-     * parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("aaa | b | c", parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c'")); doTry("", "aaa", true, grammar, parser, lexer, true); doTry("", "b", true, grammar,
-     * parser, lexer, true); doTry("", "c", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false,
-     * grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("",
-     * "bbb", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true);
-     * grammar = new Grammar("a | bb | c", parseScript("S ::= 'a' | 'b' 'b' | 'c'")); doTry("", "a", true, grammar, parser, lexer, true); doTry("", "bb", true,
-     * grammar, parser, lexer, true); doTry("", "c", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa",
-     * false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true);
-     * doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser,
-     * lexer, true); grammar = new Grammar("aa | bb | c", parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c'")); doTry("", "aa", true, grammar, parser, lexer, true);
-     * doTry("", "bb", true, grammar, parser, lexer, true); doTry("", "c", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer,
-     * true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser,
-     * lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false,
-     * grammar, parser, lexer, true); grammar = new Grammar("aaa | bb | c", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c'")); doTry("", "aaa", true, grammar,
-     * parser, lexer, true); doTry("", "bb", true, grammar, parser, lexer, true); doTry("", "c", true, grammar, parser, lexer, true); doTry("", "", false,
-     * grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "b",
-     * false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true);
-     * doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("a | bbb | c", parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c'")); doTry("", "a",
-     * true, grammar, parser, lexer, true); doTry("", "bbb", true, grammar, parser, lexer, true); doTry("", "c", true, grammar, parser, lexer, true); doTry("",
-     * "", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true);
-     * doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer,
-     * true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("aa | bbb | c", parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c'"));
-     * doTry("", "aa", true, grammar, parser, lexer, true); doTry("", "bbb", true, grammar, parser, lexer, true); doTry("", "c", true, grammar, parser, lexer,
-     * true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser,
-     * lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar,
-     * parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("aaa | bbb | c",
-     * parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c'")); doTry("", "aaa", true, grammar, parser, lexer, true); doTry("", "bbb", true, grammar, parser,
-     * lexer, true); doTry("", "c", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar,
-     * parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false,
-     * grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("a | cc", parseScript("S ::= 'a' | 'c' 'c'")); doTry("", "a", true, grammar, parser, lexer, true); doTry("", "cc", true, grammar, parser, lexer,
-     * true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser,
-     * lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar,
-     * parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("aa | cc", parseScript("S ::= 'a' 'a' | 'c' 'c'")); doTry("", "aa", true, grammar, parser, lexer, true); doTry("", "cc", true, grammar, parser,
-     * lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar,
-     * parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false,
-     * grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("aaa | cc", parseScript("S ::= 'a' 'a' 'a' | 'c' 'c'")); doTry("", "aaa", true, grammar, parser, lexer, true); doTry("", "cc", true, grammar,
-     * parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false,
-     * grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("",
-     * "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true);
-     * grammar = new Grammar("a | b | cc", parseScript("S ::= 'a' | 'b' | 'c' 'c'")); doTry("", "a", true, grammar, parser, lexer, true); doTry("", "b", true,
-     * grammar, parser, lexer, true); doTry("", "cc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa",
-     * false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true);
-     * doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser,
-     * lexer, true); grammar = new Grammar("aa | b | cc", parseScript("S ::= 'a' 'a' | 'b' | 'c' 'c'")); doTry("", "aa", true, grammar, parser, lexer, true);
-     * doTry("", "b", true, grammar, parser, lexer, true); doTry("", "cc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer,
-     * true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar,
-     * parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "ccc", false,
-     * grammar, parser, lexer, true); grammar = new Grammar("aaa | b | cc", parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c' 'c'")); doTry("", "aaa", true, grammar,
-     * parser, lexer, true); doTry("", "b", true, grammar, parser, lexer, true); doTry("", "cc", true, grammar, parser, lexer, true); doTry("", "", false,
-     * grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "bb",
-     * false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true);
-     * doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("a | bb | cc", parseScript("S ::= 'a' | 'b' 'b' | 'c' 'c'")); doTry("", "a",
-     * true, grammar, parser, lexer, true); doTry("", "bb", true, grammar, parser, lexer, true); doTry("", "cc", true, grammar, parser, lexer, true); doTry("",
-     * "", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true);
-     * doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer,
-     * true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("aa | bb | cc", parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c' 'c'"));
-     * doTry("", "aa", true, grammar, parser, lexer, true); doTry("", "bb", true, grammar, parser, lexer, true); doTry("", "cc", true, grammar, parser, lexer,
-     * true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser,
-     * lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar,
-     * parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("aaa | bb | cc",
-     * parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' 'c'")); doTry("", "aaa", true, grammar, parser, lexer, true); doTry("", "bb", true, grammar, parser,
-     * lexer, true); doTry("", "cc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar,
-     * parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bbb", false,
-     * grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("a | bbb | cc", parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c' 'c'")); doTry("", "a", true, grammar, parser, lexer, true); doTry("", "bbb", true,
-     * grammar, parser, lexer, true); doTry("", "cc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa",
-     * false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true);
-     * doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "ccc", false, grammar, parser,
-     * lexer, true); grammar = new Grammar("aa | bbb | cc", parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' 'c'")); doTry("", "aa", true, grammar, parser, lexer,
-     * true); doTry("", "bbb", true, grammar, parser, lexer, true); doTry("", "cc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser,
-     * lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar,
-     * parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "ccc", false,
-     * grammar, parser, lexer, true); grammar = new Grammar("aaa | bbb | cc", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' 'c'")); doTry("", "aaa", true,
-     * grammar, parser, lexer, true); doTry("", "bbb", true, grammar, parser, lexer, true); doTry("", "cc", true, grammar, parser, lexer, true); doTry("", "",
-     * false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true);
-     * doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer,
-     * true); doTry("", "ccc", false, grammar, parser, lexer, true); grammar = new Grammar("a | ccc", parseScript("S ::= 'a' | 'c' 'c' 'c'")); doTry("", "a",
-     * true, grammar, parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("",
-     * "aa", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true);
-     * doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser,
-     * lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); grammar = new Grammar("aa | ccc", parseScript("S ::= 'a' 'a' | 'c' 'c' 'c'"));
-     * doTry("", "aa", true, grammar, parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer,
-     * true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser,
-     * lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar,
-     * parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); grammar = new Grammar("aaa | ccc",
-     * parseScript("S ::= 'a' 'a' 'a' | 'c' 'c' 'c'")); doTry("", "aaa", true, grammar, parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer,
-     * true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser,
-     * lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar,
-     * parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("a | b | ccc", parseScript("S ::= 'a' | 'b' | 'c' 'c' 'c'")); doTry("", "a", true, grammar, parser, lexer, true); doTry("", "b", true, grammar,
-     * parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa", false,
-     * grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("",
-     * "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true);
-     * grammar = new Grammar("aa | b | ccc", parseScript("S ::= 'a' 'a' | 'b' | 'c' 'c' 'c'")); doTry("", "aa", true, grammar, parser, lexer, true); doTry("",
-     * "b", true, grammar, parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true);
-     * doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser,
-     * lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar,
-     * parser, lexer, true); grammar = new Grammar("aaa | b | ccc", parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c' 'c' 'c'")); doTry("", "aaa", true, grammar,
-     * parser, lexer, true); doTry("", "b", true, grammar, parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer, true); doTry("", "", false,
-     * grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "bb",
-     * false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true);
-     * doTry("", "cc", false, grammar, parser, lexer, true); grammar = new Grammar("a | bb | ccc", parseScript("S ::= 'a' | 'b' 'b' | 'c' 'c' 'c'")); doTry("",
-     * "a", true, grammar, parser, lexer, true); doTry("", "bb", true, grammar, parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer, true);
-     * doTry("", "", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer,
-     * true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser,
-     * lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); grammar = new Grammar("aa | bb | ccc",
-     * parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c' 'c' 'c'")); doTry("", "aa", true, grammar, parser, lexer, true); doTry("", "bb", true, grammar, parser, lexer,
-     * true); doTry("", "ccc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser,
-     * lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bbb", false,
-     * grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); grammar = new
-     * Grammar("aaa | bb | ccc", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' 'c' 'c'")); doTry("", "aaa", true, grammar, parser, lexer, true); doTry("",
-     * "bb", true, grammar, parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true);
-     * doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer,
-     * true); doTry("", "bbb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar,
-     * parser, lexer, true); grammar = new Grammar("a | bbb | ccc", parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'")); doTry("", "a", true, grammar, parser,
-     * lexer, true); doTry("", "bbb", true, grammar, parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer, true); doTry("", "", false, grammar,
-     * parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer, true); doTry("", "b", false,
-     * grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "cc",
-     * false, grammar, parser, lexer, true); grammar = new Grammar("aa | bbb | ccc", parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'")); doTry("", "aa",
-     * true, grammar, parser, lexer, true); doTry("", "bbb", true, grammar, parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer, true);
-     * doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true); doTry("", "aaa", false, grammar, parser, lexer,
-     * true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb", false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser,
-     * lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); grammar = new Grammar("aaa | bbb | ccc",
-     * parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'")); doTry("", "aaa", true, grammar, parser, lexer, true); doTry("", "bbb", true, grammar,
-     * parser, lexer, true); doTry("", "ccc", true, grammar, parser, lexer, true); doTry("", "", false, grammar, parser, lexer, true); doTry("", "a", false,
-     * grammar, parser, lexer, true); doTry("", "aa", false, grammar, parser, lexer, true); doTry("", "b", false, grammar, parser, lexer, true); doTry("", "bb",
-     * false, grammar, parser, lexer, true); doTry("", "c", false, grammar, parser, lexer, true); doTry("", "cc", false, grammar, parser, lexer, true); grammar
-     * = new Grammar("H", parseScript("S ::= # ")); doTry("", "", true, grammar, parser, lexer, true); doTry("", "a", false, grammar, parser, lexer, true);
-     * doTry("", "aa", false, grammar, parser, lexer, true);
-     *
-     * grammar = new Grammar("deliberatelyBad", parseScript("S ::= 'a' 'b' | 'c' 'd'")); doTry("", "acd", true, grammar, parser, lexer, true); doTry("", "cd",
-     * false, grammar, parser, lexer, true);
-     *
-     * reportSummary();
-     */
+    // Grammar grammar;
+    // grammar = new Grammar("a", parseScript("S ::= 'a'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa", parseScript("S ::= 'a' 'a'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa", parseScript("S ::= 'a' 'a' 'a'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | b", parseScript("S ::= 'a' | 'b'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | b", parseScript("S ::= 'a' 'a' | 'b'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | b", parseScript("S ::= 'a' 'a' 'a' | 'b'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | bb", parseScript("S ::= 'a' | 'b' 'b'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | bb", parseScript("S ::= 'a' 'a' | 'b' 'b'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | bb", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | bbb", parseScript("S ::= 'a' | 'b' 'b' 'b'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | bbb", parseScript("S ::= 'a' 'a' | 'b' 'b' 'b'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | bbb", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | c", parseScript("S ::= 'a' | 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | c", parseScript("S ::= 'a' 'a' | 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | c", parseScript("S ::= 'a' 'a' 'a' | 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | b | c", parseScript("S ::= 'a' | 'b' | 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | b | c", parseScript("S ::= 'a' 'a' | 'b' | 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | b | c", parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | bb | c", parseScript("S ::= 'a' | 'b' 'b' | 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | bb | c", parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | bb | c", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | bbb | c", parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | bbb | c", parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | bbb | c", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "c", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | cc", parseScript("S ::= 'a' | 'c' 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | cc", parseScript("S ::= 'a' 'a' | 'c' 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | cc", parseScript("S ::= 'a' 'a' 'a' | 'c' 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | b | cc", parseScript("S ::= 'a' | 'b' | 'c' 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | b | cc", parseScript("S ::= 'a' 'a' | 'b' | 'c' 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | b | cc", parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c' 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | bb | cc", parseScript("S ::= 'a' | 'b' 'b' | 'c' 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | bb | cc", parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c' 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | bb | cc", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | bbb | cc", parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c' 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | bbb | cc", parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | bbb | cc", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "cc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "ccc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | ccc", parseScript("S ::= 'a' | 'c' 'c' 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | ccc", parseScript("S ::= 'a' 'a' | 'c' 'c' 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | ccc", parseScript("S ::= 'a' 'a' 'a' | 'c' 'c' 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | b | ccc", parseScript("S ::= 'a' | 'b' | 'c' 'c' 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | b | ccc", parseScript("S ::= 'a' 'a' | 'b' | 'c' 'c' 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | b | ccc", parseScript("S ::= 'a' 'a' 'a' | 'b' | 'c' 'c' 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "b", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | bb | ccc", parseScript("S ::= 'a' | 'b' 'b' | 'c' 'c' 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | bb | ccc", parseScript("S ::= 'a' 'a' | 'b' 'b' | 'c' 'c' 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | bb | ccc", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' 'c' 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "bb", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bbb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("a | bbb | ccc", parseScript("S ::= 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'"));
+    // doTry("", "a", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aa | bbb | ccc", parseScript("S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'"));
+    // doTry("", "aa", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aaa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("aaa | bbb | ccc", parseScript("S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'"));
+    // doTry("", "aaa", true, grammar, parser, lexer, true);
+    // doTry("", "bbb", true, grammar, parser, lexer, true);
+    // doTry("", "ccc", true, grammar, parser, lexer, true);
+    // doTry("", "", false, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    // doTry("", "b", false, grammar, parser, lexer, true);
+    // doTry("", "bb", false, grammar, parser, lexer, true);
+    // doTry("", "c", false, grammar, parser, lexer, true);
+    // doTry("", "cc", false, grammar, parser, lexer, true);
+    // grammar = new Grammar("H", parseScript("S ::= # "));
+    // doTry("", "", true, grammar, parser, lexer, true);
+    // doTry("", "a", false, grammar, parser, lexer, true);
+    // doTry("", "aa", false, grammar, parser, lexer, true);
+    //
+    // grammar = new Grammar("deliberatelyBad", parseScript("S ::= 'a' 'b' | 'c' 'd'"));
+    // doTry("", "acd", true, grammar, parser, lexer, true);
+    // doTry("", "cd", false, grammar, parser, lexer, true);
+    //
+    // reportSummary();
+
   }
 
   private void torture() {

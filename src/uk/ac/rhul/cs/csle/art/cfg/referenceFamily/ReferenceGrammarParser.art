@@ -1,6 +1,6 @@
 !whitespace (&SIMPLE_WHITESPACE, &COMMENT_NEST_ART, &COMMENT_LINE_C) 
 
-text ::= directive^^ | directive text^ | cfgRule^^ | cfgRule text^
+text ::= directive | directive text^ | cfgRule | cfgRule text^
 
 directive ::= '!'^ term
 

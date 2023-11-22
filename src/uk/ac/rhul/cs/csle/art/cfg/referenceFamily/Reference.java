@@ -210,8 +210,12 @@ final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTermi
           break;
 
         case "derivation":
-          System.out.println("Working derivation term:\n" + iTerms.toString(workingDerivationTerm, false, -1, null));
+          System.out.println("Working derivation term: [" + workingDerivationTerm + "]\n" + iTerms.toString(workingDerivationTerm, false, -1, null));
           if (scriptParserTerm == workingDerivationTerm) System.out.println("Bootstrap achieved: script parser term and working derivation term identical");
+          break;
+
+        default:
+          Reference.fatal("Unexpected !print argument " + iTerms.toString(iTerms.getSubterm(term, 0, i)));
         }
       break;
     case "statisticsTitle":

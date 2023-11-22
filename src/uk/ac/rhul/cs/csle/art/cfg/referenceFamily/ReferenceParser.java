@@ -19,6 +19,67 @@ public abstract class ReferenceParser {
   public int rightmostParseIndex;
   public boolean suppressEcho;
 
+  protected String lexemeForBuiltin(int inputIndex) {
+    switch (grammar.lexicalKindsArray[input[inputIndex]]) {
+    case ID: {
+      int right = positions[inputIndex];
+      while (right < inputString.length()
+          && (Character.isAlphabetic(inputString.charAt(right)) || Character.isDigit(inputString.charAt(right)) || inputString.charAt(right) == '_'))
+        right++;
+
+      return inputString.substring(positions[inputIndex], right);
+    }
+    case CHARACTER:
+      break;
+    case CHAR_BQ:
+      break;
+    case COMMENT_BLOCK_C:
+      break;
+    case COMMENT_LINE_C:
+      break;
+    case COMMENT_NEST_ART:
+      break;
+    case INTEGER:
+      break;
+    case REAL:
+      break;
+    case SIGNED_INTEGER:
+      break;
+    case SIGNED_REAL:
+      break;
+    case SIMPLE_WHITESPACE:
+      break;
+    case SINGLETON_CASE_INSENSITIVE:
+      break;
+    case SINGLETON_CASE_SENSITIVE:
+      break;
+    case STRING_PLAIN_SQ: {
+      int right = positions[inputIndex] + 1;
+      while (inputString.charAt(right) != '\'')
+        right++;
+
+      return inputString.substring(positions[inputIndex], right + 1);
+    }
+
+    case STRING_DQ: {
+      int right = positions[inputIndex] + 1;
+      while (inputString.charAt(right) != '\"')
+        right++;
+
+      return inputString.substring(positions[inputIndex], right + 1);
+    }
+    case STRING_BRACE_NEST:
+      break;
+    case STRING_BRACKET_NEST:
+      break;
+    case STRING_DOLLAR:
+      break;
+    case STRING_SQ:
+      break;
+    }
+    return "???";
+  }
+
   protected boolean match(GrammarNode gn) {
     return input[i] == gn.elm.ei;
   }
@@ -80,11 +141,12 @@ public abstract class ReferenceParser {
   final int displayPrefixLength = 20;
 
   public void statistics(boolean outcome) {
+    int inputLength = input == null ? 0 : input.length;
     System.out.println(timestamp() + "," + this.getClass().getSimpleName() + "," + grammar.name + "," + inputStringName + ",'"
         + inputString.substring(0, Math.min(displayPrefixLength, inputString.length())).replace("\n", "\\n").replace("\r", "\\r")
-        + (displayPrefixLength < inputString.length() ? "...'" : "'") + "," + inputString.length() + "," + input.length + ","
+        + (displayPrefixLength < inputString.length() ? "...'" : "'") + "," + inputString.length() + "," + inputLength + ","
         + (inadmissable ? "Inadmissable" : accepted ? "Accept" : "Reject") + "," + (!inadmissable && accepted == outcome ? "Good," : "Bad,")
-        + String.format("%.2f", intervalAsSeconds()) + "," + String.format("%.2f", input.length / intervalAsSeconds()) + "," + subStatistics());
+        + String.format("%.2f", intervalAsSeconds()) + "," + String.format("%.2f", inputLength / intervalAsSeconds()) + "," + subStatistics());
   }
 
   protected String subStatistics() {

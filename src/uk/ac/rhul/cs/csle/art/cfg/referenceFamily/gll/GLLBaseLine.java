@@ -37,6 +37,7 @@ public class GLLBaseLine extends ReferenceParser {
 
   @Override
   protected String subStatistics() {
+    if (input == null) return "";
     int descriptorCount = descS.size(), gssNodeCount = gss.keySet().size(), gssEdgeCount = 0, popCount = 0, sppfNodeCount = sppf.keySet().size(),
         sppfPCount = 0, sppfEdgeCount = 0, sppfAmbiguityCount = 0;
     for (GSSN g : gss.keySet()) {

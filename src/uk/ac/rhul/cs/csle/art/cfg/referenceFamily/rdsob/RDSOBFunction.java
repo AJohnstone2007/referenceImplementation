@@ -19,7 +19,8 @@ public class RDSOBFunction extends RDSOBParser {
 
   boolean rdsobFunction(GrammarNode lhs) {
     if (dn.next == null) dn.next = new DerivationNode(grammar.endOfStringNode, null);
-    DerivationNode dnAtEntry = dn = dn.next;
+    dn = dn.next;
+    DerivationNode dnAtEntry = dn;
 
     level++;
 

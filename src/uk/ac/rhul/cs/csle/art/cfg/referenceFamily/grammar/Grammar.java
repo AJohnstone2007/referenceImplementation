@@ -25,9 +25,9 @@ public class Grammar {
   public final Map<GrammarElement, GrammarNode> rules = new TreeMap<>(); // Map from nonterminals to list of productions represented by their LHS node
   public final GrammarNode endOfStringNode;
 
-  private LKind[] lexicalKindsArray;
-  private String[] lexicalStringsArray;
-  private LKind[] whitespacesArray;
+  public LKind[] lexicalKindsArray;
+  public String[] lexicalStringsArray;
+  public LKind[] whitespacesArray;
 
   public GrammarElement startNonterminal;
   public Set<Integer> acceptingNodeNumbers = new TreeSet<>(); // Set of nodes which are END nodes of the start production

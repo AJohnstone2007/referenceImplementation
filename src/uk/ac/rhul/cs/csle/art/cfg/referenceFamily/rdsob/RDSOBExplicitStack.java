@@ -1,21 +1,24 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
 
-public class RDSOBExplicitStack extends RDSOBParser {
+public class RDSOBExplicitStack extends ReferenceParser {
   class SNode {
     GrammarNode returnNode;
     int i_entry;
-    DerivationNode dn_entry;
+    DerivationSingletonNode dnAtEntry;
     SNode next;
 
-    public SNode(GrammarNode returnNode, int i, SNode next, DerivationNode dn) {
-      this.returnNode = returnNode;
+    public SNode(GrammarNode retNode, int i, SNode next, DerivationSingletonNode dn) {
+      this.returnNode = retNode;
       this.i_entry = i;
       this.next = next;
-      this.dn_entry = dn;
+      if (dn.next == null) dn.next = new DerivationSingletonNode(gn, null);
+      dn = dn.next;
+      this.dnAtEntry = dn;
     }
   }
 
@@ -25,7 +28,7 @@ public class RDSOBExplicitStack extends RDSOBParser {
   boolean rdsobExplicitStack() {
     while (true)
       switch (gn.elm.kind) {
-      case T:
+      case B, C, T, TI:
         if (match(gn)) {
           i++;
           gn = gn.seq;
@@ -42,7 +45,7 @@ public class RDSOBExplicitStack extends RDSOBParser {
         gn = retrn();
         if (sn == null) return true;
         break;
-      case ALT, B, C, DO, EOS, KLN, OPT, POS, TI:
+      case ALT, DO, EOS, KLN, OPT, POS:
         Reference.fatal("internal error - unexpected grammar node in rdsobExplicitStack");
       }
   }
@@ -67,8 +70,9 @@ public class RDSOBExplicitStack extends RDSOBParser {
         if (sn == null) return true;
       } else {
         i = sn.i_entry;
-        dn = sn.dn_entry;
+        dn = sn.dnAtEntry;
         gn = gn.alt.alt.seq;
+        dn.gn = gn;
         break;
       }
     }
@@ -79,8 +83,13 @@ public class RDSOBExplicitStack extends RDSOBParser {
   public void parse() {
     gn = grammar.rules.get(grammar.startNonterminal).alt.seq;
     i = 0;
-    dn = new DerivationNode(grammar.endOfStringNode, null);
+    dnRoot = dn = new DerivationSingletonNode(grammar.endOfStringNode, null);
     sn = new SNode(grammar.endOfStringNode, 0, null, dn);
     accepted = rdsobExplicitStack() && input[i] == 0;
+  }
+
+  @Override
+  public int derivationAsTerm() {
+    return derivationSingletonAsTerm();
   }
 }

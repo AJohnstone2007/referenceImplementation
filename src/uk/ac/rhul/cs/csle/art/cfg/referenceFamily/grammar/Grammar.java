@@ -109,7 +109,7 @@ public class Grammar {
 
     if (tmp.size() > 0) {
       StringBuilder sb = new StringBuilder();
-      sb.append("*** Context Free Grammar error - nonterminal" + (tmp.size() == 1 ? " " : "s ") + "used but not defined: ");
+      sb.append("Nonterminal" + (tmp.size() == 1 ? " " : "s ") + "used but not defined: ");
       for (GrammarElement n : tmp)
         sb.append(n.str + " ");
       Reference.fatal(sb.toString());

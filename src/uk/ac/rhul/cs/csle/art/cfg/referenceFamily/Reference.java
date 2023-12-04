@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import uk.ac.rhul.cs.csle.art.adl.ADL;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.gll.GLLBaseLine;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.gll.GLLHashPool;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GIFTKind;
@@ -156,6 +157,11 @@ final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTermi
           Reference.fatal("Unexpected !whitespace element " + iTerms.toString(iTerms.getSubterm(term, 0, i, 0)));
           }
       break;
+    case "adl":
+      ADL adl = new ADL(iTerms);
+      System.out.println("Intepreting ADL");
+      adl.interpret(workingDerivationTerm);
+      break;
     case "builtinTests":
       builtinTests();
       break;
@@ -243,7 +249,7 @@ final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTermi
     case "nop": // No operation
       break;
     default:
-      fatal("unknown directive !" + iTerms.toString(iTerms.getSubterm(term, 0)));
+      fatal("Unknown directive !" + iTerms.toString(iTerms.getSubterm(term, 0)));
     }
   }
 

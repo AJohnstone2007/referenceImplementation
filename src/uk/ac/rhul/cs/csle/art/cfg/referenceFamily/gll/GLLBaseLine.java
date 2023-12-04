@@ -317,6 +317,7 @@ private boolean isSymbol(SPPFN sppfn) {
   return sppfn.packNS.size() == 0 /* terminal or epsilon */ || (sppfn.gn.elm.kind == GrammarKind.N && sppfn.gn.seq == null /* LHS */);
 }
 
+// TODO: this needs to be merged with referenceParser.lexemeForBuiltin()
 private String constructorOf(SPPFN sppfn, GrammarNode gn) {
   if (gn.elm.kind == GrammarKind.B) switch (LKind.valueOf(gn.elm.str)) {
   case ID: {
@@ -335,8 +336,12 @@ private String constructorOf(SPPFN sppfn, GrammarNode gn) {
     break;
   case COMMENT_NEST_ART:
     break;
-  case INTEGER:
-    break;
+  case INTEGER: {
+    int right = positions[sppfn.li];
+    while (right< inputString.length() &&(Character.isDigit(inputString.charAt(right))|| inputString.charAt(right)=='_')) right++;
+
+    return inputString.substring(positions[sppfn.li],right) ;
+  }
   case REAL:
     break;
   case SIGNED_INTEGER:
@@ -368,15 +373,20 @@ private String constructorOf(SPPFN sppfn, GrammarNode gn) {
     break;
   case STRING_DOLLAR:
     break;
-  case STRING_SQ:
-    break;
+  case STRING_SQ:{
+    int right = positions[sppfn.li]+1;
+    while (inputString.charAt(right) != '\'') right++;
+
+    return inputString.substring(positions[sppfn.li],right+1) ;
+  }
+
   }
   return gn.elm.str;
 }
 
 private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFromParent, GrammarNode gn) {
-//   System.out.println("\nEntering derivationAsTermRec() at node " + sppfn + " instance " + gn);
-  if (visited.contains(sppfn)) Reference.fatal("ArtDerivationAsTermRec() found cycle in derivation");
+//   System.out.println("\nEntered derivationAsTermRec() at node " + sppfn + " instance " + gn);
+  if (visited.contains(sppfn)) Reference.fatal("derivationAsTermRec() found cycle in derivation");
   visited.add(sppfn);
 
   LinkedList<Integer> children = (gn.giftKind == GIFTKind.OVER || gn.giftKind == GIFTKind.UNDER) ? childrenFromParent : new LinkedList<>();
@@ -402,7 +412,7 @@ private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFrom
 }
 
 private void collectChildNodesRec(SPPFPN sppfpn, LinkedList<SPPFN> childNodes) {
-  // System.out.println("CollectChildNodesRec() at pack node " + sppfpn);
+//  System.out.println("CollectChildNodesRec() at pack node " + sppfpn);
   SPPFN leftChild = sppfpn.leftChild, rightChild = sppfpn.rightChild;
   if (leftChild != null) {
     if (isSymbol(leftChild)) // found a symbol

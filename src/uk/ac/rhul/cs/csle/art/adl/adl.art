@@ -1,0 +1,53 @@
+(* adl - a dynamic language (or maybe Adrian's dynamic language) *)
+!whitespace(&SIMPLE_WHITESPACE,&COMMENT_BLOCK_C,&COMMENT_LINE_C)
+
+seq  ::= expr^^ | seq sep^ expr
+ sep ::= #^ | ';'^ sep^ 
+expr ::= bind^^
+bind ::= list^^ | const^^ | assign^^
+ const ::= bind '='^ list 
+ assign ::= bind ':='^ list 
+list ::= iter^^ | iter ','^ list 
+iter ::=  sel^^ | sel '@'^ iter | sel '@'^ iter '~'^ iter
+sel  ::=   or^^ |  or '?'^ sel  |  or '?'^ sel  '~'^ sel 
+or   ::=  xor^^ |  or '|'^ xor 
+xor  ::=  and^^ | xor '^'^ and 
+and  ::=  eq0^^ | eq0 '&'^ and
+eq0  ::=  rel0^^ | eq^^ | ne^^
+ eq  ::= rel0 '=='^ rel0 
+ ne  ::= rel0 '!='^ rel0 
+rel0 ::=  cat^^ | ge^^ | gt^^ | le^^ | lt^^
+ ge  ::= cat '>='^ cat 
+ gt  ::= cat '>'^ cat 
+ le  ::= cat '<='^ cat 
+ lt  ::= cat '<'^ cat
+cat  ::=  sh0^^  | cat '::'^ sh0
+sh0  ::=  add0^^ | lsh^^ | rsh^^ | rol^^ | ror^^ | ash^^
+ lsh ::= sh0 '<<'^ add0 
+ rsh ::= sh0 '>>'^ add0 
+ rol ::= sh0 '<<|'^ add0 
+ ror ::= sh0 '>>|'^ add0
+ ash ::= sh0 '>>>'^ add0 
+add0 ::=  mul0^^ | add^^ | sub^^
+ add ::= add0 '+'^ mul0 
+ sub ::= add0 '-'^ mul0 
+mul0 ::=  exp^^ | mul^^ | div^^ | mod^^
+ mul ::= mul0 '*'^ exp  
+ div ::= mul0 '/'^ exp 
+ mod ::= mul0 '%'^ exp
+exp  ::=   op^^ | op '**'^ exp
+op   ::=  pos^^ | neg^^ | not^^ | lambda^^
+| BOOLEAN^^ | INTEGER^^ | REAL^^ | CHARACTER^^ | STRING^^ | ID^^ | '_'^^ | 'empty'^^ | 'break'^^ | 'continue'^^ | 'return'^^
+| '('^ expr^^ ')'^ | scope^^
+ pos ::= '!+'^ op 
+ neg ::= '!-'^ op 
+ not ::= '!'^ op
+ lambda ::= '\\'^ list scope
+ scope  ::= '{'^ expr '}'^ 
+
+ID        ::= &ID | &ID ':'^ &ID
+BOOLEAN   ::= 'True'^^ | 'False'^^
+INTEGER   ::= &INTEGER
+REAL      ::= &REAL
+CHARACTER ::= &STRING_SQ
+STRING    ::= &STRING_DQ

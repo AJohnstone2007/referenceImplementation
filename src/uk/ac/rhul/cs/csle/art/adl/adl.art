@@ -5,11 +5,13 @@ seq  ::= expr^^ | seq sep^ expr
  sep ::= #^ | ';'^ sep^ 
 expr ::= bind^^
 bind ::= list^^ | const^^ | assign^^
- const ::= bind '='^ list 
- assign ::= bind ':='^ list 
+ const ::= lhsID '='^ expr 
+ assign ::= lhsID ':='^ expr
+ lhsID ::= &ID
 list ::= iter^^ | iter ','^ list 
-iter ::=  sel^^ | sel '@'^ iter | sel '@'^ iter '~'^ iter
-sel  ::=   or^^ |  or '?'^ sel  |  or '?'^ sel  '~'^ sel 
+iter ::=  sel^^ | sel '@'^ iter skip | sel '@'^ iter '~'^ iter
+sel  ::=   or^^ |  or '?'^ sel  skip |  or '?'^ sel  '~'^ sel 
+ skip ::= #^
 or   ::=  xor^^ |  or '|'^ xor 
 xor  ::=  and^^ | xor '^'^ and 
 and  ::=  eq0^^ | eq0 '&'^ and
@@ -37,17 +39,25 @@ mul0 ::=  exp^^ | mul^^ | div^^ | mod^^
  mod ::= mul0 '%'^ exp
 exp  ::=   op^^ | op '**'^ exp
 op   ::=  pos^^ | neg^^ | not^^ | lambda^^
-| BOOLEAN^^ | INTEGER^^ | REAL^^ | CHARACTER^^ | STRING^^ | ID^^ | '_'^^ | 'empty'^^ | 'break'^^ | 'continue'^^ | 'return'^^
-| '('^ expr^^ ')'^ | scope^^
+| __bool^^ | __int32^^ | __real64^^ | __char^^ | __string^^ | deref^^ | '_'^^ | __done | __empty | break | continue | return | yield 
+| '('^ seq^^ ')'^ | scope^^
  pos ::= '!+'^ op 
  neg ::= '!-'^ op 
  not ::= '!'^ op
- lambda ::= '\\'^ list scope
- scope  ::= '{'^ expr '}'^ 
+ deref ::= ID^
+ __done ::= 'done'^
+ __empty ::= 'empty'^
+ break ::= 'break'^
+ continue ::= 'continue'^
+ return ::= 'return'^
+ yield ::= 'yield'
 
-ID        ::= &ID | &ID ':'^ &ID
-BOOLEAN   ::= 'True'^^ | 'False'^^
-INTEGER   ::= &INTEGER
-REAL      ::= &REAL
-CHARACTER ::= &STRING_SQ
-STRING    ::= &STRING_DQ
+ lambda ::= '\\'^ list scope
+ scope  ::= '{'^ list '}'^ 
+
+ID       ::= &ID | &ID ':'^ &ID
+__bool   ::= 'True'^^ | 'False'^^
+__int32  ::= &INTEGER
+__real64 ::= &REAL
+__char   ::= &STRING_SQ
+__string ::= &STRING_DQ

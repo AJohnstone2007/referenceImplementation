@@ -49,8 +49,14 @@ public abstract class ReferenceParser {
 
       return inputString.substring(positions[inputIndex], right);
     }
-    case REAL:
-      break;
+    case REAL: {
+      int right = positions[inputIndex];
+      while (!ReferenceLexer.isSimpleSpace(inputString.charAt(right)))
+        right++;
+
+      return inputString.substring(positions[inputIndex], right);
+    }
+
     case SIGNED_INTEGER:
       break;
     case SIGNED_REAL:

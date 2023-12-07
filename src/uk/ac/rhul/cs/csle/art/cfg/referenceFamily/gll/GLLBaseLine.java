@@ -342,8 +342,12 @@ private String constructorOf(SPPFN sppfn, GrammarNode gn) {
 
     return inputString.substring(positions[sppfn.li],right) ;
   }
-  case REAL:
-    break;
+  case REAL:{    int right = positions[sppfn.li];
+  while (right< inputString.length() && Character.isDigit(inputString.charAt(right))) right++;
+  right++; // skip decimal point
+  while (right< inputString.length() && Character.isDigit(inputString.charAt(right))) right++;
+  return inputString.substring(positions[sppfn.li],right) ;
+  }
   case SIGNED_INTEGER:
     break;
   case SIGNED_REAL:

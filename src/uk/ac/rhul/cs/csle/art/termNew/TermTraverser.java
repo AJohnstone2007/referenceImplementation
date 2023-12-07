@@ -1,4 +1,4 @@
-package uk.ac.rhul.cs.csle.art.term;
+package uk.ac.rhul.cs.csle.art.termNew;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -93,5 +93,4 @@ public class TermTraverser {
     builder.append("]");
     return builder.toString();
   }
-
 }

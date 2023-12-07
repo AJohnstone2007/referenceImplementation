@@ -19,6 +19,9 @@ import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob.RDSOBGenerator;
 import uk.ac.rhul.cs.csle.art.term.ITerms;
 import uk.ac.rhul.cs.csle.art.term.ITermsLowLevelAPI;
 import uk.ac.rhul.cs.csle.art.term.TermTraverser;
+import uk.ac.rhul.cs.csle.art.term.Value;
+import uk.ac.rhul.cs.csle.art.term.ValueException;
+import uk.ac.rhul.cs.csle.art.term.__mapChain;
 
 public class Reference {
   //@formatter:off
@@ -158,9 +161,17 @@ final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTermi
           }
       break;
     case "adl":
+      if (workingDerivationTerm == 0) break;
       ADL adl = new ADL(iTerms);
-      System.out.println("Intepreting ADL");
-      adl.interpret(workingDerivationTerm);
+      __mapChain env = new __mapChain();
+      Value result = iTerms.valueBottom;
+      try {
+        result = adl.interpret(workingDerivationTerm, env);
+      } catch (ValueException e) {
+        System.out.println("Value exception: " + e.getMessage());
+      }
+
+      System.out.println("ADL interpreter returns " + result + " with environment " + env);
       break;
     case "builtinTests":
       builtinTests();
@@ -251,6 +262,7 @@ final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTermi
     default:
       fatal("Unknown directive !" + iTerms.toString(iTerms.getSubterm(term, 0)));
     }
+
   }
 
   /* Support for echoing the current line */

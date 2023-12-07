@@ -1,6 +1,5 @@
-package uk.ac.rhul.cs.csle.art.term;
+package uk.ac.rhul.cs.csle.art.termNew;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -40,105 +39,7 @@ public class ITermsLowLevelAPI extends ITerms {
       findString("_" + v + "*");
     firstSpecialSymbolIndex = getStringMapNextFreeIndex();
 
-    // Cut and paste these from the output after running the mainline in ITerms.java
-    if (findString("__bottom") != 33) System.out.println("String index mismatch for __bottom");
-    if (findString("__done") != 34) System.out.println("String index mismatch for __done");
-    if (findString("__empty") != 35) System.out.println("String index mismatch for __empty");
-    if (findString("__quote") != 36) System.out.println("String index mismatch for __quote");
-    if (findString("__proc") != 37) System.out.println("String index mismatch for __proc");
-    if (findString("__procV3") != 38) System.out.println("String index mismatch for __procV3");
-    if (findString("__input") != 39) System.out.println("String index mismatch for __input");
-    if (findString("__output") != 40) System.out.println("String index mismatch for __output");
-    if (findString("__blob") != 41) System.out.println("String index mismatch for __blob");
-    if (findString("__binding") != 42) System.out.println("String index mismatch for __binding");
-    if (findString("__adtProd") != 43) System.out.println("String index mismatch for __adtProd");
-    if (findString("__adtSum") != 44) System.out.println("String index mismatch for __adtSum");
-    if (findString("__bool") != 45) System.out.println("String index mismatch for __bool");
-    if (findString("__char") != 46) System.out.println("String index mismatch for __char");
-    if (findString("__intAP") != 47) System.out.println("String index mismatch for __intAP");
-    if (findString("__int32") != 48) System.out.println("String index mismatch for __int32");
-    if (findString("__realAP") != 49) System.out.println("String index mismatch for __realAP");
-    if (findString("__real64") != 50) System.out.println("String index mismatch for __real64");
-    if (findString("__string") != 51) System.out.println("String index mismatch for __string");
-    if (findString("__array") != 52) System.out.println("String index mismatch for __array");
-    if (findString("__list") != 53) System.out.println("String index mismatch for __list");
-    if (findString("__flexArray") != 54) System.out.println("String index mismatch for __flexArray");
-    if (findString("__set") != 55) System.out.println("String index mismatch for __set");
-    if (findString("__map") != 56) System.out.println("String index mismatch for __map");
-    if (findString("__mapChain") != 57) System.out.println("String index mismatch for __mapChain");
-    if (findString("__eq") != 58) System.out.println("String index mismatch for __eq");
-    if (findString("__ne") != 59) System.out.println("String index mismatch for __ne");
-    if (findString("__gt") != 60) System.out.println("String index mismatch for __gt");
-    if (findString("__lt") != 61) System.out.println("String index mismatch for __lt");
-    if (findString("__ge") != 62) System.out.println("String index mismatch for __ge");
-    if (findString("__le") != 63) System.out.println("String index mismatch for __le");
-    if (findString("__compare") != 64) System.out.println("String index mismatch for __compare");
-    if (findString("__not") != 65) System.out.println("String index mismatch for __not");
-    if (findString("__and") != 66) System.out.println("String index mismatch for __and");
-    if (findString("__or") != 67) System.out.println("String index mismatch for __or");
-    if (findString("__xor") != 68) System.out.println("String index mismatch for __xor");
-    if (findString("__cnd") != 69) System.out.println("String index mismatch for __cnd");
-    if (findString("__lsh") != 70) System.out.println("String index mismatch for __lsh");
-    if (findString("__rsh") != 71) System.out.println("String index mismatch for __rsh");
-    if (findString("__ash") != 72) System.out.println("String index mismatch for __ash");
-    if (findString("__rol") != 73) System.out.println("String index mismatch for __rol");
-    if (findString("__ror") != 74) System.out.println("String index mismatch for __ror");
-    if (findString("__neg") != 75) System.out.println("String index mismatch for __neg");
-    if (findString("__add") != 76) System.out.println("String index mismatch for __add");
-    if (findString("__sub") != 77) System.out.println("String index mismatch for __sub");
-    if (findString("__mul") != 78) System.out.println("String index mismatch for __mul");
-    if (findString("__div") != 79) System.out.println("String index mismatch for __div");
-    if (findString("__mod") != 80) System.out.println("String index mismatch for __mod");
-    if (findString("__exp") != 81) System.out.println("String index mismatch for __exp");
-    if (findString("__size") != 82) System.out.println("String index mismatch for __size");
-    if (findString("__cat") != 83) System.out.println("String index mismatch for __cat");
-    if (findString("__slice") != 84) System.out.println("String index mismatch for __slice");
-    if (findString("__get") != 85) System.out.println("String index mismatch for __get");
-    if (findString("__put") != 86) System.out.println("String index mismatch for __put");
-    if (findString("__contains") != 87) System.out.println("String index mismatch for __contains");
-    if (findString("__remove") != 88) System.out.println("String index mismatch for __remove");
-    if (findString("__extract") != 89) System.out.println("String index mismatch for __extract");
-    if (findString("__union") != 90) System.out.println("String index mismatch for __union");
-    if (findString("__intersection") != 91) System.out.println("String index mismatch for __intersection");
-    if (findString("__difference") != 92) System.out.println("String index mismatch for __difference");
-    if (findString("__cast") != 93) System.out.println("String index mismatch for __cast");
-    if (findString("__cast__bool") != 94) System.out.println("String index mismatch for __cast__bool");
-    if (findString("__cast__char") != 95) System.out.println("String index mismatch for __cast__char");
-    if (findString("__cast__intAP") != 96) System.out.println("String index mismatch for __cast__intAP");
-    if (findString("__cast__int32") != 97) System.out.println("String index mismatch for __cast__int32");
-    if (findString("__cast__realAP") != 98) System.out.println("String index mismatch for __cast__realAP");
-    if (findString("__cast__real64") != 99) System.out.println("String index mismatch for __cast__real64");
-    if (findString("__cast__string") != 100) System.out.println("String index mismatch for __cast__string");
-    if (findString("__cast__array") != 101) System.out.println("String index mismatch for __cast__array");
-    if (findString("__cast__list") != 102) System.out.println("String index mismatch for __cast__list");
-    if (findString("__cast__flexArray") != 103) System.out.println("String index mismatch for __cast__flexArray");
-    if (findString("__cast__set") != 104) System.out.println("String index mismatch for __cast__set");
-    if (findString("__cast__map") != 105) System.out.println("String index mismatch for __cast__map");
-    if (findString("__cast__mapChain") != 106) System.out.println("String index mismatch for __cast__mapChain");
-    if (findString("__termArity") != 107) System.out.println("String index mismatch for __termArity");
-    if (findString("__termRoot") != 108) System.out.println("String index mismatch for __termRoot");
-    if (findString("__termChild") != 109) System.out.println("String index mismatch for __termChild");
-    if (findString("__termMake") != 110) System.out.println("String index mismatch for __termMake");
-    if (findString("__termMatch") != 111) System.out.println("String index mismatch for __termMatch");
-    if (findString("__user") != 112) System.out.println("String index mismatch for __user");
-
     firstNormalSymbolIndex = getStringMapNextFreeIndex();
-    bottomTermIndex = findTerm("__bottom");
-    doneTermIndex = findTerm("__done");
-    emptyTermIndex = findTerm("__empty");
-
-    valueBoolTrue = new __bool(true);
-    valueBoolFalse = new __bool(false);
-    valueInt32Zero = new __int32(0, 0);
-    valueInt32One = new __int32(1, 0);
-    valueInt32MinusOne = new __int32(-1, 0);
-    valueIntAPZero = new __intAP(new BigInteger("0"));
-    valueIntAPOne = new __intAP(new BigInteger("1"));
-    valueIntAPMinusOne = new __intAP(new BigInteger("-1"));
-    valueBottom = new __bottom();
-    valueDone = new __done();
-    valueEmpty = new __empty();
-    valueBlob = new __blob(emptyTermIndex);
   }
 
   abstract class ITermAPI {
@@ -347,6 +248,18 @@ public class ITermsLowLevelAPI extends ITerms {
     return findTerm(findString(string), children);
   }
 
+  public int findTerm(int symbolStringIndex, LinkedList<Integer> children) {
+    int nc = 0, newChildren[] = new int[children.size()];
+    for (int i : children)
+      newChildren[nc++] = i;
+    return findTerm(symbolStringIndex, newChildren);
+  }
+
+  @Override
+  public int findTerm(String string, LinkedList<Integer> children) {
+    return findTerm(findString(string), children);
+  }
+
   /*
    * Attributes
    */
@@ -408,18 +321,6 @@ public class ITermsLowLevelAPI extends ITerms {
       ret += (arity == null) ? indexToTerm.get(k).getArity() + 1 : arity;
     }
     return ret;
-  }
-
-  public int findTerm(int symbolStringIndex, LinkedList<Integer> children) {
-    int nc = 0, newChildren[] = new int[children.size()];
-    for (int i : children)
-      newChildren[nc++] = i;
-    return findTerm(symbolStringIndex, newChildren);
-  }
-
-  @Override
-  public int findTerm(String string, LinkedList<Integer> children) {
-    return findTerm(findString(string), children);
   }
 
 }

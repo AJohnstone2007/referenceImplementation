@@ -129,23 +129,23 @@ public class ReferenceLexer {
     getCh();
   }
 
-  private boolean isAlpha(char c) {
+  public static boolean isAlpha(char c) {
     return Character.isLetter(c);
   }
 
-  private boolean isDigit(char c) {
+  public static boolean isDigit(char c) {
     return Character.isDigit(c);
   }
 
-  private boolean isHexDigit(char c) {
+  public static boolean isHexDigit(char c) {
     return isDigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
   }
 
-  private boolean isAlphaOrDigit(char c) {
+  public static boolean isAlphaOrDigit(char c) {
     return isAlpha(c) || isDigit(c);
   }
 
-  private boolean isSimpleSpace(char c) {
+  public static boolean isSimpleSpace(char c) {
     return c == ' ' || c == '\t' || c == '\n' || c == '\r';
   }
 

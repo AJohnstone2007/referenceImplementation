@@ -1,61 +1,68 @@
 (* adl - a dynamic language (or maybe Adrian's dynamic language) *)
 !whitespace(&SIMPLE_WHITESPACE,&COMMENT_BLOCK_C,&COMMENT_LINE_C)
+adl    ::= #^ | sep^ | seq^^ 
+seq    ::= def^^ | seq sep^ def
+sep    ::= #^ | ';'^ sep^ 
+def    ::= slice^^ | const^^ | assign^^
+const  ::= lhsLst^ '='^ def
+assign ::= lhsLst^ ':='^ def
+lhsLst ::= lhs | '('^ lhs ')'^
+lhs    ::= &ID | &ID ','^ lhs  
+slice  ::= pair^^ | pair '#'^ slicer^
+slicer ::= or | sel '..'^ sel | sel '..'^ sel '..'^ sel
+pair   ::= list^^ | list ':'^ list
+pairs  ::= pair^^ | pair pairs
+list   ::= or^^  | or ','^ list 
+or     ::= xor^^ |  or '|'^ xor 
+xor    ::= and^^ | xor '^'^ and 
+and    ::= eqs^^ | eqs '&'^ and
+eqs    ::= rels^^ | eq^^ | ne^^
+eq     ::= rels '=='^ rels 
+ne     ::= rels '!='^ rels 
+rels   ::= cat^^ | ge^^ | gt^^ | le^^ | lt^^
+ge     ::= cat '>='^ cat 
+gt     ::= cat '>'^ cat 
+le     ::= cat '<='^ cat 
+lt     ::= cat '<'^ cat
+cat    ::=  shs^^  | cat '::'^ shs
+shs    ::=  adds^^ | lsh^^ | rsh^^ | rol^^ | ror^^ | ash^^
+lsh    ::= shs '<<'^ adds 
+rsh    ::= shs '>>'^ adds 
+rol    ::= shs '<<|'^ adds 
+ror    ::= shs '>>|'^ adds
+ash    ::= shs '>>>'^ adds 
+adds   ::= muls^^ | add^^ | sub^^
+add    ::= adds '+'^ muls 
+sub    ::= adds '-'^ muls 
+muls   ::=  exp^^ | mul^^ | div^^ | mod^^
+mul    ::= muls '*'^ exp  
+div    ::= muls '/'^ exp 
+mod    ::= muls '%'^ exp
+exp    ::= base^^ | base '**'^ exp
+base   ::= pos^^ | neg^^ | not^^ | lambda^^
+         | __bool^^ | __int32^^ | __real64^^ | __char^^ | __string^^ | use^^ | '_'^^  
+         | __done | __empty | break | continue | return | yield | sel | iter
+         | '('^ seq^^ ')'^ | scope^^
+pos    ::= '!+'^ base
+neg    ::= '!-'^ base
+not    ::= '!'^ base
+lambda ::= 'fn'^ parLst^ scope
+parLst ::= par | '('^ par ')'^
+par    ::= &ID skip | &ID skip ','^ par | &ID ':'^ or | &ID ':'^ or ','^ par 
+use    ::= ID^
+__done ::= 'done'^
+__empty ::= 'empty'^
+break  ::= 'break'^
+continue ::= 'continue'^
+return ::= 'return'^
+yield  ::= 'yield'
+sel    ::= '('^ list '?'^ pairs skip ')'^ | '('^ list '?'^ pairs '~' list ')'^ 
+iter   ::= '('^ list '@'^ pairs skip ')'^ | '('^ list '@'^ pairs '~' list ')'^ 
+skip   ::= #^
+scope  ::= '{'^ seq '}'^ 
 
-seq  ::= expr^^ | seq sep^ expr
- sep ::= #^ | ';'^ sep^ 
-expr ::= bind^^
-bind ::= list^^ | const^^ | assign^^
- const ::= lhsID '='^ expr 
- assign ::= lhsID ':='^ expr
- lhsID ::= &ID
-list ::= iter^^ | iter ','^ list 
-iter ::=  sel^^ | sel '@'^ iter skip | sel '@'^ iter '~'^ iter
-sel  ::=   or^^ |  or '?'^ sel  skip |  or '?'^ sel  '~'^ sel 
- skip ::= #^
-or   ::=  xor^^ |  or '|'^ xor 
-xor  ::=  and^^ | xor '^'^ and 
-and  ::=  eq0^^ | eq0 '&'^ and
-eq0  ::=  rel0^^ | eq^^ | ne^^
- eq  ::= rel0 '=='^ rel0 
- ne  ::= rel0 '!='^ rel0 
-rel0 ::=  cat^^ | ge^^ | gt^^ | le^^ | lt^^
- ge  ::= cat '>='^ cat 
- gt  ::= cat '>'^ cat 
- le  ::= cat '<='^ cat 
- lt  ::= cat '<'^ cat
-cat  ::=  sh0^^  | cat '::'^ sh0
-sh0  ::=  add0^^ | lsh^^ | rsh^^ | rol^^ | ror^^ | ash^^
- lsh ::= sh0 '<<'^ add0 
- rsh ::= sh0 '>>'^ add0 
- rol ::= sh0 '<<|'^ add0 
- ror ::= sh0 '>>|'^ add0
- ash ::= sh0 '>>>'^ add0 
-add0 ::=  mul0^^ | add^^ | sub^^
- add ::= add0 '+'^ mul0 
- sub ::= add0 '-'^ mul0 
-mul0 ::=  exp^^ | mul^^ | div^^ | mod^^
- mul ::= mul0 '*'^ exp  
- div ::= mul0 '/'^ exp 
- mod ::= mul0 '%'^ exp
-exp  ::=   op^^ | op '**'^ exp
-op   ::=  pos^^ | neg^^ | not^^ | lambda^^
-| __bool^^ | __int32^^ | __real64^^ | __char^^ | __string^^ | deref^^ | '_'^^ | __done | __empty | break | continue | return | yield 
-| '('^ seq^^ ')'^ | scope^^
- pos ::= '!+'^ op 
- neg ::= '!-'^ op 
- not ::= '!'^ op
- deref ::= ID^
- __done ::= 'done'^
- __empty ::= 'empty'^
- break ::= 'break'^
- continue ::= 'continue'^
- return ::= 'return'^
- yield ::= 'yield'
-
- lambda ::= '\\'^ list scope
- scope  ::= '{'^ list '}'^ 
-
-ID       ::= &ID | &ID ':'^ &ID
+// Lexical elements below this line - replace with paraterminals when MGLL working
+ID       ::= &ID 
 __bool   ::= 'True'^^ | 'False'^^
 __int32  ::= &INTEGER
 __real64 ::= &REAL

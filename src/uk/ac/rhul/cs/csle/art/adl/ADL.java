@@ -1,11 +1,15 @@
 package uk.ac.rhul.cs.csle.art.adl;
 
+import java.util.LinkedHashMap;
+
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.term.ITerms;
 import uk.ac.rhul.cs.csle.art.term.Value;
+import uk.ac.rhul.cs.csle.art.term.ValueException;
 import uk.ac.rhul.cs.csle.art.term.__char;
 import uk.ac.rhul.cs.csle.art.term.__int32;
 import uk.ac.rhul.cs.csle.art.term.__mapChain;
+import uk.ac.rhul.cs.csle.art.term.__proc;
 import uk.ac.rhul.cs.csle.art.term.__quote;
 import uk.ac.rhul.cs.csle.art.term.__real64;
 import uk.ac.rhul.cs.csle.art.term.__string;
@@ -22,8 +26,9 @@ public class ADL {
     int children[] = iTerms.getTermChildren(term);
     // Preorder
     switch (iTerms.getTermSymbolString(term)) {
+    case "adl":
+      return iTerms.valueEmpty; // Empty program
     case "iter": {
-
       Value ret;
       while (interpret(children[0], env).equals(iTerms.valueBoolTrue))
         ret = interpret(children[1], env);
@@ -37,15 +42,21 @@ public class ADL {
         return interpret(children[2], env);
     case "skip":
       return iTerms.valueDone;
+    case "pair":
+      return iTerms.valueBottom;
+    case "slice":
+      return iTerms.valueBottom;
     case "list":
-      break;
+      return iTerms.valueBottom;
     case "lambda":
-      break;
+      LinkedHashMap<__quote, Value> parameters = new LinkedHashMap<>();
+      processParameters(children[0], parameters);
+      return new __proc(parameters, children[1]);
     case "scope":
       break;
-    case "lhsID":
+    case "lhs":
       return new __quote(children[0]);
-    case "deref":
+    case "use":
       return env.__get(new __quote(children[0]));
     case "true":
       return iTerms.valueBoolTrue;
@@ -104,9 +115,17 @@ public class ADL {
     case "neg": return values[0].__neg();
     case "not": return values[0].__not();
     default:
-      Reference.fatal("unknown constructor in adl term " + iTerms.getTermSymbolString(term));
+      Reference.fatal("in ADL term, unknown constructor '" + iTerms.getTermSymbolString(term) + "'");
    // @formatter:on
     }
     return iTerms.valueBottom;
+  }
+
+  private void processParameters(int term, LinkedHashMap<__quote, Value> parameters) {
+    String str = iTerms.getTermSymbolString(term);
+    if (!str.equals("par")) throw new ValueException("lambda parameter - unexpected constructor '" + str + "'");
+    int tmp = iTerms.getSubterm(term, 1);
+    parameters.put(new __quote(iTerms.getSubterm(term, 0)), iTerms.getTermSymbolString(tmp).equals("skip") ? iTerms.valueEmpty : iTerms.valueFromTerm(tmp));
+    if (iTerms.getTermArity(term) == 3) processParameters(iTerms.getSubterm(term, 2), parameters);
   }
 }

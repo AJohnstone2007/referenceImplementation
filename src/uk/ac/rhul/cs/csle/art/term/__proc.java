@@ -4,39 +4,45 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class __proc extends Value {
-  private final __quote statements;
-  private final LinkedHashMap<Value, Value> parameters;
+  private final LinkedHashMap<__quote, Value> parameters;
+  private final int bodyTerm;
 
-  public __quote getStatements() {
-    return statements;
+  public int getBodyTerm() {
+    return bodyTerm;
   }
 
-  public __proc(Value parameters, Value defaults, Value statements) {
-    System.out.println("Constructing V3 style procedure with paramaters " + parameters + " and defaults " + defaults);
-    if (!(parameters instanceof __list)) throw new ValueException("parameters supplied to __proc constructor must be a __list");
-    if (!(defaults instanceof __list)) throw new ValueException("defaults supplied to __proc constructor must be a __list");
-    if (!(statements instanceof __quote)) throw new ValueException("statements supplied to __proc constructor must be a __quote");
-    LinkedList<Value> pars = ((__list) parameters).javaValue();
-    LinkedList<Value> defs = ((__list) defaults).javaValue();
-    if (pars.size() != defs.size()) throw new ValueException("parameters and defaults supplied to __procedureV3 constructor must have the same cardinality ");
-    this.parameters = new LinkedHashMap<>();
-    for (int i = 0; i < pars.size(); i++)
-      if (this.parameters.get(pars.get(i)) != null)
-        throw new ValueException("parameter " + pars.get(i) + " appears more than once");
-      else
-        this.parameters.put(pars.get(i), defs.get(i));
-    this.statements = (__quote) statements;
-    System.out.println("Created procedure: " + toString());
+  public __proc(LinkedHashMap<__quote, Value> parameters, int bodyTerm) {
+    this.parameters = parameters;
+    this.bodyTerm = bodyTerm;
   }
 
   @Override
   public Object javaValue() {
-    throw new ValueException("__proc does not supply a value");
+    return bodyTerm;
+  }
+
+  public Object javaValue1() {
+    return parameters;
   }
 
   @Override
   public String toString() {
-    return "__proc(" + parameters + ")";
+    StringBuilder sb = new StringBuilder();
+    sb.append("__proc(");
+    boolean notFirst = false;
+    for (Value p : parameters.keySet()) {
+      if (notFirst)
+        sb.append(", ");
+      else
+        notFirst = true;
+      sb.append(p);
+      sb.append(":");
+      sb.append(parameters.get(p));
+    }
+    sb.append(") {");
+    sb.append(iTerms.toString(bodyTerm));
+    sb.append("}");
+    return sb.toString();
   }
 
   public __mapChain buildEnvironment(__mapChain env, Value unnamedArguments, Value namedArguments, Value namedValues) {

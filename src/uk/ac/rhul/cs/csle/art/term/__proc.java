@@ -7,6 +7,10 @@ public class __proc extends Value {
   private final LinkedHashMap<__quote, Value> parameters;
   private final int bodyTerm;
 
+  public LinkedHashMap<__quote, Value> getParameters() {
+    return parameters;
+  }
+
   public int getBodyTerm() {
     return bodyTerm;
   }
@@ -18,11 +22,7 @@ public class __proc extends Value {
 
   @Override
   public Object javaValue() {
-    return bodyTerm;
-  }
-
-  public Object javaValue1() {
-    return parameters;
+    return null;
   }
 
   @Override

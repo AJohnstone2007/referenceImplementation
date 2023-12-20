@@ -708,7 +708,7 @@ class SPPFPN {
 }
 
 enum SPPF2DotKind {
-  FULL, CORE, DERIVATION, ALL_DERIVATIONS
+  FULL, CORE, DERIVATION
 }
 
 class SPPF2Dot {
@@ -766,8 +766,6 @@ this.sppf = sppf;
       sppfOut.println("digraph \"SPPF\" {\n"
           + "graph[ordering=out ranksep=0.1]\n node[fontname=Helvetica fontsize=9 shape=box height=0 width=0 margin=0.04 color=gray]\nedge[arrowsize=0.1 color=gray]");
       if (sppf != null) switch (renderKind) {
-      case ALL_DERIVATIONS:
-        break;
       case CORE:
         coreSPPFRec(rootNode);
         break;

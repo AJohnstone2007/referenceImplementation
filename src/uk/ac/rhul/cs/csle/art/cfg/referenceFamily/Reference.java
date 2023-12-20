@@ -45,6 +45,18 @@ final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTermi
 
   public static void main(String[] args) {
     new Reference(args);
+
+    // Scratchpad for language forms
+    boolean p = true;
+    int x, y, z;
+    if (p)
+      if (p)
+        x = 2;
+      else
+        x = 3;
+    else
+      x = 4;
+
   }
 
   public Reference(String[] args) {
@@ -228,6 +240,7 @@ final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTermi
 
         case "derivation":
           System.out.println("Working derivation term: [" + workingDerivationTerm + "]\n" + iTerms.toString(workingDerivationTerm, false, -1, null));
+          // System.out.println("Working derivation term: [" + workingDerivationTerm + "]\n" + iTerms.toString(workingDerivationTerm, true, -1, null));
           if (scriptParserTerm == workingDerivationTerm) System.out.println("Bootstrap achieved: script parser term and working derivation term identical");
           break;
 

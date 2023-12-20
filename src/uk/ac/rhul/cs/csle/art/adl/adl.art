@@ -1,70 +1,65 @@
-(* Merge lhsList and parList *)
-
 (* adl - a dynamic language (or maybe Adrian's dynamic language) *)
 !whitespace(&SIMPLE_WHITESPACE,&COMMENT_BLOCK_C,&COMMENT_LINE_C)
-adl    ::= #^ | ';'^ | seq^^
-seq    ::= appitr^^ | appitr ';'^ seq
-appitr ::= def | def appitr^ // iterative apply 
-def    ::= slice^^ | const^^ | assign^^
-const  ::= lhsLst '='^ def
-assign ::= lhsLst ':='^ def
-lhsLst ::= lhsEls^ | ID^ '::'^ ID^ 
-lhsEls ::= lhsEl^ | lhsEl^ ','^ lhsEls^
-lhsEl  ::= ID^ | '('^ lhsLst ')'^
-
-(* !todo *)
-parLst ::= par | '('^ par ')'^
-par    ::= &ID skip | &ID skip ','^ par | &ID ':'^ or | &ID ':'^ or ','^ par 
-
-slice  ::= list^^ | list '#'^ sel | list '#'^ sel '..'^ sel | list '#'^ sel '..'^ sel '..'^ sel
-list   ::= or  | or ','^ or | or ':'^ list^ // iterative list
-
-or     ::= xor^^ |  or '|'^ xor 
-xor    ::= and^^ | xor '^'^ and 
-and    ::= eqs^^ | eqs '&'^ and
-eqs    ::= rels^^ | eq^^ | ne^^
-eq     ::= rels '=='^ rels 
-ne     ::= rels '!='^ rels 
-rels   ::= cat^^ | ge^^ | gt^^ | le^^ | lt^^
-ge     ::= cat '>='^ cat 
-gt     ::= cat '>'^ cat 
-le     ::= cat '<='^ cat 
-lt     ::= cat '<'^ cat
-cat    ::=  shs^^  | cat '::'^ shs
-shs    ::=  adds^^ | lsh^^ | rsh^^ | rol^^ | ror^^ | ash^^
-lsh    ::= shs '<<'^ adds 
-rsh    ::= shs '>>'^ adds 
-rol    ::= shs '<<|'^ adds 
-ror    ::= shs '>>|'^ adds
-ash    ::= shs '>>>'^ adds 
-adds   ::= muls^^ | add^^ | sub^^
-add    ::= adds '+'^ muls 
-sub    ::= adds '-'^ muls 
-muls   ::=  exp^^ | mul^^ | div^^ | mod^^
-mul    ::= muls '*'^ exp  
-div    ::= muls '/'^ exp 
-mod    ::= muls '%'^ exp
-exp    ::= base^^ | base '**'^ exp
-base   ::= pos^^ | neg^^ | not^^ | lambda^^
-         | __bool^^ | __int32^^ | __real64^^ | __char^^ | __string^^ | use^^ | '_'^^  
-         | __done | __empty | break | continue | return | yield | sel | iter
-         | '('^ seq^^ ')'^ | scope^^
-pos    ::= '!+'^ base
-neg    ::= '!-'^ base
-not    ::= '!'^ base
-lambda ::= 'fn'^ parLst^ scope^
-
-use    ::= ID^
-__done ::= 'done'^
-__empty ::= 'empty'^
-break  ::= 'break'^
+adl      ::= #^ | ';'^ | seq^^     // A script may be empty, or just a semicolon or a sequence
+seq      ::= apply^^ | apply ';'^ seq  // void-left operator
+apply    ::= typed | typed apply^      // 'space' operator (juxtaposition) apply
+typed    ::= def^^ | def '::' ID
+def      ::= slice^^ | const^^ | assign^^
+const    ::= lhsLst '='^ def
+assign   ::= lhsLst ':='^ def
+lhsLst   ::= lhsEl^ | lhsEl^ ','^ lhsLst^
+lhsEl    ::= ID^^ | ID^ '::'^ ID 
+slice    ::= list^^ | list '#'^ or | list '#'^ or '..'^ or | list '#'^ or '..'^ or '..'^ or
+list     ::= pair^^ | pair ','^ listTail^
+listTail ::= pair  | pair ','^ listTail^
+pair     ::= or^^ | or ':'^ or
+or       ::= xor^^ |  or '|'^ xor 
+xor      ::= and^^ | xor '^'^ and 
+and      ::= eqs^^ | eqs '&'^ and
+eqs      ::= rels^^ | eq^^ | ne^^
+  eq     ::= rels '=='^ rels 
+  ne     ::= rels '!='^ rels 
+rels     ::= cat^^ | ge^^ | gt^^ | le^^ | lt^^
+  ge     ::= cat '>='^ cat 
+  gt     ::= cat '>'^ cat 
+  le     ::= cat '<='^ cat 
+  lt     ::= cat '<'^ cat
+cat      ::=  shs^^  | cat '::'^ shs
+shs      ::=  adds^^ | lsh^^ | rsh^^ | rol^^ | ror^^ | ash^^
+  lsh    ::= shs '<<'^ adds 
+  rsh    ::= shs '>>'^ adds 
+  rol    ::= shs '<<|'^ adds 
+  ror    ::= shs '>>|'^ adds
+  ash    ::= shs '>>>'^ adds 
+adds     ::= muls^^ | add^^ | sub^^
+  add    ::= adds '+'^ muls 
+  sub    ::= adds '-'^ muls 
+muls     ::=  exp^^ | mul^^ | div^^ | mod^^
+  mul    ::= muls '*'^ exp  
+  div    ::= muls '/'^ exp 
+  mod    ::= muls '%'^ exp
+exp      ::= base^^ | base '**'^ exp
+base     ::= pos^^ | neg^^ | not^^ | lambda^^ | blist^^ | mtlist^^
+           | __bool^^ | __int32^^ | __real64^^ | __char^^ | __string^^ | use^^ | '_'^^    
+           | __done | __empty | break | continue | return | yield | match | matchrep
+           | '('^ seq^^ ')'^ | scope^^
+pos      ::= '+'^ base
+neg      ::= '-'^ base
+not      ::= '!'^ base
+lambda   ::= 'fn'^ lhsLst scope^ | 'fn'^ '('^ lhsLst ')'^ scope^
+blist    ::= '['^ seq ']'^
+mtlist   ::= '['^ ']'^
+use      ::= ID^
+__done   ::= 'done'^
+__empty  ::= 'empty'^
+break    ::= 'break'^
 continue ::= 'continue'^
-return ::= 'return'^
-yield  ::= 'yield'
-sel    ::= '('^ list '?'^ list skip ')'^ | '('^ list '?'^ list '~' list ')'^ 
-iter   ::= '('^ list '@'^ list skip ')'^ | '('^ list '@'^ list '~' list ')'^ 
-skip   ::= #^
-scope  ::= '{'^ seq '}'^ 
+return   ::= 'return'^
+yield    ::= 'yield'
+match    ::= '('^ list '?'^ list skip ')'^ | '('^ list '?'^ list '~' list ')'^ 
+matchrep ::= '('^ list '@'^ list skip ')'^ | '('^ list '@'^ list '~' list ')'^ 
+skip     ::= #^
+scope    ::= '{'^ seq '}'^ 
 
 // Lexical elements below this line - replace with paraterminals when MGLL working
 ID       ::= &ID

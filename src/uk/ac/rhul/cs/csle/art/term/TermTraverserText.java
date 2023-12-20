@@ -79,7 +79,7 @@ public class TermTraverserText extends TermTraverser {
     if (indent) {
       sb.append("\n");
       for (int i = 0; i < depth; i++)
-        sb.append(" ");
+        sb.append("   ");
     }
     perform(opsPreorder, termIndex);
     if (depthLimit >= 0 && depth >= depthLimit)

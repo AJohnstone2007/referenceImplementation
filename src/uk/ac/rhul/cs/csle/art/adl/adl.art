@@ -4,8 +4,8 @@ adl      ::= #^ | seq^^ | ';' | seq ';'                // top level expression m
 seq      ::= apply^^ | apply ';'^ seq                  // and-also (void-left) operator
 apply    ::= flow | flow apply^                        // 'space' operator (juxtaposition) apply
 flow     ::= def^^ | match^^ | matchr^^                // non-linear flow control
-  match  ::= def '?'^ def skip | def '?'^ def '~'^ def // pattern matching
-  matchr ::= def '@'^ def skip | def '@'^ def '~'^ def // pattern matching and repeat
+  match  ::= def '?'^ flow skip | def '?'^ flow '~'^ def // pattern matching
+  matchr ::= def '@'^ flow skip | def '@'^ flow '~'^ def // pattern matching and repeat
   skip   ::= #^                                        // do-nothing
 def      ::= slice^^ | const^^ | assign^^              // assign and constant definition
   const  ::= lhslst '='^ def
@@ -44,12 +44,13 @@ muls     ::= exp^^ | mul^^ | div^^ | mod^^
   mod    ::= muls '%'^ exp
 exp      ::= cast^^ | cast '**'^ exp
 cast     ::= base^^ | base '$'^ ID^                    // attempt to cast a value to another type, throwing an exeption if unavailable
-base     ::= pos^^ | neg^^ | not^^ | lambda^^ | blist^^ | mtlist^^ | use^^ | '('^ seq^^ ')'^ | scope^^  
+base     ::= pos^^ | neg^^ | not^^ | lambda^^ | system^^ | blist^^ | mtlist^^ | use^^ | '('^ seq^^ ')'^ | scope^^  
            | __bool^^ | __int32^^ | __real64^^ | __char^^ | __string^^ | __done^^ | __empty^^ | any | break^^ | continue^^ | return^^ | yield^^
-pos      ::= '+'^ base
-neg      ::= '-'^ base
+pos      ::= '!+'^ base
+neg      ::= '!-'^ base
 not      ::= '!'^ base
 lambda   ::= '\'^ lhslst scope^ | '\'^ '('^ lhslst ')'^ scope^
+system   ::= '$$$'^
 blist    ::= '['^ seq ']'^                               // fully bracketed list, allowing single element lists
 mtlist   ::= '['^ ']'^                                   // empty list (since empty seq is not allowed)
 use      ::= ID^

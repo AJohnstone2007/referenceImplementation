@@ -45,7 +45,7 @@ public class ADL {
     case "assign":   return updateEnvironment(env, children[0],children[1],env, false);
     case "match":    if (interpret(children[0], env).equals(iTerms.valueBoolTrue)) return interpret(children[1], env);
                      return interpret(children[2], env);
-    case "matchrep": ret = iTerms.valueEmpty;
+    case "matchr": ret = iTerms.valueEmpty;
                      while (interpret(children[0], env).equals(iTerms.valueBoolTrue)) ret = interpret(children[1], env);
                      if (!iTerms.hasSymbol(children[2], "skip")) ret = interpret(children[2], env);
                      return ret;

@@ -1,18 +1,22 @@
 (* adl - a dynamic language (or maybe Adrian's dynamic language) *)
 !whitespace(&SIMPLE_WHITESPACE,&COMMENT_BLOCK_C,&COMMENT_LINE_C)
-adl      ::= #^ | ';'^ | seq^^     // A script may be empty, or just a semicolon or a sequence
-seq      ::= apply^^ | apply ';'^ seq  // void-left operator
-apply    ::= typed | typed apply^      // 'space' operator (juxtaposition) apply
-typed    ::= def^^ | def '::' ID
-def      ::= slice^^ | const^^ | assign^^
-const    ::= lhsLst '='^ def
-assign   ::= lhsLst ':='^ def
-lhsLst   ::= lhsEl^ | lhsEl^ ','^ lhsLst^
-lhsEl    ::= ID^^ | ID^ '::'^ ID 
-slice    ::= list^^ | list '#'^ or | list '#'^ or '..'^ or | list '#'^ or '..'^ or '..'^ or
-list     ::= pair^^ | pair ','^ listTail^
-listTail ::= pair  | pair ','^ listTail^
-pair     ::= or^^ | or ':'^ or
+adl      ::= #^ | seq^^ | ';' | seq ';'                // top level expression may be empty or a seq followed by optional semicolon
+seq      ::= apply^^ | apply ';'^ seq                  // and-also (void-left) operator
+apply    ::= flow | flow apply^                        // 'space' operator (juxtaposition) apply
+flow     ::= def^^ | match^^ | matchr^^                // non-linear flow control
+  match  ::= def '?'^ def skip | def '?'^ def '~'^ def // pattern matching
+  matchr ::= def '@'^ def skip | def '@'^ def '~'^ def // pattern matching and repeat
+  skip   ::= #^                                        // do-nothing
+def      ::= slice^^ | const^^ | assign^^              // assign and constant definition
+  const  ::= lhslst '='^ def
+  assign ::= lhslst ':='^ def
+  lhslst ::= lhselm^ | lhselm^ ','^ lhselm^            // restricted syntax for LHS of definitions and function parameters
+  lhselm ::= ID^^ | ID^ '::'^ ID 
+slice    ::= list^^                                    // extract a sub list
+           | list '#'^ or | list '#'^ or '..'^ or | list '#'^ or '..'^ or '..'^ or
+list     ::= pair^^ | pair ','^ listtl^
+  listtl ::= pair  | pair ','^ listtl^
+pair     ::= or^^ | or ':'^ or                         // sugar for list of exactly two elements
 or       ::= xor^^ |  or '|'^ xor 
 xor      ::= and^^ | xor '^'^ and 
 and      ::= eqs^^ | eqs '&'^ and
@@ -24,8 +28,8 @@ rels     ::= cat^^ | ge^^ | gt^^ | le^^ | lt^^
   gt     ::= cat '>'^ cat 
   le     ::= cat '<='^ cat 
   lt     ::= cat '<'^ cat
-cat      ::=  shs^^  | cat '::'^ shs
-shs      ::=  adds^^ | lsh^^ | rsh^^ | rol^^ | ror^^ | ash^^
+cat      ::= shs^^  | cat '::'^ shs
+shs      ::= adds^^ | lsh^^ | rsh^^ | rol^^ | ror^^ | ash^^
   lsh    ::= shs '<<'^ adds 
   rsh    ::= shs '>>'^ adds 
   rol    ::= shs '<<|'^ adds 
@@ -34,36 +38,33 @@ shs      ::=  adds^^ | lsh^^ | rsh^^ | rol^^ | ror^^ | ash^^
 adds     ::= muls^^ | add^^ | sub^^
   add    ::= adds '+'^ muls 
   sub    ::= adds '-'^ muls 
-muls     ::=  exp^^ | mul^^ | div^^ | mod^^
+muls     ::= exp^^ | mul^^ | div^^ | mod^^
   mul    ::= muls '*'^ exp  
   div    ::= muls '/'^ exp 
   mod    ::= muls '%'^ exp
-exp      ::= base^^ | base '**'^ exp
-base     ::= pos^^ | neg^^ | not^^ | lambda^^ | blist^^ | mtlist^^
-           | __bool^^ | __int32^^ | __real64^^ | __char^^ | __string^^ | use^^ | '_'^^    
-           | __done | __empty | break | continue | return | yield | match | matchrep
-           | '('^ seq^^ ')'^ | scope^^
+exp      ::= cast^^ | cast '**'^ exp
+cast     ::= base^^ | ID^ '::'^ base                    // attempt to cast a value to another type, throwing an exeption if unavailable
+base     ::= pos^^ | neg^^ | not^^ | lambda^^ | blist^^ | mtlist^^ | use^^ | '('^ seq^^ ')'^ | scope^^  
+           | __bool^^ | __int32^^ | __real64^^ | __char^^ | __string^^ | __done^^ | __empty^^ | any | break^^ | continue^^ | return^^ | yield^^
 pos      ::= '+'^ base
 neg      ::= '-'^ base
 not      ::= '!'^ base
-lambda   ::= 'fn'^ lhsLst scope^ | 'fn'^ '('^ lhsLst ')'^ scope^
-blist    ::= '['^ seq ']'^
-mtlist   ::= '['^ ']'^
+lambda   ::= 'fn'^ lhslst scope^ | 'fn'^ '('^ lhslst ')'^ scope^
+blist    ::= '['^ seq ']'^                               // fully bracketed list, allowing single element lists
+mtlist   ::= '['^ ']'^                                   // empty list (since empty seq is not allowed)
 use      ::= ID^
+any      ::= '_'^  
 __done   ::= 'done'^
 __empty  ::= 'empty'^
 break    ::= 'break'^
 continue ::= 'continue'^
 return   ::= 'return'^
-yield    ::= 'yield'
-match    ::= '('^ list '?'^ list skip ')'^ | '('^ list '?'^ list '~' list ')'^ 
-matchrep ::= '('^ list '@'^ list skip ')'^ | '('^ list '@'^ list '~' list ')'^ 
-skip     ::= #^
+yield    ::= 'yield'^
 scope    ::= '{'^ seq '}'^ 
 
 // Lexical elements below this line - replace with paraterminals when MGLL working
 ID       ::= &ID
-__bool   ::= 'True'^^ | 'False'^^
+__bool   ::= 'true'^^ | 'false'^^
 __int32  ::= &INTEGER
 __real64 ::= &REAL
 __char   ::= &STRING_SQ

@@ -41,6 +41,8 @@ public class ADL {
                          ret = interpret(((__proc) ret).getBodyTerm(), callEnv);
                        } else ret = interpret(c, env);
                      return ret; // Result of expression is the last thing computed
+    case "const":    return updateEnvironment(env, children[0],children[1],env, true);
+    case "assign":   return updateEnvironment(env, children[0],children[1],env, false);
     case "match":    if (interpret(children[0], env).equals(iTerms.valueBoolTrue)) return interpret(children[1], env);
                      return interpret(children[2], env);
     case "matchrep": ret = iTerms.valueEmpty;
@@ -56,8 +58,6 @@ public class ADL {
     case "scope":    return interpret(children[0], new __mapChain(env));
     case "skip":     return iTerms.valueDone;
     case "pair":     ret = new __list(); ret.__add(interpret(children[0], env)); ret.__add(interpret(children[1], env)); return ret;
-    case "const":    env.__put(interpret(children[0],env), interpret(children[1],env), false); return interpret(children[1],env);
-    case "assign":   env.__put(interpret(children[0],env), interpret(children[1],env), false); return interpret(children[1],env);
     case "or":       return interpret(children[0],env).__or(interpret(children[1], env));
     case "xor":      return interpret(children[0],env).__xor(interpret(children[1], env));
     case "and":      return interpret(children[0],env).__and(interpret(children[1], env));
@@ -91,5 +91,13 @@ public class ADL {
     case "use":      return env.__get(new __quote(children[0]));
     }
     throw new ADLException("in ADL term, unknown constructor '" + iTerms.getTermSymbolString(term) + "'");
+  }
+
+  private Value updateEnvironment(__mapChain env, int lhsTerm, int rhsTerm, __mapChain env2, boolean lock) {
+    Value ret = iTerms.valueEmpty;
+    if (iTerms.getTermArity(lhsTerm) == 1)
+      env.__put(new __quote(iTerms.getSubterm(lhsTerm, 0)), ret = interpret(rhsTerm, env), lock);
+    else throw new ADLException("lhsList with arity > 1 not yet implemented");
+    return ret;
   }
 }

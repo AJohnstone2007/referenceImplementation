@@ -99,11 +99,23 @@ public abstract class ReferenceParser {
   }
 
   public void parse() {
-    System.out.println("Parse not available");
+    System.out.println("parse() not implemented for parser class " + this.getClass().getSimpleName());
   }
 
   public void show() {
-    System.out.println("Visualisation not available");
+    System.out.println("show() not implemented for parser class " + this.getClass().getSimpleName());
+  }
+
+  public void chooseLongestMatch() {
+    System.out.println("chooseLongestMatch() not implemented for parser class " + this.getClass().getSimpleName());
+  }
+
+  public void selectFirst() {
+    System.out.println("selectFirst() not implemented for parser class " + this.getClass().getSimpleName());
+  }
+
+  public void selectLast() {
+    System.out.println("selectLast() not implemented for parser class " + this.getClass().getSimpleName());
   }
 
   public int derivationAsTerm() {

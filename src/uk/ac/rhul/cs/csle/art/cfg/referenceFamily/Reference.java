@@ -125,6 +125,7 @@ final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTermi
     scriptParser.input = scriptLexer.tokens;
     scriptParser.positions = scriptLexer.positions;
     scriptParser.parse();
+    scriptParser.selectFirst();
 
     int scriptTerm = scriptParser.accepted ? scriptParser.derivationAsTerm() : 0;
 
@@ -239,8 +240,8 @@ final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTermi
           break;
 
         case "derivation":
-          System.out.println("Working derivation term: [" + workingDerivationTerm + "]\n" + iTerms.toString(workingDerivationTerm, false, -1, null));
-          // System.out.println("Working derivation term: [" + workingDerivationTerm + "]\n" + iTerms.toString(workingDerivationTerm, true, -1, null));
+          // System.out.println("Working derivation term: [" + workingDerivationTerm + "]\n" + iTerms.toString(workingDerivationTerm, false, -1, null));
+          System.out.println("Working derivation term: [" + workingDerivationTerm + "]\n" + iTerms.toString(workingDerivationTerm, true, -1, null));
           if (scriptParserTerm == workingDerivationTerm) System.out.println("Bootstrap achieved: script parser term and working derivation term identical");
           break;
 
@@ -370,8 +371,10 @@ final String scriptParserTermString = "text(directive(whitespace(cfgBuiltinTermi
       good++;
     else
       bad++;
-    if (!suppressOutput) {
-      return parser.accepted ? parser.derivationAsTerm() : 0;
+    if (!suppressOutput) if (parser.accepted) {
+      parser.chooseLongestMatch();
+      parser.selectFirst();
+      return parser.derivationAsTerm();
     }
     return 0;
   }

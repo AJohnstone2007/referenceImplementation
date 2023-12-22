@@ -4,8 +4,8 @@ adl      ::= #^ | seq^^ | ';' | seq ';'                // top level expression m
 seq      ::= apply^^ | apply ';'^ seq                  // and-also (void-left) operator
 apply    ::= flow | flow apply^                        // 'space' operator (juxtaposition) apply
 flow     ::= def^^ | match^^ | matchr^^                // non-linear flow control
-  match  ::= def '?'^ flow skip | def '?'^ flow '~'^ def // pattern matching
-  matchr ::= def '@'^ flow skip | def '@'^ flow '~'^ def // pattern matching and repeat
+  match  ::= def '?'^ flow '~'^ def | def '?'^ flow skip  // pattern matching
+  matchr ::= def '@'^ flow '~'^ def |def '@'^ flow skip  // pattern matching and repeat
   skip   ::= #^                                        // do-nothing
 def      ::= slice^^ | const^^ | assign^^              // assign and constant definition
   const  ::= lhslst '='^ def
@@ -49,8 +49,10 @@ base     ::= pos^^ | neg^^ | not^^ | lambda^^ | system^^ | blist^^ | mtlist^^ | 
 pos      ::= '!+'^ base
 neg      ::= '!-'^ base
 not      ::= '!'^ base
-lambda   ::= '\'^ lhslst scope^ | '\'^ '('^ lhslst ')'^ scope^
+lambda   ::= lambkw^ lhslst scope^ | lambkw^ '('^ lhslst ')'^ scope^
+  lambkw ::= '\'^ | 'fn'^
 system   ::= '$$$'^
+
 blist    ::= '['^ seq ']'^                               // fully bracketed list, allowing single element lists
 mtlist   ::= '['^ ']'^                                   // empty list (since empty seq is not allowed)
 use      ::= ID^

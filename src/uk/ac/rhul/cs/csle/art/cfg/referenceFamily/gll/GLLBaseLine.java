@@ -62,25 +62,56 @@ public class GLLBaseLine extends ReferenceParser {
         + sppfAmbiguityCount + "," + (endMemory - startMemory) + "," + String.format("%.2f", (double) (endMemory - startMemory) / input.length);
   }
 
-  private void sppfClearSelected() {
+  private void clearSelected() {
     for (SPPFN s : sppf.keySet())
       for (SPPFPN p : s.packNS)
         p.selected = false;
   }
 
-  private void sppfClearSuppressed() {
+  private void clearSuppressed() {
     for (SPPFN s : sppf.keySet())
       for (SPPFPN p : s.packNS)
         p.suppressed = false;
   }
 
+  @Override
+  public void chooseLongestMatch() {
+    chooseLongestMatchRec(sppfRootNode);
+  }
+
+  private void chooseLongestMatchRec(SPPFN sn) {
+    int rightMostPivot = -1;
+    SPPFPN candidate = null;
+    for (SPPFPN p : sn.packNS) {
+      if (p.pivot > rightMostPivot) {
+        rightMostPivot = p.pivot;
+        candidate = p;
+      }
+      if (p.leftChild != null) chooseLongestMatchRec(p.leftChild);
+      if (p.rightChild != null) chooseLongestMatchRec(p.rightChild);
+    }
+
+    for (SPPFPN p : sn.packNS)
+      if (p != candidate) p.suppressed = true;
+  }
+
+  @Override
+  public void selectFirst() {
+    sppfSelectFirst(sppfRootNode);
+  }
+
   private void sppfSelectFirst(SPPFN sppfRootNode) {
-    sppfClearSelected();
+    clearSelected();
     sppfRootNode.selectFirstRec();
   }
 
+  @Override
+  public void selectLast() {
+    sppfSelectLast(sppfRootNode);
+  }
+
   private void sppfSelectLast(SPPFN sppfRootNode) {
-    sppfClearSelected();
+    clearSelected();
     sppfRootNode.selectLastRec();
   }
 
@@ -304,7 +335,7 @@ HashSet<SPPFN> visited;
 private SPPFPN firstSelectedPackNode(SPPFN sppfn) {
   SPPFPN candidate = null;
   for (SPPFPN p : sppfn.packNS)
-    // if (p.selected)
+    if (p.selected)
     if (candidate == null)
       candidate = p;
     else

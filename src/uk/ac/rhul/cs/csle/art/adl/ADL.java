@@ -46,9 +46,12 @@ public class ADL {
     case "match":    if (interpret(children[0], env).equals(iTerms.valueBoolTrue)) return interpret(children[1], env);
                      return interpret(children[2], env);
     case "matchr": ret = iTerms.valueEmpty;
-                     while (interpret(children[0], env).equals(iTerms.valueBoolTrue)) ret = interpret(children[1], env);
-                     if (!iTerms.hasSymbol(children[2], "skip")) ret = interpret(children[2], env);
-                     return ret;
+                     if (interpret(children[0], env).equals(iTerms.valueBoolTrue)) {
+                       ret = interpret(children[1], env);
+                       while (interpret(children[0], env).equals(iTerms.valueBoolTrue)) ret = interpret(children[1], env);
+                       return ret;
+                     }
+                     return interpret(children[2], env);
     case "slice":    throw new ADLException("Slice not yet implemented");
     case "blist":    int gc = iTerms.getSubterm(term, 0,0); if (iTerms.hasSymbol(gc, "list")) children = iTerms.getTermChildren(gc);
     case "mtlist":   // blist flattens list as top argument and flows through to list; mtlist just flows through

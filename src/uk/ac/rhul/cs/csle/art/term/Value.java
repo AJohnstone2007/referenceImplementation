@@ -45,6 +45,27 @@ public abstract class Value {
     return this.getClass().getSimpleName() + "(" + javaValue() + ")";
   }
 
+  public String toValueString() {
+
+    return javaValue() == null ? "null" : javaValue().toString();
+  }
+
+  char processEscape(char e) {
+    switch (e) {
+    case 'b':
+      return '\n';
+    case 'f':
+      return '\f';
+    case 'n':
+      return '\n';
+    case 'r':
+      return '\r';
+    case 't':
+      return '\t';
+    }
+    return e;
+  }
+
   public Value __eq(Value r) {
     if (equals(r))
       return iTerms.valueBoolTrue;

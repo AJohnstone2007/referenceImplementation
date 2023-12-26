@@ -1,22 +1,25 @@
-(* adl - a dynamic language (or maybe Adrian's dynamic language) *)
+(* adl - a dynamic language (or maybe Adrian's dynamic language) 
+   This is version 0.1 with lambdas and basic flow control but no pattern matching
+*)
 !whitespace(&SIMPLE_WHITESPACE,&COMMENT_BLOCK_C,&COMMENT_LINE_C)
-adl      ::= #^ | seq^^ | ';' | seq ';'                // top level expression may be empty or a seq followed by optional semicolon
-seq      ::= apply^^ | apply ';'^ seq                  // and-also (void-left) operator
-apply    ::= flow | flow apply^                        // 'space' operator (juxtaposition) apply
-flow     ::= def^^ | match^^ | matchr^^                // non-linear flow control
+adl      ::= #^ | seq^^ | ';' | seq ';'                   // top level expression may be empty or a seq followed by optional semicolon
+seq      ::= apply^^ | apply ';'^ seq                     // and-also (void-left) operator
+apply    ::= flow | flow apply^                           // 'space' operator (juxtaposition) apply
+flow     ::= def^^ | match^^ | matchr^^                   // non-linear flow control
   match  ::= def '?'^ flow '~'^ def | def '?'^ flow skip  // pattern matching
-  matchr ::= def '@'^ flow '~'^ def |def '@'^ flow skip  // pattern matching and repeat
-  skip   ::= #^                                        // do-nothing
-def      ::= slice^^ | const^^ | assign^^              // assign and constant definition
+  matchr ::= def '@'^ flow '~'^ def |def '@'^ flow skip   // pattern matching and repeat
+  skip   ::= #^                                           // do-nothing
+def      ::= system^^ | const^^ | assign^^                // assign and constant definition
   const  ::= lhslst '='^ def
   assign ::= lhslst ':='^ def
-  lhslst ::= lhselm^ | lhselm^ ','^ lhselm^            // restricted syntax for LHS of definitions and function parameters
-  lhselm ::= ID^^ | ID^^ '::'^ or                      // pair interpreted as paramater-name(default value) 
-slice    ::= list^^                                    // extract a sub list
+  lhslst ::= lhselm^ | lhselm^ ','^ lhselm^               // restricted syntax for LHS of definitions and function parameters
+  lhselm ::= ID^^ | ID^^ '::'^ or                         // pair interpreted as paramater-name(default value) 
+system   ::= slice^^ | slice '$$$'^ slice                 // system call: lhs is opcode, rhs is argument
+slice    ::= list^^                                       // extract a sub list
            | list '#'^ or | list '#'^ or '..'^ or | list '#'^ or '..'^ or '..'^ or
 list     ::= pair^^ | pair ','^ listtl^
   listtl ::= pair  | pair ','^ listtl^
-pair     ::= or^^ | or '::'^ or                        // sugar for list of exactly two elements
+pair     ::= or^^ | or '::'^ or                           // sugar for list of exactly two elements
 or       ::= xor^^ |  or '|'^ xor 
 xor      ::= and^^ | xor '^'^ and 
 and      ::= eqs^^ | eqs '&'^ and
@@ -43,15 +46,14 @@ muls     ::= exp^^ | mul^^ | div^^ | mod^^
   div    ::= muls '/'^ exp 
   mod    ::= muls '%'^ exp
 exp      ::= cast^^ | cast '**'^ exp
-cast     ::= base^^ | base '$'^ ID^                    // attempt to cast a value to another type, throwing an exeption if unavailable
-base     ::= pos^^ | neg^^ | not^^ | lambda^^ | system^^ | blist^^ | mtlist^^ | use^^ | '('^ seq^^ ')'^ | scope^^  
+cast     ::= base^^ | base '$'^ ID^                       // attempt to cast a value to another type, throwing an exeption if unavailable
+base     ::= pos^^ | neg^^ | not^^ | lambda^^ | blist^^ | mtlist^^ | use^^ | '('^ seq^^ ')'^ | scope^^  
            | __bool^^ | __int32^^ | __real64^^ | __char^^ | __string^^ | __done^^ | __empty^^ | any | break^^ | continue^^ | return^^ | yield^^
 pos      ::= '!+'^ base
 neg      ::= '!-'^ base
 not      ::= '!'^ base
-lambda   ::= lambkw^ lhslst scope^ | lambkw^ '('^ lhslst ')'^ scope^
+lambda   ::= lambkw^ lhslst scope^ | lambkw^ '('^ lhslst ')'^ scope^ | lambkw^ scope^ | lambkw^ '('^ ')'^ scope^
   lambkw ::= '\'^ | 'fn'^
-system   ::= '$$$'^
 
 blist    ::= '['^ seq ']'^                               // fully bracketed list, allowing single element lists
 mtlist   ::= '['^ ']'^                                   // empty list (since empty seq is not allowed)

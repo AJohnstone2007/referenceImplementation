@@ -14,7 +14,7 @@ public class __string extends Value {
 
   public __string(int termIndex) {
     String label = iTerms.getTermSymbolString(iTerms.getTermChildren(termIndex)[0]);
-    value = label.substring(1, label.length() - 1);
+    value = label.substring(1, label.length() - 1).translateEscapes();
   }
 
   @Override
@@ -31,9 +31,9 @@ public class __string extends Value {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     __string other = (__string) obj;
-    if (value == null) {
-      if (other.value != null) return false;
-    } else if (!value.equals(other.value)) return false;
+    if (value == null) if (other.value != null)
+      return false;
+    else if (!value.equals(other.value)) return false;
     return true;
   }
 

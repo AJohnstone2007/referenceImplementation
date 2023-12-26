@@ -81,6 +81,20 @@ public class __mapChain extends Value {
     return sb.toString();
   }
 
+  public String toStringLocal() {
+    StringBuilder sb = new StringBuilder("__mapChain(");
+    boolean notFirst = false;
+    for (Value v : javaValue.keySet()) {
+      if (notFirst)
+        sb.append(", ");
+      else
+        notFirst = true;
+      sb.append(" " + v + ":" + javaValue.get(v));
+    }
+    sb.append(")");
+    return sb.toString();
+  }
+
   @Override
   public Value __size() {
     return new __int32(javaValue.size() + (parent != null ? ((__int32) parent.__size()).javaValue() : 0), 0);

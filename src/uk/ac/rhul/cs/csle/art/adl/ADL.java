@@ -1,7 +1,12 @@
 // @formatter:off
 package uk.ac.rhul.cs.csle.art.adl;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 import uk.ac.rhul.cs.csle.art.term.ITerms;
 import uk.ac.rhul.cs.csle.art.term.Value;
@@ -16,19 +21,18 @@ import uk.ac.rhul.cs.csle.art.term.__string;
 
 public class ADL {
   ITerms iTerms;
+  BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
   public ADL(ITerms iTerms) { this.iTerms = iTerms;}
 
   public Value interpret(int term, __mapChain env) {
-    // System.out.println("ADL interpret " + iTerms.toString(term));
+    System.out.println("ADL interpret " + iTerms.toString(term));
     Value ret; // tenporary used in some switch cases
     int children[] = iTerms.getTermChildren(term);
     switch (iTerms.getTermSymbolString(term)) {
-    case "lambda":   LinkedHashMap<__quote, Value> parameters = new LinkedHashMap<>();
-                     for (int i: iTerms.getTermChildren(children[0])) parameters.put(new __quote(i), iTerms.valueEmpty);
-                     return new __proc(parameters, children[1]);
     case "apply":    ret = iTerms.valueEmpty;
-                     for (int c : children)
+                     for (int c : children) {
                        if (ret instanceof __proc) { // ret is result of previous child
+                        System.out.println("Applying procedure");
                          __mapChain callEnv = new __mapChain(env);
                          Value argument = interpret(c, env);
                          Iterator<__quote> parameterIterator = ((__proc) ret).getParameters().keySet().iterator();
@@ -38,15 +42,18 @@ public class ADL {
                            while (argumentIterator.hasNext()) callEnv.__put(parameterIterator.next(), argumentIterator.next());
                          } else callEnv.__put(parameterIterator.next(), argument); // singleton case
 
+                         System.out.println("apply " + ret + " with argument environment "  + callEnv.toStringLocal());
+
                          ret = interpret(((__proc) ret).getBodyTerm(), callEnv);
                        } else ret = interpret(c, env);
+                     }
                      return ret; // Result of expression is the last thing computed
+    case "system":   return systemCall(interpret(children[0], env), interpret(children[1], env));
     case "const":    return updateEnvironment(env, children[0],children[1],env, true);
     case "assign":   return updateEnvironment(env, children[0],children[1],env, false);
     case "match":    if (interpret(children[0], env).equals(iTerms.valueBoolTrue)) return interpret(children[1], env);
                      return interpret(children[2], env);
-    case "matchr": ret = iTerms.valueEmpty;
-                     if (interpret(children[0], env).equals(iTerms.valueBoolTrue)) {
+    case "matchr":   if (interpret(children[0], env).equals(iTerms.valueBoolTrue)) {
                        ret = interpret(children[1], env);
                        while (interpret(children[0], env).equals(iTerms.valueBoolTrue)) ret = interpret(children[1], env);
                        return ret;
@@ -58,7 +65,7 @@ public class ADL {
     case "list":     ret = new __list(); for (int c : children) ret.__put(interpret(c, env)); return ret;
     case "adl":      return iTerms.valueEmpty; // Special case - empty program
     case "seq":      interpret(children[0], env); return interpret(children[1], env);
-    case "scope":    return interpret(children[0], new __mapChain(env));
+    case "body":    return iTerms.valueDone;
     case "skip":     return iTerms.valueDone;
     case "pair":     ret = new __list(); ret.__add(interpret(children[0], env)); ret.__add(interpret(children[1], env)); return ret;
     case "or":       return interpret(children[0],env).__or(interpret(children[1], env));
@@ -92,8 +99,37 @@ public class ADL {
     case "__real64": return new __real64(term);
     case "__string": return new __string(term);
     case "use":      return env.__get(new __quote(children[0]));
-    }
+    case "lambda":   LinkedHashMap<__quote, Value> parameters = new LinkedHashMap<>();
+                     if (iTerms.getTermArity(term) == 1) return new __proc(parameters, children[0]);
+                     else {
+                       for (int i: iTerms.getTermChildren(children[0])) parameters.put(new __quote(i), iTerms.valueEmpty);
+                       return new __proc(parameters, children[1]);
+                     }
+   }
     throw new ADLException("in ADL term, unknown constructor '" + iTerms.getTermSymbolString(term) + "'");
+  }
+
+  private Value systemCall(Value opcode, Value argument) {
+//     System.out.println("System call with opcode " + opcode + " and argument " + argument);
+    if (!(opcode instanceof __int32)) throw new ADLException("Left operand of $$$ system operator must be an integer");
+    int oc = ((__int32)opcode).javaValue;
+    switch (oc){
+    case 0: throw new ADLException("Plugin access not yet implemented"); // Plugin
+    case 1: return print(System.out, argument);
+    case 2: return print(System.err, argument);
+    case 3: try { return new __string(keyboard.readLine());
+                } catch (IOException e) { throw new ADLException("I/O error on keyboard read"); }
+    default: throw new ADLException("Illegal system opcode " + oc);
+    }
+  }
+
+  private Value print(PrintStream ps, Value argument) {
+    LinkedList<Value> list = argument instanceof __list ? ((__list) argument).javaValue(): null;
+    String nl = "\n";
+    if (list == null) ps.print(argument.toValueString());
+    else for (Value v:list)
+      System.out.print(v.toValueString());
+    return iTerms.valueEmpty;
   }
 
   private Value updateEnvironment(__mapChain env, int lhsTerm, int rhsTerm, __mapChain env2, boolean lock) {

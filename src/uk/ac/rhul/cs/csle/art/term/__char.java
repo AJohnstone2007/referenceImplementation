@@ -14,7 +14,7 @@ public class __char extends Value {
 
   public __char(int termIndex) {
     int[] children = iTerms.getTermChildren(termIndex);
-    String child = iTerms.getTermSymbolString(children[0]);
+    String child = iTerms.getTermSymbolString(children[0]).translateEscapes();
     if (child.charAt(0) != '`') throw new ValueException("__char argument must have leading `");
     javaValue = child.charAt(1);
   }

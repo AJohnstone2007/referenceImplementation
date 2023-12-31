@@ -1,3 +1,5 @@
+31 December 2023
+
 This note explains how to modify the reference implementation's script grammar and update the bootstrap
 
 1. The reference script grammar is in the file 

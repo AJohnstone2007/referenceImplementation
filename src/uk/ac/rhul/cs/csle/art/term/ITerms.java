@@ -18,7 +18,7 @@ public abstract class ITerms {
   protected int firstSpecialSymbolIndex;
   protected int firstNormalSymbolIndex;
 
-  public PluginInterface plugin = new Plugin();
+  public PluginInterface plugin = new ARTPlugin();
 
   public int bottomTermIndex;
   public int doneTermIndex;
@@ -126,16 +126,17 @@ public abstract class ITerms {
     // Load text traverser default action which appends the escaped version of the constructor
     tt.addAction(-1, (Integer t) -> tt.append(escapeMeta(getTermSymbolString(t)) + (getTermArity(t) == 0 ? "" : "(")), (Integer t) -> tt.append(", "),
         (Integer t) -> tt.append(getTermArity(t) == 0 ? "" : ")"));
-    plugin = new Plugin();
+
+    plugin = new ARTPlugin();
     // Try and find a plugin for __user() calls
     Class<?> pluginClass;
     try {
-      pluginClass = getClass().getClassLoader().loadClass("ValueUserPlugin");
+      pluginClass = getClass().getClassLoader().loadClass("ARTPlugin");
       plugin = (PluginInterface) pluginClass.getDeclaredConstructor().newInstance();
     } catch (Exception e) {
       // Silently ignore failure to locate any plugin
     }
-    // if (valueUserPlugin.name() != null) System.out.println("Attached to ValueUserPlugin : " + valueUserPlugin.name());
+    if (plugin.name() != null) System.out.println("Attached to plugin: " + plugin.name());
   }
 
   public String toString(int term) {

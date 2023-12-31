@@ -1,15 +1,15 @@
 package uk.ac.rhul.cs.csle.art.term;
 
-public class Plugin implements PluginInterface {
+public class ARTPlugin implements PluginInterface {
 
   @Override
   public String name() {
-    return "Default ValueUserPlugin";
+    return "Default ART plugin";
   }
 
   @Override
   public Value plugin(Value... args) throws ValueException {
-    System.out.println("Default plugin called with " + args.length + " argument" + (args.length == 1 ? "" : "s"));
+    System.out.println(name() + " called with " + args.length + " argument" + (args.length == 1 ? "" : "s"));
     for (Value a : args) {
       if (a.javaValue().getClass().isArray()) {
         Value[] v = (Value[]) a.javaValue();

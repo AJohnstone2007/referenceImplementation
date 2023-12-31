@@ -1,6 +1,6 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar;
 
-public class GrammarElement implements Comparable {
+public class GrammarElement implements Comparable<Object> {
   public int ei;
   public final GrammarKind kind;
   public final String str;

@@ -1,4 +1,4 @@
-package uk.ac.rhul.cs.csle.art.cfg.referenceFamily;
+package uk.ac.rhul.cs.csle.art;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,12 +8,8 @@ import uk.ac.rhul.cs.csle.art.term.ITerms;
 import uk.ac.rhul.cs.csle.art.term.ITermsLowLevelAPI;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
-public class Reference {
+public class ART {
   public static void main(String[] args) {
-    new Reference(args);
-  }
-
-  public Reference(String[] args) {
     final ITerms iTerms = new ITermsLowLevelAPI();
 
     StringBuilder scriptString = new StringBuilder();
@@ -34,6 +30,6 @@ public class Reference {
     }
     // System.out.println("Script string: " + scriptString);
 
-    new ReferenceScriptInterpreter(iTerms).interpret(scriptString.toString());
+    new ARTScriptInterpreter(iTerms).interpret(scriptString.toString());
   }
 }

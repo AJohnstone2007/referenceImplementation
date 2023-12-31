@@ -5,7 +5,7 @@ import java.util.Set;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.LKind;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
-public class ReferenceLexer {
+public abstract class ReferenceLexer {
   protected LKind[] kinds;
   protected String[] strings;
   protected LKind[] whitespaces;
@@ -13,6 +13,8 @@ public class ReferenceLexer {
   protected String inputString;
   protected char[] input;
   protected int inputIndex, inputLength, leftIndex, longestMatchToken, longestMatchRightIndex, firstBuiltin;
+
+  public abstract void lex(String inputString, LKind[] kinds, String[] strings, LKind[] whitespaces, boolean suppressEcho);
 
   protected void processBuiltin(LKind b, String s) {
     switch (b) {

@@ -53,7 +53,7 @@ public class ARTScriptInterpreter {
     scriptParser.grammar = currentGrammar;
   }
 
-  void initialiseScriptTraverser() { // Initialise scriptTraverser
+  private void initialiseScriptTraverser() { // Initialise scriptTraverser
     scriptTraverser.addActionBreak("directive", (Integer t) -> directiveAction(t), null, null);
 
     scriptTraverser.addActionBreak("cfgLHS", (Integer t) -> currentGrammar.lhsAction(childSymbolString(t)), null, null);
@@ -78,7 +78,7 @@ public class ARTScriptInterpreter {
     scriptTraverser.addAction("cfgSlot", (Integer t) -> currentGrammar.workingAction = t, null, null);
   }
 
-  public void directiveAction(int term) {
+  private void directiveAction(int term) {
     // System.out.println("Processing " + iTerms.toString(term));
     switch (iTerms.getTermSymbolString(iTerms.getSubterm(term, 0))) {
     case "whitespace":
@@ -280,5 +280,9 @@ public class ARTScriptInterpreter {
     if (scriptTerm == 0) Util.fatal("Script syntax error");
 
     scriptTraverser.traverse(scriptTerm);
+  }
+
+  public Grammar getGrammar() {
+    return currentGrammar;
   }
 }

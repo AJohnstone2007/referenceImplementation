@@ -62,14 +62,9 @@ public class __mapChain extends Value {
       sb.append("__empty");
     else
       sb.append(parent.toString());
-    sb.append("), ");
-    boolean notFirst = false;
+    sb.append(")");
     for (Value v : javaValue.keySet()) {
-      if (notFirst)
-        sb.append(", ");
-      else
-        notFirst = true;
-      sb.append(" " + v + ":" + javaValue.get(v));
+      sb.append(", " + v + ":" + javaValue.get(v));
     }
   }
 

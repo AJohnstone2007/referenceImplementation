@@ -1,14 +1,21 @@
-// @formatter:off
 package uk.ac.rhul.cs.csle.art.adl;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import uk.ac.rhul.cs.csle.art.ARTScriptInterpreter;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.gll.GLLBaseLine;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
+import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.lexer.LexerLM;
 import uk.ac.rhul.cs.csle.art.term.ITerms;
+import uk.ac.rhul.cs.csle.art.term.ITermsLowLevelAPI;
 import uk.ac.rhul.cs.csle.art.term.Value;
 import uk.ac.rhul.cs.csle.art.term.__char;
 import uk.ac.rhul.cs.csle.art.term.__class;
@@ -19,15 +26,66 @@ import uk.ac.rhul.cs.csle.art.term.__proc;
 import uk.ac.rhul.cs.csle.art.term.__quote;
 import uk.ac.rhul.cs.csle.art.term.__real64;
 import uk.ac.rhul.cs.csle.art.term.__string;
+import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class ADL {
-  ITerms iTerms;
-  BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-  public ADL(ITerms iTerms) { this.iTerms = iTerms;}
-//  String objectClassBody = ";";
-//
-  __class objectClass = new __class(new LinkedList<>(),0);
+  private final ITerms iTerms;
+  private final BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
 
+  public static void main(String[] args) {
+    if (args.length == 0) Util.fatal("ADL - usage adl <filename.adl>");
+    new ADL(args[0]);
+  }
+
+  public ADL(String filename) {
+    System.out.println("ADL V1.00");
+    iTerms = new ITermsLowLevelAPI();
+    InputStream inputStream = getClass().getClassLoader().getResourceAsStream("uk/ac/rhul/cs/csle/art/adl/adlSpecification.art");
+    String ADLSpecification = "** null **";
+    try {
+      ADLSpecification = new String(inputStream.readAllBytes());
+    } catch (IOException e) {
+      Util.fatal("Unable to read ADL specification");
+    }
+    // System.out.println(ADLSpecification);
+    ARTScriptInterpreter artScriptInterpreter = new ARTScriptInterpreter(iTerms);
+    artScriptInterpreter.interpret(ADLSpecification);
+    String inputString = "3+4";
+
+    Grammar adlGrammar = artScriptInterpreter.getGrammar();
+    LexerLM adlLexer = new LexerLM();
+    ReferenceParser adlParser = new GLLBaseLine();
+
+    adlParser.traceLevel = 0;
+    adlParser.inputStringName = "";
+    adlParser.inputString = inputString;
+    adlParser.suppressEcho = true;
+    adlGrammar.normalise();
+    adlParser.grammar = adlGrammar;
+    int adlDerivationTerm = 0;
+    adlParser.accepted = false;
+
+    adlLexer.lex(inputString, adlGrammar.lexicalKindsArray(), adlGrammar.lexicalStringsArray(), adlGrammar.whitespacesArray(), true);
+    // lexer.report();
+    adlParser.input = adlLexer.tokens;
+    adlParser.positions = adlLexer.positions;
+    if (adlParser.input != null) adlParser.parse();
+    if (adlParser.accepted) {
+      adlParser.chooseLongestMatch();
+      adlParser.selectFirst();
+      adlDerivationTerm = adlParser.derivationAsTerm();
+      __mapChain topLevelEnvironment = new __mapChain();
+      Value topLevelReturn = interpret(adlDerivationTerm, topLevelEnvironment);
+
+      System.out.println("ADL returns " + topLevelReturn + " with environment " + topLevelEnvironment);
+    }
+  }
+
+  // String objectClassBody = ";";
+  //
+  __class objectClass = new __class(new LinkedList<>(), 0);
+
+//@formatter:off
   public Value interpret(int term, __mapChain env) {
 //    System.out.println("ADL interpret " + iTerms.toString(term));
     Value ret; // tenporary used in some switch cases

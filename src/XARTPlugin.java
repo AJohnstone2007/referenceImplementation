@@ -25,5 +25,4 @@ public class XARTPlugin implements PluginInterface {
     }
     return new __string("Return value from text example plugin");
   }
-
 }

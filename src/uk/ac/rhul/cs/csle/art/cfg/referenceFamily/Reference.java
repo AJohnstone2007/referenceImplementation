@@ -32,7 +32,7 @@ public class Reference {
       } else
         scriptString.append(a);
     }
-    System.out.println("Script string: " + scriptString);
+    // System.out.println("Script string: " + scriptString);
 
     new ReferenceScriptInterpreter(iTerms).interpret(scriptString.toString());
   }

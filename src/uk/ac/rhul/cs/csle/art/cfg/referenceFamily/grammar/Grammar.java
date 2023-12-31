@@ -35,7 +35,6 @@ public class Grammar {
   private int nextFreeEnumerationElement;
 
   public Grammar(String name, ITerms iTerms) {
-    System.out.println("*** Created grammar " + name);
     this.name = name;
     this.iTerms = iTerms;
     endOfStringNode = new GrammarNode(GrammarKind.EOS, "$", this); // Note that this first GNode to be created fills in static grammar field
@@ -191,7 +190,6 @@ public class Grammar {
   LinkedList<GrammarNode> stack = new LinkedList<>();
 
   public void lhsAction(String id) {
-    System.out.println("lhsAction on " + id);
     GrammarElement element = findElement(GrammarKind.N, id);
     if (startNonterminal == null) startNonterminal = element;
     workingNode = rules.get(element);

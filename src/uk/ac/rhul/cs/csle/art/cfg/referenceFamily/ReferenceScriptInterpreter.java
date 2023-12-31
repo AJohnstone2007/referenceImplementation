@@ -30,9 +30,9 @@ public class ReferenceScriptInterpreter {
   private final int scriptParserTerm;
   private final TermTraverser scriptTraverser;
 
-  private ReferenceParser workingParser = new GLLBaseLine(); // default user parser
-  private final LexerLM workingLexer = new LexerLM(); // default user lexer
-  private final Grammar workingGrammar; // scriptTraverser builds grammar rules into this grammar
+  private ReferenceParser workingParser = new GLLBaseLine(); // default working parser is GLL base line - change to MGLL when available
+  private final LexerLM workingLexer = new LexerLM(); // default working lexer is longest match - change to TWE set lexer when available
+  private Grammar workingGrammar; // scriptTraverser builds grammar rules into this grammar
   private int workingDerivationTerm = 0;
 
   private int goodCount = 0;
@@ -200,7 +200,7 @@ public class ReferenceScriptInterpreter {
       } catch (IOException e) {
         Util.fatal("Unable to open try file '" + tryOperand);
       }
-      workingDerivationTerm = doTry("try", inputString, true, workingGrammar, workingParser, workingLexer, false);
+      doTry("try", inputString, true, workingGrammar, workingParser, workingLexer, false);
       break;
     case "bootstrapTest":
       // Add code to test bootstrapTest.art against itself
@@ -210,7 +210,6 @@ public class ReferenceScriptInterpreter {
     default:
       Util.fatal("Unknown directive !" + iTerms.toString(iTerms.getSubterm(term, 0)));
     }
-
   }
 
   private String childSymbolStringStrip(int t) {
@@ -225,37 +224,36 @@ public class ReferenceScriptInterpreter {
     return iTerms.getTermSymbolString(iTerms.getSubterm(t, 0));
   }
 
-  private int doTry(String inputStringName, String inputString, boolean outcome, Grammar grammar, ReferenceParser parser, LexerLM lexer,
+  private void doTry(String inputStringName, String inputString, boolean outcome, Grammar workingGrammar, ReferenceParser workingParser, LexerLM workingLexer,
       boolean suppressOutput) {
-    parser.traceLevel = traceLevel;
-    parser.inputString = inputString;
-    parser.suppressEcho = suppressOutput;
-    parser.accepted = false;
-    parser.grammar = grammar;
-    parser.inputStringName = inputStringName;
+    workingDerivationTerm = 0;
+    workingParser.traceLevel = traceLevel;
+    workingParser.inputString = inputString;
+    workingParser.suppressEcho = suppressOutput;
+    workingParser.accepted = false;
+    workingParser.grammar = workingGrammar;
+    workingParser.inputStringName = inputStringName;
 
-    grammar.normalise();
-    lexer.lex(inputString, grammar.lexicalKindsArray(), grammar.lexicalStringsArray(), grammar.whitespacesArray(), suppressOutput);
+    workingGrammar.normalise();
+    workingLexer.lex(inputString, workingGrammar.lexicalKindsArray(), workingGrammar.lexicalStringsArray(), workingGrammar.whitespacesArray(), suppressOutput);
     // lexer.report();
-    parser.input = lexer.tokens;
-    parser.positions = lexer.positions;
-    if (parser.input != null) parser.parse();
-    if (parser.inadmissable)
+    workingParser.input = workingLexer.tokens;
+    workingParser.positions = workingLexer.positions;
+    if (workingParser.input != null) workingParser.parse();
+    if (workingParser.inadmissable)
       inadmissableCount++;
-    else if (parser.accepted == outcome)
+    else if (workingParser.accepted == outcome)
       goodCount++;
     else
       badCount++;
-    if (!suppressOutput) if (parser.accepted) {
-      parser.chooseLongestMatch();
-      parser.selectFirst();
-      return parser.derivationAsTerm();
+    if (!suppressOutput) if (workingParser.accepted) {
+      workingParser.chooseLongestMatch();
+      workingParser.selectFirst();
+      workingDerivationTerm = workingParser.derivationAsTerm();
     }
-    return 0;
   }
 
   private void builtinTests() {
-    Grammar workingGrammar;
     workingGrammar = new Grammar("a", parseScript("S ::= 'a'"));
     doTry("", "a", true, workingGrammar, workingParser, workingLexer, true);
     doTry("", "", false, workingGrammar, workingParser, workingLexer, true);

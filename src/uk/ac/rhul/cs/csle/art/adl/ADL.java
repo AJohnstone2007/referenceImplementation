@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import uk.ac.rhul.cs.csle.art.term.ITerms;
 import uk.ac.rhul.cs.csle.art.term.Value;
 import uk.ac.rhul.cs.csle.art.term.__char;
+import uk.ac.rhul.cs.csle.art.term.__class;
 import uk.ac.rhul.cs.csle.art.term.__int32;
 import uk.ac.rhul.cs.csle.art.term.__list;
 import uk.ac.rhul.cs.csle.art.term.__mapChain;
@@ -23,9 +24,12 @@ public class ADL {
   ITerms iTerms;
   BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
   public ADL(ITerms iTerms) { this.iTerms = iTerms;}
+//  String objectClassBody = ";";
+//
+  __class objectClass = new __class(new LinkedList<>(),0);
 
   public Value interpret(int term, __mapChain env) {
-    System.out.println("ADL interpret " + iTerms.toString(term));
+//    System.out.println("ADL interpret " + iTerms.toString(term));
     Value ret; // tenporary used in some switch cases
     int children[] = iTerms.getTermChildren(term);
     switch (iTerms.getTermSymbolString(term)) {
@@ -100,10 +104,20 @@ public class ADL {
     case "__string": return new __string(term);
     case "use":      return env.__get(new __quote(children[0]));
     case "lambda":   LinkedHashMap<__quote, Value> parameters = new LinkedHashMap<>();
-                     if (iTerms.getTermArity(term) == 1) return new __proc(parameters, children[0]);
+                     if (children.length == 1) return new __proc(parameters, children[0]);
                      else {
                        for (int i: iTerms.getTermChildren(children[0])) parameters.put(new __quote(i), iTerms.valueEmpty);
                        return new __proc(parameters, children[1]);
+                     }
+    case "class":    LinkedList<Value> superClasses = new LinkedList<>();
+                     if (children.length == 1) {
+                       superClasses.add(objectClass);
+                       return new __class(superClasses, children[0]);
+                     } else {
+                       for (int i: iTerms.getTermChildren(children[0])) {
+                         superClasses.add(new __class(null,0));
+                         return new __class(superClasses, children[1]);
+                       }
                      }
    }
     throw new ADLException("in ADL term, unknown constructor '" + iTerms.getTermSymbolString(term) + "'");

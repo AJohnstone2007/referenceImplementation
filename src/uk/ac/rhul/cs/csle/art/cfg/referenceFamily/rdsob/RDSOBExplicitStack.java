@@ -1,9 +1,9 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
+import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class RDSOBExplicitStack extends ReferenceParser {
   class SNode {
@@ -46,7 +46,7 @@ public class RDSOBExplicitStack extends ReferenceParser {
         if (sn == null) return true;
         break;
       case ALT, DO, EOS, KLN, OPT, POS:
-        Reference.fatal("internal error - unexpected grammar node in rdsobExplicitStack");
+        Util.fatal("internal error - unexpected grammar node in rdsobExplicitStack");
       }
   }
 

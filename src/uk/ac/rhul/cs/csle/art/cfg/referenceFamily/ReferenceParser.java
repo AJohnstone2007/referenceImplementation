@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
+import uk.ac.rhul.cs.csle.art.util.Util;
 
 public abstract class ReferenceParser {
   public int traceLevel = 0;
@@ -262,7 +263,7 @@ public abstract class ReferenceParser {
         return ret;
 
       case ALT, DO, EOS, KLN, OPT, POS:
-        Reference.fatal("Unexpected grammar node in RDSOB derivation builder " + s);
+        Util.fatal("Unexpected grammar node in RDSOB derivation builder " + s);
         break;
       }
     }

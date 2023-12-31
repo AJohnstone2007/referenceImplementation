@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarElement;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
+import uk.ac.rhul.cs.csle.art.util.Util;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
 
 public class RDSOBGenerator {
@@ -17,7 +17,7 @@ public class RDSOBGenerator {
     try {
       text = new PrintWriter(new File(className + ".java"));
     } catch (FileNotFoundException e) {
-      Reference.fatal("Unable to open output file " + className + ".java");
+      Util.fatal("Unable to open output file " + className + ".java");
     }
 
     System.out.println(grammar);
@@ -69,7 +69,7 @@ public class RDSOBGenerator {
             text.println();
             break seqLoop;
           case ALT, B, C, DO, EOS, KLN, OPT, POS, TI:
-            Reference.fatal("internal error - unexpected grammar node in rdsobFunction");
+            Util.fatal("internal error - unexpected grammar node in rdsobFunction");
           }
         }
       }

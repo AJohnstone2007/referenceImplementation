@@ -3,6 +3,7 @@ package uk.ac.rhul.cs.csle.art.cfg.referenceFamily;
 import java.util.Set;
 
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.LKind;
+import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class ReferenceLexer {
   protected LKind[] kinds;
@@ -73,13 +74,13 @@ public class ReferenceLexer {
       match_COMMENT_NEST_ART();
       break;
     default:
-      Reference.fatal("Unknown builtin " + b);
+      Util.fatal("Unknown builtin " + b);
       break;
     }
   }
 
   protected void lexicalError(String msg) {
-    System.out.print(Reference.echo(msg, inputIndex, inputString));
+    System.out.print(Util.echo(msg, inputIndex, inputString));
   }
 
   /******************************************************************************

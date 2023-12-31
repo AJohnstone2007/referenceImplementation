@@ -1,8 +1,8 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
+import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class RDSOBFunction extends ReferenceParser {
 
@@ -38,7 +38,7 @@ public class RDSOBFunction extends ReferenceParser {
         case END:
           return true;
         case ALT, DO, EOS, KLN, OPT, POS:
-          Reference.fatal("internal error - unexpected grammar node in rdsobFunction: " + gn);
+          Util.fatal("internal error - unexpected grammar node in rdsobFunction: " + gn);
         }
       }
     }
@@ -50,7 +50,7 @@ public class RDSOBFunction extends ReferenceParser {
     i = 0;
     dnRoot = dn = new DerivationSingletonNode(grammar.endOfStringNode, null);
     accepted = rdsobFunction(grammar.rules.get(grammar.startNonterminal)) && input[i] == 0;
-    if (!accepted) Reference.echo("Syntax error at location " + i, Reference.lineNumber(i, inputString), inputString);
+    if (!accepted) Util.echo("Syntax error at location " + i, Util.lineNumber(i, inputString), inputString);
   }
 
   @Override

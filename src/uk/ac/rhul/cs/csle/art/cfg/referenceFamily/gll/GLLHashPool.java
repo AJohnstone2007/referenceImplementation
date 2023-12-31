@@ -1,8 +1,8 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.gll;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.hashpool.HashPool;
+import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class GLLHashPool extends HashPool {
   // Tabular copies of grammar information installed by setGrammar()
@@ -265,10 +265,10 @@ public class GLLHashPool extends HashPool {
     targetOf = grammar.makeCallTargetsArray();
     elementOf = grammar.makeElementOfArray();
     // Defensive programming - make sure we've not messed up the enumeration value
-    if (T != GrammarKind.T.ordinal()) Reference.fatal("Enumeration mismatch for T - check ParserHashPool.java for consistency with Kind enumeration");
-    if (EPS != GrammarKind.EPS.ordinal()) Reference.fatal("Enumeration mismatch for EPS - check ParserHashPool.java for consistency with Kind enumeration");
-    if (N != GrammarKind.N.ordinal()) Reference.fatal("Enumeration mismatch for N - check ParserHashPool.java for consistency with Kind enumeration");
-    if (END != GrammarKind.END.ordinal()) Reference.fatal("Enumeration mismatch for END - check ParserHashPool.java for consistency with Kind enumeration");
+    if (T != GrammarKind.T.ordinal()) Util.fatal("Enumeration mismatch for T - check ParserHashPool.java for consistency with Kind enumeration");
+    if (EPS != GrammarKind.EPS.ordinal()) Util.fatal("Enumeration mismatch for EPS - check ParserHashPool.java for consistency with Kind enumeration");
+    if (N != GrammarKind.N.ordinal()) Util.fatal("Enumeration mismatch for N - check ParserHashPool.java for consistency with Kind enumeration");
+    if (END != GrammarKind.END.ordinal()) Util.fatal("Enumeration mismatch for END - check ParserHashPool.java for consistency with Kind enumeration");
 
     // 1a. (Debug): print precomputed tables
     // System.out.println(grammar);
@@ -347,6 +347,6 @@ void gllHashPool() {
    case N: call(gn); continue nextDescriptor;
    case EPS: d(0); gn++; break;
    case END: ret(); continue nextDescriptor;
-   default: Reference.fatal("internal error - unexpected grammar node in gllHashPool");
+   default: Util.fatal("internal error - unexpected grammar node in gllHashPool");
    }}}
 }

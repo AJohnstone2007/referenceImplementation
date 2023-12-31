@@ -1,6 +1,6 @@
 package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
+import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class GrammarNode {
   public static String caseSensitiveTerminalStrop = "'";
@@ -152,7 +152,7 @@ public class GrammarNode {
 
   private void toStringAsSequenceRec(StringBuilder sb, GrammarNode alt, String slotDenotation, GrammarNode targetNode) {
     // System.out.println("toStringAsSequenceRec called on " + this.instanceNumber + ":" + this);
-    if (alt.elm.kind != GrammarKind.ALT) Reference.fatal("toStringAsSequenceRe()c called on node " + alt.num + " which is not not an ALT node");
+    if (alt.elm.kind != GrammarKind.ALT) Util.fatal("toStringAsSequenceRe()c called on node " + alt.num + " which is not not an ALT node");
     for (GrammarNode tmpSeq = alt.seq;; tmpSeq = tmpSeq.seq) { // run down this sequence
       if (tmpSeq == targetNode) sb.append(slotDenotation);
       if (tmpSeq.elm.kind != GrammarKind.END && tmpSeq.alt != null) { // If this element has an alt, then recursively process it first

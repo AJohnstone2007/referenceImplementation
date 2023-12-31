@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.term.ITerms;
+import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class Grammar {
   public String name = "";
@@ -35,6 +35,7 @@ public class Grammar {
   private int nextFreeEnumerationElement;
 
   public Grammar(String name, ITerms iTerms) {
+    System.out.println("*** Created grammar " + name);
     this.name = name;
     this.iTerms = iTerms;
     endOfStringNode = new GrammarNode(GrammarKind.EOS, "$", this); // Note that this first GNode to be created fills in static grammar field
@@ -112,7 +113,7 @@ public class Grammar {
       sb.append("Nonterminal" + (tmp.size() == 1 ? " " : "s ") + "used but not defined: ");
       for (GrammarElement n : tmp)
         sb.append(n.str + " ");
-      Reference.fatal(sb.toString());
+      Util.fatal(sb.toString());
     }
 
     // reachable nonterminal test
@@ -135,7 +136,7 @@ public class Grammar {
         try {
           lexicalKindsArray[token] = LKind.valueOf(e.str);
         } catch (IllegalArgumentException ex) {
-          Reference.fatal("Unknown builtin &" + e.str);
+          Util.fatal("Unknown builtin &" + e.str);
         }
         lexicalStringsArray[token] = e.str;
         break;
@@ -190,6 +191,7 @@ public class Grammar {
   LinkedList<GrammarNode> stack = new LinkedList<>();
 
   public void lhsAction(String id) {
+    System.out.println("lhsAction on " + id);
     GrammarElement element = findElement(GrammarKind.N, id);
     if (startNonterminal == null) startNonterminal = element;
     workingNode = rules.get(element);

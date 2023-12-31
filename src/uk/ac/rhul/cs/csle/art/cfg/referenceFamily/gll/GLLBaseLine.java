@@ -10,13 +10,13 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GIFTKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
 import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.LKind;
+import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class GLLBaseLine extends ReferenceParser {
   @Override
@@ -192,7 +192,7 @@ public class GLLBaseLine extends ReferenceParser {
   }
 
   private void parserError(String msg) {
-    System.out.print(Reference.echo(msg + "syntax error", positions[sppfWidestIndex()], inputString));
+    System.out.print(Util.echo(msg + "syntax error", positions[sppfWidestIndex()], inputString));
   }
 
   // Paper material below this line
@@ -421,7 +421,7 @@ private String constructorOf(SPPFN sppfn, GrammarNode gn) {
 
 private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFromParent, GrammarNode gn) {
 //   System.out.println("\nEntered derivationAsTermRec() at node " + sppfn + " instance " + gn);
-  if (visited.contains(sppfn)) Reference.fatal("derivationAsTermRec() found cycle in derivation");
+  if (visited.contains(sppfn)) Util.fatal("derivationAsTermRec() found cycle in derivation");
   visited.add(sppfn);
 
   LinkedList<Integer> children = (gn.giftKind == GIFTKind.OVER || gn.giftKind == GIFTKind.UNDER) ? childrenFromParent : new LinkedList<>();

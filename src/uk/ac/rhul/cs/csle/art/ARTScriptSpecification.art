@@ -1,53 +1,88 @@
-(* ART script grammar rules *)
-
-(* This specification has a rather unusual form suitable for use when bootstrapping via the rdsob style parsers though normally it is used with GLL parsers
-
-1. There are no left recursive rules
-2. Alterates are listed in decreasing length order
-3. A !nop directive is inserted before each left hand side so as to avoid the LHS nonterminal being ansorbed by the previous RHS rule when no lookahead is available
-
-*)
-
-//!rdsobFunction
+(* ART script grammar rules - suitable for RDSOB parsers: No left recursive rules; Alterates in decreasing length order; !nop directive at end of each rule *)
+//!rdsobFunction // Uncomment this line to try bootstrapping with Recursive Descent Singleton Ordered Backtracking parser instead of default GLL parser
 !whitespace (&SIMPLE_WHITESPACE, &COMMENT_NEST_ART, &COMMENT_LINE_C) 
 
-text ::= directive text^ | cfgRule text^ | directive^^ | cfgRule^^  !nop
-directive ::= '!'^ term !nop
+rules ::= rule text^ | rule^^ !nop
+rule  ::= cfgRule^^ | trRule^^ | chooseRule^^ | directive^^  !nop
 
+(* Context Free Grammar rules ************************************************)
 cfgRule  ::= cfgLHS '::='^ cfgAlts^ !nop
-cfgLHS ::= &ID !nop
+  cfgLHS ::= &ID !nop
 cfgAlts ::= cfgAlt '|'^ cfgAlts^ | cfgAlt !nop
 cfgAlt  ::= cfgSeq^^ cfgActions cfgEpsilonCarrier | cfgSeq^^ cfgActions cfgEpsilon | cfgSeq^^ cfgElems^ cfgActions (* final actions in sequence *) !nop
-cfgEpsilonCarrier ::= cfgEpsilon cfgAnnotation^^ !nop
-
+  cfgEpsilonCarrier ::= cfgEpsilon cfgAnnotation^^ !nop
 cfgAltNoAction ::= cfgSeq^^ cfgSlot cfgPrim cfgSlot !nop // This matches a single element with no actions allowed for use in abbreviated Kleene operations
 cfgElems ::= cfgActions cfgExtended cfgElems^ | cfgActions cfgExtended !nop
 cfgExtended ::= cfgPrim cfgAnnotation^^ | cfgPrim^^ | cfgOptional^^ | cfgKleene^^ | cfgPositive^^ | cfgDoFirst^^ !nop
 cfgAnnotation ::= cfgFoldUnder^^ | cfgFoldOver^^ !nop
-cfgFoldUnder ::= '^'^ !nop
-cfgFoldOver ::= '^^'^ !nop
-
-cfgDoFirst  ::= '('^ cfgAlts^ ')'^   !nop
-cfgOptional ::= '('^ cfgAlts^ ')'^ '?'^ | cfgAltNoAction '?'^  !nop
-cfgPositive ::= '('^ cfgAlts^ ')'^ '+'^ | cfgAltNoAction '+'^  !nop
-cfgKleene   ::= '('^ cfgAlts^ ')'^ '*'^ | cfgAltNoAction '*'^  !nop
-
+  cfgFoldUnder ::= '^'^ !nop
+  cfgFoldOver ::= '^^'^ !nop
+cfgDoFirst  ::= '('^ cfgAlts^ ')'^ !nop
+cfgOptional ::= '('^ cfgAlts^ ')'^ '?'^ | cfgAltNoAction '?'^ !nop
+cfgPositive ::= '('^ cfgAlts^ ')'^ '+'^ | cfgAltNoAction '+'^ !nop
+cfgKleene   ::= '('^ cfgAlts^ ')'^ '*'^ | cfgAltNoAction '*'^ !nop
 cfgPrim ::= cfgNonterminal^^ | cfgCaseSensitiveTerminal^^ | cfgBuiltinTerminal^^ !nop
-cfgNonterminal ::= &ID !nop
-cfgCaseSensitiveTerminal ::= &STRING_PLAIN_SQ !nop
-cfgBuiltinTerminal ::= '&'^ &ID !nop
-cfgEpsilon ::= '#'^ !nop
-
+  cfgNonterminal ::= &ID !nop
+  cfgCaseSensitiveTerminal ::= &STRING_PLAIN_SQ !nop
+  cfgBuiltinTerminal ::= '&'^ &ID !nop
+  cfgEpsilon ::= '#'^ !nop
 cfgActions ::= cfgSlot^^ cfgActionSeq^ | cfgSlot^^  !nop
-cfgActionSeq ::= cfgAction cfgActionSeq^ | cfgAction !nop
-cfgAction  ::= cfgEquation^^ | cfgAssignment^^ | cfgInsert !nop
+  cfgActionSeq ::= cfgAction cfgActionSeq^ | cfgAction !nop
+  cfgAction  ::= cfgEquation^^ | cfgAssignment^^ | cfgInsert !nop
 cfgEquation ::= cfgAttribute '='^ term !nop
 cfgAssignment ::= cfgAttribute ':='^ term !nop
 cfgInsert ::= '^+'^ &ID !nop
 cfgAttribute ::= &ID '.'^ &ID  !nop
-
 cfgSeq ::= #^ !nop // Dirty trick: both cfgAlt and cfgAltNoAction promote cfgSeq to achieve gather operation
 cfgSlot ::= #^ !nop
 
-term ::= cfgAttribute^^ | &INTEGER^^ | &REAL^^ | &STRING_DQ^^ | cfgBuiltinTerminal^^ | &ID^^ '('^ arguments^ ')'^  | &ID^^ '('^ ')'^ | &ID^^ !nop
-arguments ::= term ','^ arguments^ | term !nop
+(* Term rewrite rules ********************************************************)
+trRule ::= trLabel tr 
+trLabel ::= #^ | '-'^ ID | '-'^ STRING_DQ  
+tr ::= trPremises '---'^ trTransition trEquations | trPremises '---'^ trTransition
+trPremises ::= #^ | trTransition trPremises^ | trMatch trPremises^
+trTransition ::= trConfiguration TRRELATION trConfiguration 
+trConfiguration ::= trTerm^^ | trTerm trEntityReferences^ | '<'^ trTerm trEntityReferences^ '>'^
+trEntityReferences ::= ','^ trTerm | ','^ trTerm trEntityReferences^ | ','^ trNamedTerm | ','^ trNamedTerm  trEntityReferences^
+trNamedTerm ::= ID '='^ trTerm
+trMatch ::= trTerm '|>'^ trTerm
+trTerm ::= __bool^^ | __int32^^ | __real64^^ | __string^^ | __char^^ | ID^^ | ID^^ '('^ ')'^ | ID^^  '('^ trSubterms^ ')'^ | ID_ATTRIBUTE
+         | STRING_PLAIN_SQ^^ (* very special case: string as constructor with strops *)
+trSubterms ::= trTerm | trTerm  ','^ trSubterms^ | trTerm  trSubterms^
+trEquations ::= cfgEquation | cfgEquation ','^ trEquations^
+
+(* Choose rules ***************************************************************)
+chooseRule ::= chooseDiff chooserOp chooseDiff 
+chooseDiff ::= chooseUnionIntersection^^ | chooseDiff '\'^ chooseUnionIntersection
+chooseUnionIntersection ::= chooseElement^^ | chooseUnionIntersection chooseUnion^^ chooseElement | chooseUnionIntersection chooseIntersection^^ chooseElement
+chooseUnion ::= '|'^
+chooseIntersection ::= '/'^
+chooseElement ::= cfgNonterminal | cfgCharacterTerminal | cfgBuiltinTerminal | cfgCaseInsensitiveTerminal | cfgCaseSensitiveTerminal | choosePredefinedSet | '('^ chooseDiff ')'^
+choosePredefinedSet ::= 'anyCharacterTerminal' | 'anyBuiltinTerminal' | 'anyCaseSensitiveTerminal' | 'anyCaseInsensitiveTerminal' 
+                      | 'anyParaterminal'      | 'anyLiteralTerminal' | 'anyTerminal'              | 'anyNonterminal'
+chooserOp ::= chooseHigher^^ | chooseLower^^ | chooseLonger^^ | chooseShorter^^
+chooseHigher ::= '>'^
+chooseLower ::= '<'^
+chooseLonger ::= '>>'^
+chooseShorter ::= '<<'^
+
+(* Directives ****************************************************************)
+directive ::= '!'^ trTerm !nop
+
+(* Lexical elements **********************************************************)
+__bool ::= True | False
+  True ::= 'True'^
+  False ::='False'^
+__char ::= &CHAR_BQ
+__int32 ::= &SIGNED_INTEGER
+__real64 ::= &SIGNED_REAL 
+__string ::= &STRING_DQ | &STRING_SQ
+ID ::= &ID^^
+ID_ATTRIBUTE ::= &ID '.'^ &ID
+STRING_DQ ::= &STRING_DQ^^ 
+STRING_DOLLAR ::= &STRING_DOLLAR^^
+STRING_PLAIN_SQ ::= &STRING_PLAIN_SQ^^
+CHAR_BQ ::= &CHAR_BQ^^
+STRING_BRACE_NEST ::= &STRING_BRACE_NEST^^
+STRING_BRACKET_NEST ::= &STRING_BRACKET_NEST^^
+TRRELATION ::= '->' | '->*' | '=>'  | '=>*' | '~>'  | '~>*'  

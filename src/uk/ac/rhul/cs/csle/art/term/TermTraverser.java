@@ -66,7 +66,7 @@ public class TermTraverser {
   }
 
   public void traverse(int termIndex) {
-    System.out.println("traverse() at term " + iTerms.toString(termIndex));
+    // System.out.println("traverse() at term " + iTerms.toString(termIndex));
     perform(opsPreorder, termIndex);
     int[] children = iTerms.getTermChildren(termIndex);
     int length = children.length;

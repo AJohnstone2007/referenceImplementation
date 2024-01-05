@@ -1,40 +1,44 @@
-(* ART script grammar rules - suitable for RDSOB parsers: No left recursive rules; Alterates in decreasing length order; !nop directive at end of each rule *)
+(* ART script grammar rules - suitable for RDSOB parsers: No left recursive rules; Alterates in decreasing length order;   directive at end of each rule *)
 //!rdsobFunction // Uncomment this line to try bootstrapping with Recursive Descent Singleton Ordered Backtracking parser instead of default GLL parser
 !whitespace (&SIMPLE_WHITESPACE, &COMMENT_NEST_ART, &COMMENT_LINE_C) 
 
-rules ::= rule text^ | rule^^ !nop
-rule  ::= cfgRule^^ | trRule^^ | chooseRule^^ | directive^^  !nop
+rules ::= rule rules^ | rule^^  
+rule  ::= cfgRule^^ | trRule^^ | chooseRule^^ | directive^^   
 
 (* Context Free Grammar rules ************************************************)
-cfgRule  ::= cfgLHS '::='^ cfgAlts^ !nop
-  cfgLHS ::= &ID !nop
-cfgAlts ::= cfgAlt '|'^ cfgAlts^ | cfgAlt !nop
-cfgAlt  ::= cfgSeq^^ cfgActions cfgEpsilonCarrier | cfgSeq^^ cfgActions cfgEpsilon | cfgSeq^^ cfgElems^ cfgActions (* final actions in sequence *) !nop
-  cfgEpsilonCarrier ::= cfgEpsilon cfgAnnotation^^ !nop
-cfgAltNoAction ::= cfgSeq^^ cfgSlot cfgPrim cfgSlot !nop // This matches a single element with no actions allowed for use in abbreviated Kleene operations
-cfgElems ::= cfgActions cfgExtended cfgElems^ | cfgActions cfgExtended !nop
-cfgExtended ::= cfgPrim cfgAnnotation^^ | cfgPrim^^ | cfgOptional^^ | cfgKleene^^ | cfgPositive^^ | cfgDoFirst^^ !nop
-cfgAnnotation ::= cfgFoldUnder^^ | cfgFoldOver^^ !nop
-  cfgFoldUnder ::= '^'^ !nop
-  cfgFoldOver ::= '^^'^ !nop
-cfgDoFirst  ::= '('^ cfgAlts^ ')'^ !nop
-cfgOptional ::= '('^ cfgAlts^ ')'^ '?'^ | cfgAltNoAction '?'^ !nop
-cfgPositive ::= '('^ cfgAlts^ ')'^ '+'^ | cfgAltNoAction '+'^ !nop
-cfgKleene   ::= '('^ cfgAlts^ ')'^ '*'^ | cfgAltNoAction '*'^ !nop
-cfgPrim ::= cfgNonterminal^^ | cfgCaseSensitiveTerminal^^ | cfgBuiltinTerminal^^ !nop
-  cfgNonterminal ::= &ID !nop
-  cfgCaseSensitiveTerminal ::= &STRING_PLAIN_SQ !nop
-  cfgBuiltinTerminal ::= '&'^ &ID !nop
-  cfgEpsilon ::= '#'^ !nop
-cfgActions ::= cfgSlot^^ cfgActionSeq^ | cfgSlot^^  !nop
-  cfgActionSeq ::= cfgAction cfgActionSeq^ | cfgAction !nop
-  cfgAction  ::= cfgEquation^^ | cfgAssignment^^ | cfgInsert !nop
-cfgEquation ::= cfgAttribute '='^ term !nop
-cfgAssignment ::= cfgAttribute ':='^ term !nop
-cfgInsert ::= '^+'^ &ID !nop
-cfgAttribute ::= &ID '.'^ &ID  !nop
-cfgSeq ::= #^ !nop // Dirty trick: both cfgAlt and cfgAltNoAction promote cfgSeq to achieve gather operation
-cfgSlot ::= #^ !nop
+cfgRule  ::= cfgLHS '::='^ cfgAlts^  
+  cfgLHS ::= &ID  
+cfgAlts ::= cfgAlt '|'^ cfgAlts^ | cfgAlt  
+cfgAlt  ::= cfgSeq^^ cfgActions cfgEpsilonCarrier | cfgSeq^^ cfgActions cfgEpsilon | cfgSeq^^ cfgElems^ cfgActions (* final actions in sequence *)  
+  cfgEpsilonCarrier ::= cfgEpsilon cfgAnnotation^^  
+cfgAltNoAction ::= cfgSeq^^ cfgSlot cfgPrim cfgSlot   // This matches a single element with no actions allowed for use in abbreviated Kleene operations
+cfgElems ::= cfgActions cfgExtended cfgElems^ | cfgActions cfgExtended  
+cfgExtended ::= cfgPrim cfgAnnotation^^ | cfgPrim^^ | cfgOptional^^ | cfgKleene^^ | cfgPositive^^ | cfgDoFirst^^  
+cfgAnnotation ::= cfgFoldUnder^^ | cfgFoldOver^^  
+  cfgFoldUnder ::= '^'^  
+  cfgFoldOver ::= '^^'^  
+cfgDoFirst  ::= '('^ cfgAlts^ ')'^  
+cfgOptional ::= '('^ cfgAlts^ ')'^ '?'^ | cfgAltNoAction '?'^  
+cfgPositive ::= '('^ cfgAlts^ ')'^ '+'^ | cfgAltNoAction '+'^  
+cfgKleene   ::= '('^ cfgAlts^ ')'^ '*'^ | cfgAltNoAction '*'^  
+cfgPrim ::= cfgNonterminal^^ | cfgCaseSensitiveTerminal^^| cfgCaseInsensitiveTerminal^^ | cfgCharacterTerminal | cfgCharacterRangeTerminal | cfgBuiltinTerminal^^  
+  cfgNonterminal ::= ID | STRING_DOLLAR
+  cfgCaseSensitiveTerminal ::= STRING_PLAIN_SQ
+  cfgCaseInsensitiveTerminal ::= STRING_DQ
+  cfgCharacterTerminal ::= CHAR_BQ
+  cfgCharacterRangeTerminal ::= CHAR_BQ '..'^ CHAR_BQ
+  cfgBuiltinTerminal ::= '&'^ ID
+  cfgEpsilon ::= '#'^
+  cfgSlotSymbol ::= '.'
+cfgActions ::= cfgSlot^^ cfgActionSeq^ | cfgSlot^^   
+  cfgActionSeq ::= cfgAction cfgActionSeq^ | cfgAction  
+  cfgAction  ::= cfgEquation^^ | cfgAssignment^^ | cfgInsert  
+cfgEquation ::= cfgAttribute '='^ trTerm  
+cfgAssignment ::= cfgAttribute ':='^ trTerm  
+cfgInsert ::= '^+'^ &ID  
+cfgAttribute ::= &ID '.'^ &ID   
+cfgSeq ::= #^   // Dirty trick: both cfgAlt and cfgAltNoAction promote cfgSeq to achieve gather operation
+cfgSlot ::= #^  
 
 (* Term rewrite rules ********************************************************)
 trRule ::= trLabel tr 
@@ -47,13 +51,14 @@ trEntityReferences ::= ','^ trTerm | ','^ trTerm trEntityReferences^ | ','^ trNa
 trNamedTerm ::= ID '='^ trTerm
 trMatch ::= trTerm '|>'^ trTerm
 trTerm ::= __bool^^ | __int32^^ | __real64^^ | __string^^ | __char^^ | ID^^ | ID^^ '('^ ')'^ | ID^^  '('^ trSubterms^ ')'^ | ID_ATTRIBUTE
+         | cfgNonterminal^^ | cfgCaseSensitiveTerminal^^| cfgCaseInsensitiveTerminal^^ | cfgCharacterTerminal | cfgBuiltinTerminal^^
          | STRING_PLAIN_SQ^^ (* very special case: string as constructor with strops *)
 trSubterms ::= trTerm | trTerm  ','^ trSubterms^ | trTerm  trSubterms^
 trEquations ::= cfgEquation | cfgEquation ','^ trEquations^
 
 (* Choose rules ***************************************************************)
 chooseRule ::= chooseDiff chooserOp chooseDiff 
-chooseDiff ::= chooseUnionIntersection^^ | chooseDiff '\'^ chooseUnionIntersection
+chooseDiff ::= chooseUnionIntersection^^ | chooseDiff '|||'^ chooseUnionIntersection
 chooseUnionIntersection ::= chooseElement^^ | chooseUnionIntersection chooseUnion^^ chooseElement | chooseUnionIntersection chooseIntersection^^ chooseElement
 chooseUnion ::= '|'^
 chooseIntersection ::= '/'^
@@ -67,7 +72,7 @@ chooseLonger ::= '>>'^
 chooseShorter ::= '<<'^
 
 (* Directives ****************************************************************)
-directive ::= '!'^ trTerm !nop
+directive ::= '!'^ trTerm  
 
 (* Lexical elements **********************************************************)
 __bool ::= True | False

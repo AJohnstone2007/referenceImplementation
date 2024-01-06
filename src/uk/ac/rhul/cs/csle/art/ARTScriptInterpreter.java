@@ -38,7 +38,7 @@ public class ARTScriptInterpreter {
   //@formatter:on
   private final int scriptParserTerm;
   private final TermTraverser scriptTraverser;
-  public final TermTraverserText tt;
+  public TermTraverserText tt;
   public final TermTraverserText latexTraverser;
 
   private ReferenceParser currentParser = new GLLBaseLine(); // default current parser is GLL base line - change to MGLL when available
@@ -89,9 +89,12 @@ public class ARTScriptInterpreter {
 
   public ARTScriptInterpreter(ITerms iTerms) {
     this.iTerms = iTerms;
+
+    tt = loadTextTraverser();
+
+    latexTraverser = loadLaTeXTraverser();
+
     scriptTraverser = new TermTraverser(iTerms);
-    tt = new TermTraverserText(iTerms);
-    latexTraverser = new TermTraverserText(iTerms);
     initialiseScriptTraverser();
     scriptParserTerm = iTerms.findTerm(scriptParserTermString);
 
@@ -736,4 +739,75 @@ public class ARTScriptInterpreter {
   /* End of variable and function mapping ****************************************************************************/
 
   /* End of rewriter *****************************************************************************************/
+
+  private TermTraverserText loadTextTraverser() {
+    TermTraverserText ret = new TermTraverserText(iTerms);
+    // -1: uncomment these to suppress types have interpreted type renditions
+    ret.addEmptyAction("__bool", "__char", "__int32", "__real64", "__string");
+    ret.addAction("__map", "{", ", ", "}");
+
+    // 0. Directive and top level pretty print controls
+    ret.addEmptyAction("text", "cfgElementDeclarations", "cfgElementDeclaration", "latexDeclarations");
+    ret.addActionBreak("directive", (Integer t) -> processDirective(t), null, null);
+    ret.addAction("latexDeclaration", null, " = ", null);
+    ret.addActionBreak("idART", (Integer t) -> ret.appendAlias(ret.childSymbolIndex(t, 0)), null, null);
+
+    // 1. Context Free Grammar pretty print controls
+    ret.addEmptyAction("cfgSlot");
+
+    ret.addAction("cfgCat", null, " ", null);
+    ret.addAction("cfgRule", null, "::=\n ", "\n");
+    ret.addAction("cfgRHS", null, "\n|", "\n");
+    ret.addAction("cfgAlt", null, " | ", null);
+    ret.addActionBreak("cfgNonterminal", (Integer t) -> ret.appendAlias(iTerms.getTermSymbolIndex(iTerms.getSubterm(t, 0))), null, null);
+    ret.addActionBreak("cfgCaseInsensitiveTerminal", (Integer t) -> ret.appendAlias(iTerms.getTermSymbolIndex(iTerms.getSubterm(t, 0))), null, null);
+    ret.addActionBreak("cfgCaseSensitiveTerminal", (Integer t) -> ret.appendAlias(iTerms.getTermSymbolIndex(iTerms.getSubterm(t, 0))), null, null);
+    ret.addActionBreak("cfgCharacterTerminal", (Integer t) -> ret.appendAlias(iTerms.getTermSymbolIndex(iTerms.getSubterm(t, 0))), null, null);
+    ret.addActionBreak("cfgCharacterRangeTerminal",
+        (Integer t) -> ret.append(iTerms.getTermSymbolIndex(iTerms.getSubterm(t, 0)) + ".." + iTerms.getTermSymbolString(iTerms.getSubterm(t, 1))), null, null);
+    ret.addAction("cfgOptional", null, null, "?");
+    ret.addAction("cfgKleeneClosure", null, null, "*");
+    ret.addAction("cfgPositiveClosure", null, null, "+");
+    ret.addAction("cfgDoFirst", "(", null, ")");
+    ret.addAction("cfgEpsilon", "#", null, null);
+
+    // 2. Chooser pretty print controls
+    ret.addEmptyAction("chooseElement");
+    ret.addAction("chooseRule", null, null, "\n");
+    ret.addAction("chooseHigher", " > ", null, null);
+    ret.addAction("chooseLower", " < ", null, null);
+    ret.addAction("chooseLonger", " >> ", null, null);
+    ret.addAction("chooseShorter", " << ", null, null);
+    ret.addAction("chooseDiff", "(", " \\ ", ")");
+    ret.addAction("chooseUnion", "(", " | ", ")");
+    ret.addAction("chooseIntersection", "(", " / ", ")");
+    ret.addActionBreak("choosePredefinedSet", (Integer t) -> ret.append(ret.childStrippedSymbolString(t, 0)), null, null);
+
+    // 3. Term rewrite pretty print controls
+    ret.addEmptyAction("trRule");
+    ret.addAction("tr", null, " --- ", null);
+    ret.addAction("trPremises", null, "    ", null);
+    ret.addActionBreak("trLabel", (Integer t) -> ret.append(iTerms.getTermArity(t) > 0 ? ("-" + ret.childSymbolString(t, 0) + " ") : " "), null, null);
+    ret.addAction("trMatch", null, (Integer t) -> ret.append(" |> "), null);
+    ret.addEmptyAction("trTransition");
+    ret.addActionBreak("TRRELATION", (Integer t) -> ret.append(" " + ret.childStrippedSymbolString(t, 0) + " "), null, null);
+    // tt.addAction("trConfiguration", "<", ", ", ">");
+    ret.addAction("trConfiguration", null, ", ", null);
+    ret.addActionBreak("trTerm", (Integer t) -> ret.append(iTerms.toString(iTerms.getSubterm(t, 0))), null, null);
+    ret.addAction("trEntityReferences", ", ", ", ", null);
+    ret.addActionBreak("trNamedTerm", (Integer t) -> ret.append(iTerms.toString(iTerms.getSubterm(t, 0)) + " = " + iTerms.toString(iTerms.getSubterm(t, 1))),
+        null, null);
+
+    // 4. Attribute equation pretty print controls - not fully designed yet
+    return ret;
+  }
+
+  private void processDirective(Integer t) {
+    tt.append(tt.childStrippedSymbolString(t, 0) + " ");
+    if (iTerms.getTermArity(t) == 2) tt.traverse(iTerms.getSubterm(t, 1));
+  }
+
+  private TermTraverserText loadLaTeXTraverser() {
+    return new TermTraverserText(iTerms);
+  }
 }

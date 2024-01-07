@@ -51,7 +51,7 @@ trEntityReferences ::= ','^ trTerm | ','^ trTerm trEntityReferences^ | ','^ trNa
 trNamedTerm ::= ID '='^ trTerm
 trMatch ::= trTerm '|>'^ trTerm
 trTerm ::= __bool^^ | __int32^^ | __real64^^ | __string^^ | __char^^ | ID^^ | ID^^ '('^ ')'^ | ID^^  '('^ trSubterms^ ')'^ | ID_ATTRIBUTE
-         | cfgNonterminal^^ | cfgCaseSensitiveTerminal^^| cfgCaseInsensitiveTerminal^^ | cfgCharacterTerminal | cfgBuiltinTerminal^^
+         | cfgBuiltinTerminal^^
          | STRING_PLAIN_SQ^^ (* very special case: string as constructor with strops *)
 trSubterms ::= trTerm | trTerm  ','^ trSubterms^ | trTerm  trSubterms^
 trEquations ::= cfgEquation | cfgEquation ','^ trEquations^
@@ -75,9 +75,7 @@ chooseShorter ::= '<<'^
 directive ::= '!'^ trTerm  
 
 (* Lexical elements **********************************************************)
-__bool ::= True | False
-  True ::= 'True'^
-  False ::='False'^
+__bool ::= 'true' | 'false'
 __char ::= &CHAR_BQ
 __int32 ::= &SIGNED_INTEGER
 __real64 ::= &SIGNED_REAL 

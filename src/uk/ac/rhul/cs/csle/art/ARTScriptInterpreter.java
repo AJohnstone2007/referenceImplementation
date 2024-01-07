@@ -91,6 +91,27 @@ public class ARTScriptInterpreter {
     this.iTerms = iTerms;
 
     tt = loadTextTraverser();
+    // 2a. Debug - load text traverser default action to print message if we encounter an unknown constructor
+    // tt.addOp(-1, (Integer t) -> tt.append("??" + iTerms.toString(t) + "?? "), null, null);
+    tt.addAction(-1, (Integer t) -> { // Load default actions
+
+      // Preorder
+      tt.appendAlias(iTerms.getTermSymbolIndex(t));
+      if (iTerms.getTermArity(t) > 0) tt.append("(");
+    },
+
+        // Inorder
+        (Integer t) -> {
+          tt.append(", ");
+        },
+
+        // Postorder
+        (Integer t) -> {
+          if (iTerms.getTermArity(t) > 0) tt.append(")");
+        });
+
+    // 2b. Debug - print keys from text traverser tables
+    // System.out.println("text traverser: " + pp.tt);
 
     latexTraverser = loadLaTeXTraverser();
 
@@ -260,6 +281,9 @@ public class ARTScriptInterpreter {
     case "statistics":
       currentParser.statistics(true);
       break;
+    case "tryTerm":
+
+      break;
     case "try":
       switch (iTerms.getTermSymbolString(iTerms.getSubterm(term, 0, 0))) {
       case "__string":
@@ -345,7 +369,10 @@ public class ARTScriptInterpreter {
     int scriptTerm = scriptParser.derivationAsTerm();
     // System.out.println("Script term:\n" + iTerms.toString(scriptTerm, true, -1, null));
     scriptTraverser.traverse(scriptTerm);
-    System.out.println(trRules);
+    for (int rel : trRules.keySet())
+      for (int c : trRules.get(rel).keySet())
+        for (int r : trRules.get(rel).get(c))
+          System.out.println(tt.toString(r));
   }
 
   public Grammar getGrammar() {

@@ -15,7 +15,7 @@ public class __bool extends Value {
   public __bool(int termIndex) {
     int[] children = iTerms.getTermChildren(termIndex);
     String child = iTerms.getTermSymbolString(children[0]);
-    if (child.equals("True"))
+    if (child.equals("true"))
       javaValue = true;
     else
       javaValue = false;
@@ -41,7 +41,7 @@ public class __bool extends Value {
 
   @Override
   public String toString() {
-    return javaValue ? "__bool(True)" : "__bool(False)";
+    return javaValue ? "__bool(true)" : "__bool(false)";
   }
 
   @Override

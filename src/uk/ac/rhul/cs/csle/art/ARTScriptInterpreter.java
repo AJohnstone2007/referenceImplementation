@@ -53,7 +53,7 @@ public class ARTScriptInterpreter {
   public int verbosityLevel = 5;
   public int traceLevel = 3;
   public int statisticsLevel = 5;
-  public int defaultDepthLimit = 3;
+  public int defaultDepthLimit = 5;
 
   public int inputTerm = 0;
   public int resultTerm = 0;
@@ -282,6 +282,7 @@ public class ARTScriptInterpreter {
       currentParser.statistics(true);
       break;
     case "tryTerm":
+      normaliseAndStaticCheckRewriteRules();
       System.out.println(trRulesToString(trRules));
       int tryTerm = iTerms.getSubterm(term, 0);
       int tryTermArity = iTerms.getTermArity(tryTerm);
@@ -295,6 +296,9 @@ public class ARTScriptInterpreter {
         resultTerm = iTerms.getSubterm(tryTerm, 2);
       else
         resultTerm = 0;
+      System.out.println("inputTerm " + iTerms.toString(inputTerm));
+      System.out.println("startRelation " + iTerms.toString(startRelation));
+      System.out.println("resultTerm " + iTerms.toString(resultTerm));
       stepper();
       break;
     case "try":
@@ -458,7 +462,7 @@ public class ARTScriptInterpreter {
       // System.out.println("Variable map: ");
       // for (int i : variableMap.keySet())
       // System.out.println(i + ":" + iTerms.getString(variableMap.get(i)));
-      trace(3, level, render(ruleIndex)); // Announce the next rule we are going to try
+      trace(3, level, tt.toString(ruleIndex, false, -1, variableMap)); // Announce the next rule we are going to try
       int lhs = iTerms.getSubterm(ruleIndex, 1, 1, 0);
       int premises = iTerms.getSubterm(ruleIndex, 1, 0);
       int premiseCount = iTerms.getTermArity(premises);
@@ -589,7 +593,7 @@ public class ARTScriptInterpreter {
     return tt.toString(term, false, defaultDepthLimit, variableMap);
   }
 
-  public void normaliseAndStaticCheckRewriteRules() {
+  private void normaliseAndStaticCheckRewriteRules() {
     Map<Integer, Integer> constructorCount = new HashMap<>(); // The number of defined rules for each constructor Map<Integer, Integer>
 
     // Stage one - collect information

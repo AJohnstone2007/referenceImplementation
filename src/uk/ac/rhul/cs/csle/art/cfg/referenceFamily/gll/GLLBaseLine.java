@@ -367,20 +367,24 @@ private String constructorOf(SPPFN sppfn, GrammarNode gn) {
     break;
   case COMMENT_NEST_ART:
     break;
-  case INTEGER: {
-    int right = positions[sppfn.li];
+  case INTEGER:
+  { int right = positions[sppfn.li];
     while (right< inputString.length() &&(Character.isDigit(inputString.charAt(right))|| inputString.charAt(right)=='_')) right++;
-
     return inputString.substring(positions[sppfn.li],right) ;
   }
-  case REAL:{    int right = positions[sppfn.li];
-  while (right< inputString.length() && Character.isDigit(inputString.charAt(right))) right++;
-  right++; // skip decimal point
-  while (right< inputString.length() && Character.isDigit(inputString.charAt(right))) right++;
-  return inputString.substring(positions[sppfn.li],right) ;
+  case REAL:
+  { int right = positions[sppfn.li];
+    while (right< inputString.length() && Character.isDigit(inputString.charAt(right))) right++;
+    right++; // skip decimal point
+    while (right< inputString.length() && Character.isDigit(inputString.charAt(right))) right++;
+    return inputString.substring(positions[sppfn.li],right) ;
   }
   case SIGNED_INTEGER:
-    break;
+  { int right = positions[sppfn.li];
+    if (inputString.charAt(right) == '-') right++;
+    while (right< inputString.length() &&(Character.isDigit(inputString.charAt(right))|| inputString.charAt(right)=='_')) right++;
+    return inputString.substring(positions[sppfn.li],right) ;
+  }
   case SIGNED_REAL:
     break;
   case SIMPLE_WHITESPACE:
@@ -408,13 +412,11 @@ private String constructorOf(SPPFN sppfn, GrammarNode gn) {
     break;
   case STRING_DOLLAR:
     break;
-  case STRING_SQ:{
-    int right = positions[sppfn.li]+1;
+  case STRING_SQ:
+  { int right = positions[sppfn.li]+1;
     while (inputString.charAt(right) != '\'') right++;
-
     return inputString.substring(positions[sppfn.li],right+1) ;
   }
-
   }
   return gn.elm.str;
 }

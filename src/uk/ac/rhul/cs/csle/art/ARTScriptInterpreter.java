@@ -282,7 +282,20 @@ public class ARTScriptInterpreter {
       currentParser.statistics(true);
       break;
     case "tryTerm":
-
+      System.out.println(trRulesToString(trRules));
+      int tryTerm = iTerms.getSubterm(term, 0);
+      int tryTermArity = iTerms.getTermArity(tryTerm);
+      if (tryTermArity > 0 && iTerms.getSubterm(tryTerm, 0) != 0) inputTerm = iTerms.getSubterm(tryTerm, 0); // If no children, or if first child is zero, then
+                                                                                                             // use previous
+      if (tryTermArity > 1)
+        startRelation = iTerms.getSubterm(tryTerm, 1);
+      else
+        startRelation = defaultStartRelation;
+      if (tryTermArity > 2)
+        resultTerm = iTerms.getSubterm(tryTerm, 2);
+      else
+        resultTerm = 0;
+      stepper();
       break;
     case "try":
       switch (iTerms.getTermSymbolString(iTerms.getSubterm(term, 0, 0))) {
@@ -369,10 +382,6 @@ public class ARTScriptInterpreter {
     int scriptTerm = scriptParser.derivationAsTerm();
     // System.out.println("Script term:\n" + iTerms.toString(scriptTerm, true, -1, null));
     scriptTraverser.traverse(scriptTerm);
-    for (int rel : trRules.keySet())
-      for (int c : trRules.get(rel).keySet())
-        for (int r : trRules.get(rel).get(c))
-          System.out.println(tt.toString(r));
   }
 
   public Grammar getGrammar() {
@@ -385,6 +394,17 @@ public class ARTScriptInterpreter {
         System.out.print("  ");
       System.out.println(string);
     }
+  }
+
+  private String trRulesToString(Map<Integer, Map<Integer, List<Integer>>> trRules) {
+    StringBuilder sb = new StringBuilder();
+    for (int rel : trRules.keySet())
+      for (int c : trRules.get(rel).keySet())
+        for (int r : trRules.get(rel).get(c)) {
+          sb.append(tt.toString(r));
+          sb.append("\n");
+        }
+    return sb.toString();
   }
 
   private String bindingsToString(int[] bindings, Map<Integer, Integer> variableMap) {

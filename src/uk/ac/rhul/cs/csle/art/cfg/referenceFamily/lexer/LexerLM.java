@@ -11,6 +11,7 @@ public class LexerLM extends ReferenceLexer {
   public int[] tokens;
   public int[] positions;
 
+  @Override
   public void lex(String inputString, LKind[] kinds, String[] strings, LKind[] whitespaces, boolean suppressEcho) {
     this.inputString = inputString + "\0";
     this.kinds = kinds;

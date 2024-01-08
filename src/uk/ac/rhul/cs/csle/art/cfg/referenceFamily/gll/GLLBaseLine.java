@@ -397,14 +397,14 @@ private String constructorOf(SPPFN sppfn, GrammarNode gn) {
     int right = positions[sppfn.li]+1;
     while (inputString.charAt(right) != '\'') right++;
 
-    return inputString.substring(positions[sppfn.li],right+1) ;
+    return inputString.substring(positions[sppfn.li]+1,right) ;
   }
 
   case STRING_DQ:{
     int right = positions[sppfn.li]+1;
     while (inputString.charAt(right) != '\"') right++;
 
-    return inputString.substring(positions[sppfn.li],right+1) ;
+    return inputString.substring(positions[sppfn.li]+1,right) ;
   }
   case STRING_BRACE_NEST:
     break;
@@ -415,7 +415,7 @@ private String constructorOf(SPPFN sppfn, GrammarNode gn) {
   case STRING_SQ:
   { int right = positions[sppfn.li]+1;
     while (inputString.charAt(right) != '\'') right++;
-    return inputString.substring(positions[sppfn.li],right+1) ;
+    return inputString.substring(positions[sppfn.li]+1,right) ;
   }
   }
   return gn.elm.str;

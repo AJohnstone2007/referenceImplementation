@@ -73,7 +73,7 @@ public abstract class ReferenceParser {
       while (inputString.charAt(right) != '\'')
         right++;
 
-      return inputString.substring(positions[inputIndex], right + 1);
+      return inputString.substring(positions[inputIndex] + 1, right);
     }
 
     case STRING_DQ: {
@@ -81,7 +81,7 @@ public abstract class ReferenceParser {
       while (inputString.charAt(right) != '\"')
         right++;
 
-      return inputString.substring(positions[inputIndex], right + 1);
+      return inputString.substring(positions[inputIndex] + 1, right);
     }
     case STRING_BRACE_NEST:
       break;

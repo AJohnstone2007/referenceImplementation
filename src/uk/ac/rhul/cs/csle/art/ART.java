@@ -28,7 +28,7 @@ public class ART {
       } else
         scriptString.append(a);
     }
-    // System.out.println("Script string: " + scriptString);
+    System.out.println("Script string: " + scriptString);
 
     new ARTScriptInterpreter(iTerms).interpret(scriptString.toString());
   }

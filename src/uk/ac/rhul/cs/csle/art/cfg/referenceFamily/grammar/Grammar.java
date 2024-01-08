@@ -33,6 +33,7 @@ public class Grammar {
   public Set<Integer> acceptingNodeNumbers = new TreeSet<>(); // Set of nodes which are END nodes of the start production
 
   private int nextFreeEnumerationElement;
+  public boolean empty;
 
   public Grammar(String name, ITerms iTerms) {
     this.name = name;
@@ -62,6 +63,7 @@ public class Grammar {
     for (GrammarElement s : elements.keySet()) {
       s.ei = nextFreeEnumerationElement++;
       if (lexKinds.contains(s.kind)) lexSize = s.ei;
+      System.out.println("Enumerating grammar element " + s.ei + ": " + s.str);
     }
     lexSize++;
 
@@ -103,9 +105,15 @@ public class Grammar {
   }
 
   void checkRules() {
+    empty = true;
     Set<GrammarElement> tmp = new HashSet<>();
     for (GrammarElement e : elements.keySet())
-      if (e.kind == GrammarKind.N && rules.get(e) == null) tmp.add(e);
+      if (e.kind == GrammarKind.N) {
+        if (rules.get(e) == null)
+          tmp.add(e);
+        else
+          empty = false;
+      }
 
     if (tmp.size() > 0) {
       StringBuilder sb = new StringBuilder();
@@ -257,8 +265,13 @@ public class Grammar {
   /* Text rendering */
   @Override
   public String toString() {
+    if (empty) return "Grammar has no rules";
     StringBuilder sb = new StringBuilder();
-    sb.append("Grammar " + name + " with start nonterminal " + startNonterminal.str + "\n");
+    if (startNonterminal != null)
+      sb.append("Grammar " + name + " with start nonterminal " + startNonterminal.str + "\n");
+    else
+      sb.append("Grammar " + name + " with empty start nonterminal\n");
+
     sb.append("Grammar rules:\n");
     for (GrammarElement n : rules.keySet()) {
       boolean first = true;

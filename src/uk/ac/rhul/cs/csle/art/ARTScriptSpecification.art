@@ -2,7 +2,7 @@
 //!rdsobFunction // Uncomment this line to try bootstrapping with Recursive Descent Singleton Ordered Backtracking parser instead of default GLL parser
 !whitespace (&SIMPLE_WHITESPACE, &COMMENT_NEST_ART, &COMMENT_LINE_C) 
 
-rules ::= rule rules^ | rule^^  
+rules ::= rule rules^ | rule
 rule  ::= cfgRule^^ | trRule^^ | chooseRule^^ | directive^^   
 
 (* Context Free Grammar rules ************************************************)

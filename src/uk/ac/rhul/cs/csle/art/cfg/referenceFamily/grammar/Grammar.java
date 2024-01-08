@@ -63,7 +63,7 @@ public class Grammar {
     for (GrammarElement s : elements.keySet()) {
       s.ei = nextFreeEnumerationElement++;
       if (lexKinds.contains(s.kind)) lexSize = s.ei;
-      System.out.println("Enumerating grammar element " + s.ei + ": " + s.str);
+      // System.out.println("Enumerating grammar element " + s.ei + ": " + s.str);
     }
     lexSize++;
 

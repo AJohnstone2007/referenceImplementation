@@ -7,9 +7,6 @@ public class GrammarElement implements Comparable<Object> {
 
   public GrammarElement(GrammarKind kind, String s) {
     super();
-    if (kind == GrammarKind.T) {
-      System.out.println("Adding element " + kind + " " + s);
-    }
     this.kind = kind;
     this.str = s;
   }

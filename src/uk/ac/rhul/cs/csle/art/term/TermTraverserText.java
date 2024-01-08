@@ -43,10 +43,10 @@ public class TermTraverserText extends TermTraverser {
     return iTerms.getTermSymbolString(childSymbolIndex(root, childNumber));
   }
 
-  public String childStrippedSymbolString(int root, int childNumber) {
-    String str = childSymbolString(root, childNumber);
-    return str.substring(1, str.length() - 1);
-  }
+  // public String childStrippedSymbolString(int root, int childNumber) {
+  // String str = childSymbolString(root, childNumber);
+  // return str.substring(1, str.length() - 1);
+  // }
 
   public void clear() {
     sb.setLength(0);

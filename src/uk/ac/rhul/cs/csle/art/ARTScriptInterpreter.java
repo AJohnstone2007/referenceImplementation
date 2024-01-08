@@ -157,7 +157,7 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
 
   public void buildTRRule(int term) {
     int relation = iTerms.getSubterm(term, 1, 1, 1);
-    int constructorIndex = iTerms.getTermSymbolIndex((iTerms.getSubterm(term, 1, 1, 0, 0)));
+    int constructorIndex = iTerms.getTermSymbolIndex((iTerms.getSubterm(term, 1, 1, 0)));
     // System.out.println("Building TR rule " + iTerms.toString(term) + "\nwith relation " + iTerms.toString(relation) + "\nand constructor "
     // + iTerms.getString(constructorIndex));
     if (trRules.get(relation) == null) trRules.put(relation, new HashMap<>());
@@ -802,7 +802,7 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
   private TermTraverserText loadTextTraverser() {
     TermTraverserText ret = new TermTraverserText(iTerms);
     // -1: uncomment these to suppress types have interpreted type renditions
-    ret.addEmptyAction("__bool", "__char", "__int32", "__real64", "__string");
+    // ret.addEmptyAction("__bool", "__char", "__int32", "__real64", "__string");
     ret.addAction("__map", "{", ", ", "}");
 
     // 0. Directive and top level pretty print controls

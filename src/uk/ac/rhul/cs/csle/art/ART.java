@@ -22,9 +22,12 @@ public class ART {
           Util.fatal("Unable to open script file " + a);
         }
       else if (a.indexOf(".") != -1) {
-        scriptString.append("!try (file(\"");
+        // scriptString.append("!try (file(\"");
+        // scriptString.append(a);
+        // scriptString.append("\"))!print(derivation)");
+        scriptString.append("!try '");
         scriptString.append(a);
-        scriptString.append("\"))");
+        scriptString.append("'");
       } else
         scriptString.append(a);
     }

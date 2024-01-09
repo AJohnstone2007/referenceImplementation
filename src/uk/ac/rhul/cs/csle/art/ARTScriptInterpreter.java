@@ -268,7 +268,7 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
 
         case "derivation":
           // Switch comments if you wanted one line or indented derivations
-          System.out.println("current derivation term: [" + currentDerivationTerm + "]\n" + iTerms.toString(currentDerivationTerm, false, -1, null));
+          System.out.println("Current derivation term: [" + currentDerivationTerm + "]\n" + iTerms.toString(currentDerivationTerm, false, -1, null));
           // System.out.println("current derivation term: [" + currentDerivationTerm + "]\n" + iTerms.toString(currentDerivationTerm, true, -1, null));
           if (scriptParserTerm == currentDerivationTerm) System.out.println("Bootstrap achieved: script parser term and current derivation term identical");
           break;
@@ -288,27 +288,6 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
         }
       break;
     case "tryTerm":
-      normaliseAndStaticCheckRewriteRules();
-      int tryTerm = iTerms.getSubterm(term, 0);
-      int tryTermArity = iTerms.getTermArity(tryTerm);
-      if (tryTermArity > 0 && iTerms.getSubterm(tryTerm, 0) != 0)
-        inputTerm = iTerms.getSubterm(tryTerm, 0);
-      else
-        inputTerm = currentDerivationTerm;
-      if (inputTerm == 0) Util.fatal("!tryTerm with null term");
-      if (tryTermArity > 1)
-        startRelation = iTerms.getSubterm(tryTerm, 1);
-      else
-        startRelation = defaultStartRelation;
-      if (tryTermArity > 2)
-        resultTerm = iTerms.getSubterm(tryTerm, 2);
-      else
-        resultTerm = 0;
-      System.out.println("inputTerm " + iTerms.toString(inputTerm));
-      System.out.println("startRelation " + iTerms.toString(startRelation));
-      System.out.println("resultTerm " + iTerms.toString(resultTerm));
-      stepper();
-      break;
     case "try":
       switch (iTerms.getTermSymbolString(iTerms.getSubterm(term, 0, 0))) {
       case "__string":
@@ -325,6 +304,24 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
       default:
         Util.fatal("Unknown try kind " + iTerms.toString(term));
       }
+
+      normaliseAndStaticCheckRewriteRules();
+      int tryTerm = iTerms.getSubterm(term, 0);
+      int tryTermArity = iTerms.getTermArity(tryTerm);
+      inputTerm = currentDerivationTerm;
+      if (inputTerm == 0) Util.fatal("!tryTerm with null term");
+      if (tryTermArity > 1)
+        startRelation = iTerms.getSubterm(tryTerm, 1);
+      else
+        startRelation = defaultStartRelation;
+      if (tryTermArity > 2)
+        resultTerm = iTerms.getSubterm(tryTerm, 2);
+      else
+        resultTerm = 0;
+      System.out.println("inputTerm " + iTerms.toString(inputTerm));
+      System.out.println("startRelation " + iTerms.toString(startRelation));
+      System.out.println("resultTerm " + iTerms.toString(resultTerm));
+      stepper();
       break;
     case "nop": // No operation
       break;

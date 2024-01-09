@@ -12,7 +12,7 @@ public class LexerLM extends ReferenceLexer {
   public int[] positions;
 
   @Override
-  public void lex(String inputString, LKind[] kinds, String[] strings, LKind[] whitespaces, boolean suppressEcho) {
+  public void lex(String inputString, LKind[] kinds, String[] strings, LKind[] whitespaces) {
     this.inputString = inputString + "\0";
     this.kinds = kinds;
     this.strings = strings;
@@ -50,7 +50,7 @@ public class LexerLM extends ReferenceLexer {
       }
 
       if (longestMatchRightIndex == leftIndex) { // We matched nothing, which is an error
-        if (!suppressEcho) lexicalError("Unrecognised lexeme");
+        lexicalError("Unrecognised lexeme");
         tokenList = null;
         return;
       }

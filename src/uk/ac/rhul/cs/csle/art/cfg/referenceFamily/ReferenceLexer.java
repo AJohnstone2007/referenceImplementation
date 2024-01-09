@@ -14,7 +14,7 @@ public abstract class ReferenceLexer {
   protected char[] input;
   protected int inputIndex, inputLength, leftIndex, longestMatchToken, longestMatchRightIndex, firstBuiltin;
 
-  public abstract void lex(String inputString, LKind[] kinds, String[] strings, LKind[] whitespaces, boolean suppressEcho);
+  public abstract void lex(String inputString, LKind[] kinds, String[] strings, LKind[] whitespaces);
 
   protected void processBuiltin(LKind b, String s) {
     switch (b) {

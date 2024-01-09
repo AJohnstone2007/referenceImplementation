@@ -1,9 +1,8 @@
 (* ART script grammar rules - suitable for RDSOB parsers: No left recursive rules; Alterates in decreasing length order;   directive at end of each rule *)
-//!rdsobFunction // Uncomment this line to try bootstrapping with Recursive Descent Singleton Ordered Backtracking parser instead of default GLL parser
+//!parser rdsobFunction // Uncomment this line to try bootstrapping with Recursive Descent Singleton Ordered Backtracking parser instead of default GLL parser
 !whitespace (&SIMPLE_WHITESPACE, &COMMENT_NEST_ART, &COMMENT_LINE_C) 
-
 rules ::= rule rules^ | rule
-rule  ::= cfgRule^^ | trRule^^ | chooseRule^^ | directive^^   
+rule  ::= cfgRule^^ | trRule^^ | chooseRule^^ | '!'^ directive^^   
 
 (* Context Free Grammar rules ************************************************)
 cfgRule  ::= cfgLHS '::='^ cfgAlts^  
@@ -43,9 +42,13 @@ cfgSlot ::= #^
 (* Term rewrite rules ********************************************************)
 trRule ::= trLabel tr 
 trLabel ::= #^ | '-'^ ID | '-'^ STRING_DQ  
-tr ::= trPremises '---'^ trTransition trEquations | trPremises '---'^ trTransition
+tr ::= trPremises '---'^ trTransition trEquations 
+     | trPremises '---'^ trTransition
+     | trPremises '---'^ trNoTransition trEquations
+     | trPremises '---'^ trNoTransition 
 trPremises ::= #^ | trTransition trPremises^ | trMatch trPremises^
-trTransition ::= trConfiguration TRRELATION trConfiguration 
+trTransition ::= trConfiguration TRRELATION trConfiguration
+trNoTransition ::= trConfiguration
 trConfiguration ::= trTerm^^ | trTerm trEntityReferences^ | '<'^ trTerm trEntityReferences^ '>'^
 trEntityReferences ::= ','^ trTerm | ','^ trTerm trEntityReferences^ | ','^ trNamedTerm | ','^ trNamedTerm  trEntityReferences^
 trNamedTerm ::= ID '='^ trTerm
@@ -72,7 +75,40 @@ chooseLonger ::= '>>'^
 chooseShorter ::= '<<'^
 
 (* Directives ****************************************************************)
-directive ::= '!'^ trTerm  
+directive ::= 
+  'lexer' '#'^ | 'lexer' lexerElements 
+| 'whitespace' '#'^ | 'whitespace' whiteSpaceElements^ | 'whitespace' '('^ whiteSpaceElements^ ')'^
+| 'paraterminal' '#'^ | 'paraterminal' paraterminalElements^
+| 'parser' '#'^ | 'parser' parserElements^
+| 'start' '#'^ | 'start' cfgNonterminal // Set parser start nonterminal
+| 'rewriter' '#'^ | 'rewriter' rewriterElements^
+| 'configuration' '#'^ | TRRELATION^ ','^ trConfiguration
+| 'trace' &INTEGER
+| 'print' displayElements
+| 'show' displayElements
+| 'log' displayElements
+| 'try' &STRING_DQ // Immediate string
+| 'try' &STRING_SQ // String is in file
+| 'tryTerm' trTerm // Immediate term
+| 'tryTerm' &STRING_SQ // Term is in file
+
+lexerElements ::= lexerElement | lexerElement ','^ lexerElements
+lexerElement ::= 'LongestMatch' | 'twe'
+
+whiteSpaceElements ::= whiteSpaceElement | whiteSpaceElement ','^ whiteSpaceElements^
+whiteSpaceElement  ::= cfgNonterminal | cfgBuiltinTerminal
+
+paraterminalElements ::= paraterminalElement | paraterminalElement ','^ paraterminalElements^
+paraterminalElement  ::= cfgNonterminal
+
+parserElements ::= parserElement | parserElement ','^ parserElements^
+parserElement ::= 'gllBaseLine' | 'rdsobFunction'
+
+rewriterElements ::= rewriterElement | rewriterElement ','^ rewriterElements^
+rewriterElement ::= 'eSOS'
+
+displayElements ::= displayElement | displayElement ','^ displayElements^
+displayElement  ::= 'input' | 'tokens' | 'sppf' | 'derivation' | 'outcome' | 'statistics'
 
 (* Lexical elements **********************************************************)
 __bool ::= 'true' | 'false'

@@ -313,7 +313,8 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
         normaliseAndStaticCheckRewriteRules();
         int tryTerm = iTerms.getSubterm(term, 0);
         int tryTermArity = iTerms.getTermArity(tryTerm);
-        inputTerm = currentDerivationTerm;
+        int mapTerm = iTerms.findTerm("__map");
+        inputTerm = iTerms.findTerm("trConfiguration", currentDerivationTerm, mapTerm);
         startRelation = iTerms.getSubterm(currentConfiguration, 0);
         System.out.println("inputTerm " + iTerms.toString(inputTerm));
         System.out.println("startRelation " + iTerms.toString(startRelation));

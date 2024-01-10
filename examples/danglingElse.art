@@ -1,0 +1,26 @@
+(* Abrahams style rules *)
+
+!whitespace(&SIMPLE_WHITESPACE, &COMMENT_BLOCK_C, &COMMENT_LINE_C) 
+
+prog ::= stmnt | stmnt ';'^ prog^
+
+stmnt ::= notAnIf^^ | closedIf^^ | openIf^^
+
+closedstmnt ::= notAnIf^^ | closedIf^^
+
+notAnIf ::= &ID^^ | &INTEGER^^
+
+closedIf ::= 'if'^^ &ID 'then'^ closedstmnt 'else'^ closedstmnt 
+
+openIf ::= 'if'^^ &ID 'then'^ stmnt | 'if'^^ &ID 'then'^ closedstmnt 'else'^ openIf
+
+
+(* Abstraction of usual rules 
+
+S ::= 
+   &ID
+| &INTEGER
+| 'if' &ID 'then' S 'else' S
+| 'if' &ID 'then' S
+*)
+

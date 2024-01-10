@@ -1,0 +1,22 @@
+
+/* Notation: 
+     E - Expression; 
+     S(x) if p then x; 
+     S(x,y) if p then x else y 
+       where x,y \in {V, S(_), S(_,_) }
+*/
+
+
+1;                                     // E
+if a then 1;                           // S(E) 
+if b then 1 else 2;                    // S(E,E)
+
+if c then 1 else if y then 2;          // S(E,S(E))
+if d then 1 else if y then 2 else 3;   // S(E,S(E,E))
+
+if e then if y then 2;                 // S(S(E))
+if f then if y then 2 else 3;          // S(S(E),E) and also S(S(E,E)) ; choose later 
+
+if g then if y then 2 else 3 else 4;   // S(S(E,E),E)
+0
+

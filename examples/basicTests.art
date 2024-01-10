@@ -1,0 +1,616 @@
+!clearRules
+S ::= 'a'
+!try("a", true)
+!try("", false)
+!try("aa", false)
+!try("b", false)
+
+!clearRules
+S ::= 'a' 'a'
+!try("aa", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+
+!clearRules
+S ::= 'a' 'a' 'a'
+!try("aaa", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+
+!clearRules
+S ::= 'a' | 'b'
+!try("a", true)
+!try("b", true)
+!try("", false)
+!try("aa", false)
+!try("bb", false)
+!try("c", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b'
+!try("aa", true)
+!try("b", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b'
+!try("aaa", true)
+!try("b", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'b' 'b'
+!try("a", true)
+!try("bb", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' 'b'
+!try("aa", true)
+!try("bb", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' 'b'
+!try("aaa", true)
+!try("bb", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'b' 'b' 'b'
+!try("a", true)
+!try("bbb", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("c", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' 'b' 'b'
+!try("aa", true)
+!try("bbb", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("c", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' 'b' 'b'
+!try("aaa", true)
+!try("bbb", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bb", false)
+!try("c", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'c'
+!try("a", true)
+!try("c", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("bbb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'c'
+!try("aa", true)
+!try("c", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("bbb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'c'
+!try("aaa", true)
+!try("c", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bb", false)
+!try("bbb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'b' | 'c'
+!try("a", true)
+!try("b", true)
+!try("c", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' | 'c'
+!try("aa", true)
+!try("b", true)
+!try("c", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' | 'c'
+!try("aaa", true)
+!try("b", true)
+!try("c", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'b' 'b' | 'c'
+!try("a", true)
+!try("bb", true)
+!try("c", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bbb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' 'b' | 'c'
+!try("aa", true)
+!try("bb", true)
+!try("c", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bbb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' 'b' | 'c'
+!try("aaa", true)
+!try("bb", true)
+!try("c", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bbb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'b' 'b' 'b' | 'c'
+!try("a", true)
+!try("bbb", true)
+!try("c", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' 'b' 'b' | 'c'
+!try("aa", true)
+!try("bbb", true)
+!try("c", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c'
+!try("aaa", true)
+!try("bbb", true)
+!try("c", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bb", false)
+!try("cc", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'c' 'c'
+!try("a", true)
+!try("cc", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'c' 'c'
+!try("aa", true)
+!try("cc", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'c' 'c'
+!try("aaa", true)
+!try("cc", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'b' | 'c' 'c'
+!try("a", true)
+!try("b", true)
+!try("cc", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' | 'c' 'c'
+!try("aa", true)
+!try("b", true)
+!try("cc", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' | 'c' 'c'
+!try("aaa", true)
+!try("b", true)
+!try("cc", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'b' 'b' | 'c' 'c'
+!try("a", true)
+!try("bb", true)
+!try("cc", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bbb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' 'b' | 'c' 'c'
+!try("aa", true)
+!try("bb", true)
+!try("cc", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bbb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' 'c'
+!try("aaa", true)
+!try("bb", true)
+!try("cc", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bbb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'b' 'b' 'b' | 'c' 'c'
+!try("a", true)
+!try("bbb", true)
+!try("cc", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' 'c'
+!try("aa", true)
+!try("bbb", true)
+!try("cc", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' 'c'
+!try("aaa", true)
+!try("bbb", true)
+!try("cc", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bb", false)
+!try("c", false)
+!try("ccc", false)
+
+!clearRules
+S ::= 'a' | 'c' 'c' 'c'
+!try("a", true)
+!try("ccc", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'c' 'c' 'c'
+!try("aa", true)
+!try("ccc", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'c' 'c' 'c'
+!try("aaa", true)
+!try("ccc", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' | 'b' | 'c' 'c' 'c'
+!try("a", true)
+!try("b", true)
+!try("ccc", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' | 'c' 'c' 'c'
+!try("aa", true)
+!try("b", true)
+!try("ccc", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' | 'c' 'c' 'c'
+!try("aaa", true)
+!try("b", true)
+!try("ccc", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("bb", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' | 'b' 'b' | 'c' 'c' 'c'
+!try("a", true)
+!try("bb", true)
+!try("ccc", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' 'b' | 'c' 'c' 'c'
+!try("aa", true)
+!try("bb", true)
+!try("ccc", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' 'b' | 'c' 'c' 'c'
+!try("aaa", true)
+!try("bb", true)
+!try("ccc", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bbb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'
+!try("a", true)
+!try("bbb", true)
+!try("ccc", true)
+!try("", false)
+!try("aa", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'
+!try("aa", true)
+!try("bbb", true)
+!try("ccc", true)
+!try("", false)
+!try("a", false)
+!try("aaa", false)
+!try("b", false)
+!try("bb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= 'a' 'a' 'a' | 'b' 'b' 'b' | 'c' 'c' 'c'
+!try("aaa", true)
+!try("bbb", true)
+!try("ccc", true)
+!try("", false)
+!try("a", false)
+!try("aa", false)
+!try("b", false)
+!try("bb", false)
+!try("c", false)
+!try("cc", false)
+
+!clearRules
+S ::= # 
+!try("", true)
+!try("a", false)
+!try("aa", false)
+
+!clearRules
+S ::= 'a' 'b' | 'c' 'd'
+!try("acd", true)
+!try("cd", false)
+
+!report

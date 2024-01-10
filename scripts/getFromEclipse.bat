@@ -3,12 +3,15 @@ rem created 18 October 2023 from the equivalent file in \csle\dev\art
 del/q artForSLE23.jar
 rd /s/q src
 rd /s/q bin
-rd /s/q cpp
+rd /s/q examples
+
 
 rem copy src directory from Adrian's Eclipse workspace
 md src
 md bin
+md examples
 xcopy /S \adrian\eclipse\referenceImplementation\src\*.* src
+xcopy /S \adrian\eclipse\referenceImplementation\examples\*.* examples
 
 rem compile everything
 cd bin

@@ -1,0 +1,131 @@
+!configuration ->, _sig
+
+-sequenceDone
+---
+seq(__done, _C), _sig -> _C, _sig
+
+-sequence 
+_C1, _sig -> _C1P, _sigP
+---
+seq(_C1, _C2), _sig -> seq(_C1P, _C2), _sigP
+
+-ifTrue                          --- if(true, _C1, _C2),_sig -> _C1, _sig
+-ifFalse                         --- if(false, _C1, _C2),_sig -> _C2,_sig
+-ifResolve _E, _sig ->_EP, _sigP --- if(_E,_C1,_C2),_sig -> if(_EP, _C1, _C2), _sigP
+
+-while
+---
+while(_E, _C),_sig -> if(_E, seq(_C, while(_E,_C)), __done), _sig
+
+-assign
+_n |> __int32(_)   
+---
+assign(_X, _n), _sig -> __done, __put(_sig, _X, _n)
+
+-assignResolve
+_E, _sig -> _I, _sigP 
+---
+assign(_X,_E), _sig -> assign(_X, _I), _sigP
+
+-gt
+_n1 |> __int32(_) _n2 |> __int32(_)
+---
+gt(_n1, _n2),_sig ->  __gt(_n1, _n2),_sig 
+
+-gtRight
+_n |> __int32(_) _E2, _sig -> _I2,_sigP 
+---
+gt(_n, _E2),_sig -> gt(_n, _I2), _sigP
+
+-gtLeft
+_E1, _sig -> _I1, _sigP 
+---
+gt(_E1, _E2),_sig -> gt(_I1, _E2), _sigP
+
+-ne
+_n1 |> __int32(_) _n2 |> __int32(_)
+---
+ne(_n1, _n2),_sig ->  __ne(_n1, _n2),_sig
+
+-neRight
+_n |> __int32(_)  _E2, _sig -> _I2,_sigP 
+---
+ne(_n, _E2),_sig -> ne(_n, _I2), _sigP
+
+-neLeft
+_E1, _sig -> _I1, _sigP 
+---
+ne(_E1, _E2),_sig -> ne(_I1, _E2), _sigP
+
+-sub
+_n1 |> __int32(_) _n2 |> __int32(_)
+---
+sub(_n1, _n2),_sig ->  __sub(_n1, _n2),_sig
+
+-subRight
+_n |> __int32(_) _E2,_sig -> _I2,_sigP   
+---
+sub(_n, _E2),_sig -> sub(_n, _I2), _sigP
+
+-subLeft
+_E1,_sig -> _I1,_sigP
+---
+sub(_E1, _E2),_sig -> sub(_I1, _E2), _sigP
+
+-deref
+__get(_sig, _R) |> _Z
+---
+deref(_R),_sig -> _Z, _sig
+
+seq ::= statement^^ | statement seq 
+statement ::= assign^^ | while^^ | if^^
+assign ::= &ID ':='^ expression ';'^
+while ::= 'while'^ expression 'do'^ statement
+if ::= 'if'^ expression 'then'^ statement | 'if'^ expression 'then'^ statement 'else'^ statement
+expression ::= rels^^
+rels ::= adds^^ | gt^^ | ne^^
+  gt ::= adds '>'^ adds
+  ne ::= adds '!='^ adds 
+adds ::= operand^^ | sub^^ | add^^
+  add ::= adds '+'^ operand
+  sub ::= adds '-'^ operand
+operand ::= __int32^^ | deref^^
+__int32 ::= &INTEGER
+deref ::= &ID
+
+!try "a := 6; b := 9; while a != b do if a > b then a := a - b; else b := b - a;"
+
+(*
+!tryTerm (trConfiguration(seq(__done, __empty), __map))
+!tryTerm (trConfiguration(seq (666,667), __map))
+
+!tryTerm (trConfiguration(if(true, 7, 9),__map))
+
+!tryTerm (trConfiguration(if(false, 7, 9),__map))
+
+!tryTerm (trConfiguration(while(false, S), __map))
+
+!tryTerm (trConfiguration(gt(4,3),__map))
+!tryTerm (trConfiguration(gt(3,4),__map))
+!tryTerm (trConfiguration(ne(3,3),__map))
+!tryTerm (trConfiguration(ne(3,4),__map))
+
+!tryTerm (trConfiguration(if(ne(3,3),7,9),__map))
+!tryTerm (trConfiguration(if(ne(3,4),7,9),__map))
+!tryTerm (trConfiguration(if(gt(4,3),7,9),__map))
+!tryTerm (trConfiguration(if(gt(3,4),7,9),__map))
+
+!tryTerm (trConfiguration(sub(3,4),__map()))
+
+!tryTerm (trConfiguration(seq(assign(x,3), assign(y,28)),__map()))
+!tryTerm (trConfiguration(seq(assign(x,3), assign(y,deref(x))),__map()))
+
+!tryTerm (trConfiguration(seq(seq(assign(x, 1), assign(y,2)), deref(x)),__map()))
+
+!tryTerm (trConfiguration(seq(seq(assign(x, 1), assign(y,2)), sub(deref(x), deref(y))),__map()))
+
+!tryTerm (trConfiguration(seq(assign(z, 1), while(gt(deref(z), 0), assign(z,0))),__map()))
+!tryTerm (trConfiguration(seq(assign(z,3), while(gt(deref(z), sub(0, 2)), assign(z, sub(deref(z),1)))),__map()))
+
+!tryTerm (trConfiguration(seq(seq(seq(assign(a, 6), assign(b, 9)), while(ne(deref(a), deref(b)), if(gt(deref(a), deref(b)), assign(a, sub(deref(a), deref(b))), assign(b, sub(deref(b), deref(a)))))), assign(gcd, deref(a))),__map()))
+*)

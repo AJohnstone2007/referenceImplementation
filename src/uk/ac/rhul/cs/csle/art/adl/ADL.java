@@ -65,7 +65,7 @@ public class ADL {
     int adlDerivationTerm = 0;
     adlParser.accepted = false;
 
-    adlLexer.lex(inputString, adlGrammar.lexicalKindsArray(), adlGrammar.lexicalStringsArray(), adlGrammar.whitespacesArray(), true);
+    adlLexer.lex(inputString, adlGrammar.lexicalKindsArray(), adlGrammar.lexicalStringsArray(), adlGrammar.whitespacesArray());
     // lexer.report();
     adlParser.input = adlLexer.tokens;
     adlParser.positions = adlLexer.positions;

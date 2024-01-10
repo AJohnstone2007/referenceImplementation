@@ -39,13 +39,21 @@ public class Util {
     int length = buffer.length();
     int tmp = lineNumber;
     int i;
+    // Locate line
     for (i = 0; tmp > 1 && i < length; i++)
       if (buffer.charAt(i) == '\n') tmp--;
+
     if (i >= length) return;
 
     sb.append(String.format("%5d: ", lineNumber));
-    for (; i < length && buffer.charAt(i) != '\n'; i++)
-      sb.append(buffer.charAt(i));
+    if (lineNumber == 1)
+      sb.append("\n"); // Special case: at start of buffer
+    else
+      for (; i < length && buffer.charAt(i) != '\n'; i++) {
+        System.out.println("Appending " + buffer.charAt(i) + "[" + ((int) buffer.charAt(i)) + "]");
+        sb.append(buffer.charAt(i));
+      }
+
   }
 
   public static int columnNumber(int index, String buffer) { // Return x coordinate: note that the first column is column zero!

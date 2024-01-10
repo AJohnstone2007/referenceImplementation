@@ -50,6 +50,7 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
   private final LexerLM currentLexer = new LexerLM(); // default current lexer is longest match - change to TWE set lexer when available
   private Grammar currentGrammar; // scriptTraverser builds grammar rules into this grammar
   private int currentDerivationTerm = 0;
+  private int currentConfiguration = 0;
 
   private int goodCount = 0;
   private int badCount = 0;
@@ -161,7 +162,7 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
 
   public void buildTRRule(int term) {
     int relation = iTerms.getSubterm(term, 1, 1, 1);
-    int constructorIndex = iTerms.getTermSymbolIndex((iTerms.getSubterm(term, 1, 1, 0)));
+    int constructorIndex = iTerms.getTermSymbolIndex((iTerms.getSubterm(term, 1, 1, 0, 0)));
     // System.out.println("Building TR rule " + iTerms.toString(term) + "\nwith relation " + iTerms.toString(relation) + "\nand constructor "
     // + iTerms.getString(constructorIndex));
     if (trRules.get(relation) == null) trRules.put(relation, new HashMap<>());
@@ -172,8 +173,11 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
   }
 
   private void directiveAction(int term) {
-    // System.out.println("Processing " + iTerms.toString(term));
+    System.out.println("Processing " + iTerms.toString(term));
     switch (iTerms.getTermSymbolString(iTerms.getSubterm(term, 0))) {
+    case "configuration":
+      currentConfiguration = iTerms.getSubterm(term, 0);
+      break;
     case "whitespace":
       currentGrammar.whitespaces.clear();
       for (int i = 0; i < iTerms.getTermArity(iTerms.getSubterm(term, 0)); i++)
@@ -287,7 +291,6 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
           Util.fatal("Unexpected !print argument " + iTerms.toString(iTerms.getSubterm(term, 0, i)));
         }
       break;
-    case "tryTerm":
     case "try":
       switch (iTerms.getTermSymbolString(iTerms.getSubterm(term, 0, 0))) {
       case "__string":
@@ -305,23 +308,16 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
         Util.fatal("Unknown try kind " + iTerms.toString(term));
       }
 
-      normaliseAndStaticCheckRewriteRules();
-      int tryTerm = iTerms.getSubterm(term, 0);
-      int tryTermArity = iTerms.getTermArity(tryTerm);
-      inputTerm = currentDerivationTerm;
-      if (inputTerm == 0) Util.fatal("!tryTerm with null term");
-      if (tryTermArity > 1)
-        startRelation = iTerms.getSubterm(tryTerm, 1);
-      else
-        startRelation = defaultStartRelation;
-      if (tryTermArity > 2)
-        resultTerm = iTerms.getSubterm(tryTerm, 2);
-      else
-        resultTerm = 0;
-      System.out.println("inputTerm " + iTerms.toString(inputTerm));
-      System.out.println("startRelation " + iTerms.toString(startRelation));
-      System.out.println("resultTerm " + iTerms.toString(resultTerm));
-      stepper();
+      if (currentDerivationTerm != 0 && currentConfiguration != 0) {
+        normaliseAndStaticCheckRewriteRules();
+        int tryTerm = iTerms.getSubterm(term, 0);
+        int tryTermArity = iTerms.getTermArity(tryTerm);
+        inputTerm = currentDerivationTerm;
+        startRelation = iTerms.getSubterm(currentConfiguration, 0);
+        System.out.println("inputTerm " + iTerms.toString(inputTerm));
+        System.out.println("startRelation " + iTerms.toString(startRelation));
+        stepper();
+      }
       break;
     case "nop": // No operation
       break;
@@ -604,8 +600,8 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
     termRewriteConstructorDefinitions.put(iTerms.findString("~>"), 1);
     termRewriteConstructorDefinitions.put(iTerms.findString("~>*"), 1);
     termRewriteConstructorDefinitions.put(iTerms.findString("~>>"), 1);
-    termRewriteConstructorDefinitions.put(iTerms.findString("True"), 1);
-    termRewriteConstructorDefinitions.put(iTerms.findString("False"), 1);
+    termRewriteConstructorDefinitions.put(iTerms.findString("true"), 1);
+    termRewriteConstructorDefinitions.put(iTerms.findString("false"), 1);
     termRewriteConstructorDefinitions.put(iTerms.findString("trLabel"), 1);
     termRewriteConstructorDefinitions.put(iTerms.findString("trTransition"), 1);
     termRewriteConstructorDefinitions.put(iTerms.findString("trMatch"), 1);
@@ -620,7 +616,7 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
 
     // System.out.println("IndexToTerm:" + ((ITermsLowLevelAPI) iTerms).getIndexToTerm());
     for (Integer scanRelationIndex : trRules.keySet()) { // Step through the relations
-      // System.out.println("Scanning rules for relation " + tt.toString(scanRelationIndex));
+      System.out.println("Scanning rules for relation " + tt.toString(scanRelationIndex));
 
       // Note: rule root is a symbol not a term
 

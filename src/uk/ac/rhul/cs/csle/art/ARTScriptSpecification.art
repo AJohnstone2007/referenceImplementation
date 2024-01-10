@@ -82,7 +82,7 @@ directiveElement ::=
 | 'parser'^^ '#'^ | 'parser'^^ parserElements^
 | 'start'^^ '#'^ | 'start'^^ cfgNonterminal // Set parser start nonterminal
 | 'rewriter'^^ '#'^ | 'rewriter'^^ rewriterElements^
-| 'configuration'^^ '#'^ | TRRELATION^ ','^ trConfiguration
+| 'configuration'^^ '#'^ | 'configuration'^^ TRRELATION | 'configuration'^^ TRRELATION ','^ trConfiguration
 | 'trace'^^ &INTEGER
 | 'print'^^ displayElements^
 | 'show'^^ displayElements^

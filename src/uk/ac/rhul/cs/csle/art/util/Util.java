@@ -46,11 +46,11 @@ public class Util {
     if (i >= length) return;
 
     sb.append(String.format("%5d: ", lineNumber));
-    if (lineNumber == 1)
-      sb.append("\n"); // Special case: at start of buffer
+    if (lineNumber == 1 && buffer.charAt(0) == '\n')
+      sb.append("\n"); // Special case: at start of buffer and empty line
     else
       for (; i < length && buffer.charAt(i) != '\n'; i++) {
-        System.out.println("Appending " + buffer.charAt(i) + "[" + ((int) buffer.charAt(i)) + "]");
+        // System.out.println("Appending " + buffer.charAt(i) + "[" + ((int) buffer.charAt(i)) + "]");
         sb.append(buffer.charAt(i));
       }
 

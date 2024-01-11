@@ -107,7 +107,7 @@ rewriterElements ::= rewriterElement | rewriterElement ','^ rewriterElements^
 rewriterElement ::= 'eSOS'^^
 
 displayElements ::= displayElement | displayElement ','^ displayElements^
-displayElement  ::= 'scriptDerivationTerm' | 'input'^^ | 'tokens'^^ | 'sppf'^^ | 'derivationTerm'^^ | 'instanceTerm'^^ | 'outcome'^^ | 'statistics'^^
+displayElement  ::= 'scriptDerivationTerm'^^ | 'input'^^ | 'tokens'^^ | 'sppf'^^ | 'derivationTerm'^^ | 'instanceTerm'^^ | 'outcome'^^ | 'statistics'^^
 
 (* Lexical elements **********************************************************)
 __bool ::= 'true' | 'false'

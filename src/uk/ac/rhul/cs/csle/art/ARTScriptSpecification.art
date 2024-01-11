@@ -59,7 +59,7 @@ trEquations ::= cfgEquation | cfgEquation ','^ trEquations^
 
 (* Choose rules ***************************************************************)
 chooseRule ::= chooseDiff chooserOp chooseDiff 
-chooseDiff ::= chooseUnionIntersection^^ | chooseDiff '|||'^ chooseUnionIntersection
+chooseDiff ::= chooseUnionIntersection^^ | chooseDiff '||'^ chooseUnionIntersection
 chooseUnionIntersection ::= chooseElement^^ | chooseUnionIntersection chooseUnion^^ chooseElement | chooseUnionIntersection chooseIntersection^^ chooseElement
 chooseUnion ::= '|'^
 chooseIntersection ::= '/'^
@@ -107,7 +107,7 @@ rewriterElements ::= rewriterElement | rewriterElement ','^ rewriterElements^
 rewriterElement ::= 'eSOS'^^
 
 displayElements ::= displayElement | displayElement ','^ displayElements^
-displayElement  ::= 'input'^^ | 'tokens'^^ | 'sppf'^^ | 'derivation'^^ | 'outcome'^^ | 'statistics'^^
+displayElement  ::= 'scriptDerivationTerm' | 'input'^^ | 'tokens'^^ | 'sppf'^^ | 'derivationTerm'^^ | 'instanceTerm'^^ | 'outcome'^^ | 'statistics'^^
 
 (* Lexical elements **********************************************************)
 __bool ::= 'true' | 'false'

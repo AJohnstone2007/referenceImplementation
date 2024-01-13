@@ -1,5 +1,5 @@
 
-package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar;
+package uk.ac.rhul.cs.csle.art.cfg.grammar;
 
 import java.io.File;
 import java.io.FileNotFoundException;

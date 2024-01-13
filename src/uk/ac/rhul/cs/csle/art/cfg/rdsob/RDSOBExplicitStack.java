@@ -1,11 +1,11 @@
-package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob;
+package uk.ac.rhul.cs.csle.art.cfg.rdsob;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
+import uk.ac.rhul.cs.csle.art.cfg.ParserBase;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarKind;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarNode;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
-public class RDSOBExplicitStack extends ReferenceParser {
+public class RDSOBExplicitStack extends ParserBase {
   class SNode {
     GrammarNode returnNode;
     int i_entry;

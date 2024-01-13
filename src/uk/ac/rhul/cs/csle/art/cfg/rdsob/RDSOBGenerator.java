@@ -1,14 +1,14 @@
-package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob;
+package uk.ac.rhul.cs.csle.art.cfg.rdsob;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarElement;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.Grammar;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarElement;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarKind;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarNode;
 import uk.ac.rhul.cs.csle.art.util.Util;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
 
 public class RDSOBGenerator {
 

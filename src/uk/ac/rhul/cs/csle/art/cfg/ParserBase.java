@@ -1,15 +1,16 @@
-package uk.ac.rhul.cs.csle.art.cfg.referenceFamily;
+package uk.ac.rhul.cs.csle.art.cfg;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.Grammar;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarKind;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarNode;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
-public abstract class ReferenceParser {
+public abstract class ParserBase {
   public int traceLevel = 0;
   public Grammar grammar;
   public String inputString;
@@ -52,7 +53,7 @@ public abstract class ReferenceParser {
     }
     case REAL: {
       int right = positions[inputIndex];
-      while (!ReferenceLexer.isSimpleSpace(inputString.charAt(right)))
+      while (!LexerBase.isSimpleSpace(inputString.charAt(right)))
         right++;
 
       return inputString.substring(positions[inputIndex], right);

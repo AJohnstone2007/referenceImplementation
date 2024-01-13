@@ -1,4 +1,4 @@
-package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.gll;
+package uk.ac.rhul.cs.csle.art.cfg.gll;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,15 +10,15 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GIFTKind;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarKind;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.LKind;
+import uk.ac.rhul.cs.csle.art.cfg.ParserBase;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GIFTKind;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.Grammar;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarKind;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarNode;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.LKind;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
-public class GLLBaseLine extends ReferenceParser {
+public class GLLBaseLine extends ParserBase {
   @Override
   public void show() {
     new GSS2Dot(gss, "gssA.dot");

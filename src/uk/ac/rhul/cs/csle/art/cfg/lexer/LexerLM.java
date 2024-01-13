@@ -1,11 +1,11 @@
-package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.lexer;
+package uk.ac.rhul.cs.csle.art.cfg.lexer;
 
 import java.util.ArrayList;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceLexer;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.LKind;
+import uk.ac.rhul.cs.csle.art.cfg.LexerBase;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.LKind;
 
-public class LexerLM extends ReferenceLexer {
+public class LexerLM extends LexerBase {
   private ArrayList<Integer> tokenList;
   private ArrayList<Integer> positionList;
   public int[] tokens;

@@ -1,10 +1,10 @@
-package uk.ac.rhul.cs.csle.art.cfg.referenceFamily.rdsob;
+package uk.ac.rhul.cs.csle.art.cfg.rdsob;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.GrammarNode;
+import uk.ac.rhul.cs.csle.art.cfg.ParserBase;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarNode;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
-public class RDSOBFunction extends ReferenceParser {
+public class RDSOBFunction extends ParserBase {
 
   boolean rdsobFunction(GrammarNode lhs) {
     if (dn.next == null) dn.next = new DerivationSingletonNode(grammar.endOfStringNode, null);

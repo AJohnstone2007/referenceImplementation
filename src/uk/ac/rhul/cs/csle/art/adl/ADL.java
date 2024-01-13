@@ -10,10 +10,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import uk.ac.rhul.cs.csle.art.ARTScriptInterpreter;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.ReferenceParser;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.gll.GLLBaseLine;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.Grammar;
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.lexer.LexerLM;
+import uk.ac.rhul.cs.csle.art.cfg.ParserBase;
+import uk.ac.rhul.cs.csle.art.cfg.gll.GLLBaseLine;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.Grammar;
+import uk.ac.rhul.cs.csle.art.cfg.lexer.LexerLM;
 import uk.ac.rhul.cs.csle.art.term.ITerms;
 import uk.ac.rhul.cs.csle.art.term.ITermsLowLevelAPI;
 import uk.ac.rhul.cs.csle.art.term.Value;
@@ -54,7 +54,7 @@ public class ADL {
 
     Grammar adlGrammar = artScriptInterpreter.getGrammar();
     LexerLM adlLexer = new LexerLM();
-    ReferenceParser adlParser = new GLLBaseLine();
+    ParserBase adlParser = new GLLBaseLine();
 
     adlParser.traceLevel = 0;
     adlParser.inputStringName = "";

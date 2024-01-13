@@ -1,11 +1,11 @@
-package uk.ac.rhul.cs.csle.art.cfg.referenceFamily;
+package uk.ac.rhul.cs.csle.art.cfg;
 
 import java.util.Set;
 
-import uk.ac.rhul.cs.csle.art.cfg.referenceFamily.grammar.LKind;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.LKind;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
-public abstract class ReferenceLexer {
+public abstract class LexerBase {
   protected LKind[] kinds;
   protected String[] strings;
   protected LKind[] whitespaces;
@@ -119,8 +119,7 @@ public abstract class ReferenceLexer {
   }
 
   protected char getCh() {
-    // System.out
-    // .println("getCh() at index " + inputIndex + " character " + (int) input.charAt(inputIndex));
+    System.out.println("getCh() at index " + inputIndex + " character " + (int) input[inputIndex]);
     if (inputIndex >= inputLength)
       return '\0';
     else
@@ -515,6 +514,7 @@ public abstract class ReferenceLexer {
       }
       getCh();
     } while (peekCh() != '\'');
+    System.out.println("Matches SPQ ending at " + inputIndex);
     getCh(); // Skip delimiter
   }
 

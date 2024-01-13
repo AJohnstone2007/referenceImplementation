@@ -2,7 +2,7 @@
 
 This is the reference implementation of the Royal Holloway software language engineering tool ART written by Adrian Johnstone and tested by Elizabeth Scott; we are the authors of the GLL, RNGLR and BRNGLR algorithms.
 
-Our goals are (a) to provide a 'programmer friendly' route into GLL and (b) to provide a baseline for principled performance testing of GLL implementations
+Our goals are (a) to provide a 'programmer friendly' route into GLL (b) to provide a baseline for principled performance testing of GLL implementations and (c) extend the approach to other general parsing algorithms.
 
 The initial version of this work was presented at the Software Language Engineering 2023 conference near Lisbon. You can read the associated paper [here](https://pure.royalholloway.ac.uk/en/publications/a-reference-gll-implementation). The slides from that presentation are in __doc/referenceImplementationSlides.pdf__
 

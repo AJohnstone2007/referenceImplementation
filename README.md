@@ -1,5 +1,6 @@
-# referenceImplementation
-This is a reference implementation of GLL and its variants written by Adrian Johnstone and tested by Elizabeth Scott; we are the authors of the GLL algorithm.
+# ART reference implementation
+
+This is the reference implementation of the Royal Holloway software language engineering tool ART written by Adrian Johnstone and tested by Elizabeth Scott; we are the authors of the GLL, RNGLR and BRNGLR algorithms.
 
 Our goals are (a) to provide a 'programmer friendly' route into GLL and (b) to provide a baseline for principled performance testing of GLL implementations
 
@@ -10,8 +11,6 @@ We continue to extend the code and the associated grammars and test corprora. Fo
 You may also find the following pages useful.
 
 Our reference programming language exmples at https://github.com/AJohnstone2007/referenceLanguageCorpora
-
-Our production tool _Ambiguity Retained Translation_ (ART) at https://github.com/AJohnstone2007/ART
 
 Our research papers at https://pure.royalholloway.ac.uk/en/persons/adrian-johnstone/publications
 

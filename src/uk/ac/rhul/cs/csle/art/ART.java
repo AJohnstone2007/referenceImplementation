@@ -14,20 +14,17 @@ public class ART {
 
     StringBuilder scriptString = new StringBuilder();
     for (String a : args) {
-      scriptString.append("\n");
+      scriptString.append(" ");
       if (a.endsWith(".art"))
         try {
           scriptString.append(Files.readString(Paths.get((a))));
         } catch (IOException e) {
           Util.fatal("Unable to open script file " + a);
         }
-      else if (a.indexOf(".") != -1) {
-        // scriptString.append("!try (file(\"");
-        // scriptString.append(a);
-        // scriptString.append("\"))!print(derivation)");
-        scriptString.append("!try '");
+      else if (a.endsWith(".str")) {
+        scriptString.append("!try file(\"");
         scriptString.append(a);
-        scriptString.append("'");
+        scriptString.append("\")");
       } else
         scriptString.append(a);
     }

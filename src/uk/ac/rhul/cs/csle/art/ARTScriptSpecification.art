@@ -2,7 +2,7 @@
 //!parser rdsobFunction // Uncomment this line to try bootstrapping with Recursive Descent Singleton Ordered Backtracking parser instead of default GLL parser
 !whitespace &SIMPLE_WHITESPACE, &COMMENT_NEST_ART, &COMMENT_LINE_C 
 rules ::= rule rules^ | rule
-rule  ::= cfgRule^^ | trRule^^ | chooseRule^^ | '!'^ directive^^   
+rule  ::= cfgRule^^ | trRule^^ | 'choose'^ chooseRules^ | '!'^ directive^^   
 
 (* Context Free Grammar rules ************************************************)
 cfgRule  ::= cfgLHS '::='^ cfgAlts^  
@@ -58,12 +58,13 @@ trSubterms ::= trTerm | trTerm  ','^ trSubterms^ | trTerm  trSubterms^
 trEquations ::= cfgEquation | cfgEquation ','^ trEquations^
 
 (* Choose rules ***************************************************************)
-chooseRule ::= chooseDiff chooserOp chooseDiff 
+chooseRules ::= chooseRule | chooseRule chooseRules^
+chooseRule ::= chooseDiff chooserOp^^ chooseDiff 
 chooseDiff ::= chooseUnionIntersection^^ | chooseDiff '||'^ chooseUnionIntersection
-chooseUnionIntersection ::= chooseElement^^ | chooseUnionIntersection chooseUnion^^ chooseElement | chooseUnionIntersection chooseIntersection^^ chooseElement
+chooseUnionIntersection ::= chooseElement^^ | chooseUnionIntersection chooseUnion^^ chooseElement^ | chooseUnionIntersection chooseIntersection^^ chooseElement^
 chooseUnion ::= '|'^
 chooseIntersection ::= '/'^
-chooseElement ::= cfgNonterminal | cfgCharacterTerminal | cfgBuiltinTerminal | cfgCaseInsensitiveTerminal | cfgCaseSensitiveTerminal | choosePredefinedSet | '('^ chooseDiff ')'^
+chooseElement ::= cfgNonterminal | cfgCharacterTerminal | cfgBuiltinTerminal | cfgCaseInsensitiveTerminal | cfgCaseSensitiveTerminal | choosePredefinedSet^ | '('^ chooseDiff ')'^
 choosePredefinedSet ::= 'anyCharacterTerminal' | 'anyBuiltinTerminal' | 'anyCaseSensitiveTerminal' | 'anyCaseInsensitiveTerminal' 
                       | 'anyParaterminal'      | 'anyLiteralTerminal' | 'anyTerminal'              | 'anyNonterminal'
 chooserOp ::= chooseHigher^^ | chooseLower^^ | chooseLonger^^ | chooseShorter^^
@@ -87,7 +88,7 @@ directiveElement ::=
 | 'print'^^ displayElements^
 | 'show'^^ displayElements^
 | 'log'^^ displayElements^
-| 'try'^^ file | 'try'^^ trTerm
+| 'try'^^ file | 'try'^^ trTerm | 'try'^^ file '=' trTerm | 'try'^^ trTerm '=' trTerm
 
 file ::= &STRING_PLAIN_SQ
 
@@ -101,13 +102,13 @@ paraterminalElements ::= paraterminalElement | paraterminalElement ','^ paraterm
 paraterminalElement  ::= cfgNonterminal^^
 
 parserElements ::= parserElement | parserElement ','^ parserElements^
-parserElement ::= 'gllBaseLine'^^ | 'rdsobFunction'^^
+parserElement ::= 'gllBaseLine'^^ | 'rdsobFunction'^^ | 'algX'^^ | 'cyk'^^
 
 rewriterElements ::= rewriterElement | rewriterElement ','^ rewriterElements^
 rewriterElement ::= 'eSOS'^^
 
 displayElements ::= displayElement | displayElement ','^ displayElements^
-displayElement  ::= 'scriptDerivationTerm'^^ | 'input'^^ | 'tokens'^^ | 'sppf'^^ | 'derivationTerm'^^ | 'instanceTerm'^^ | 'outcome'^^ | 'statistics'^^
+displayElement  ::= 'scriptDerivationTerm'^^ | 'input'^^ | 'tokens'^^ | 'sppf'^^ | 'derivationTerm'^^ | 'instanceTerm'^^ | 'outcome'^^ | 'statistics'^^ | __string^^
 
 (* Lexical elements **********************************************************)
 __bool ::= 'true' | 'false'

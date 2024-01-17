@@ -119,7 +119,7 @@ public abstract class LexerBase {
   }
 
   protected char getCh() {
-    System.out.println("getCh() at index " + inputIndex + " character " + (int) input[inputIndex]);
+    // System.out.println("getCh() at index " + inputIndex + " character " + (int) input[inputIndex]);
     if (inputIndex >= inputLength)
       return '\0';
     else
@@ -514,7 +514,6 @@ public abstract class LexerBase {
       }
       getCh();
     } while (peekCh() != '\'');
-    System.out.println("Matches SPQ ending at " + inputIndex);
     getCh(); // Skip delimiter
   }
 

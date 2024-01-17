@@ -1,6 +1,7 @@
 package uk.ac.rhul.cs.csle.art.term;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class __map extends Value {
   private final HashMap<Value, Value> javaValue;
@@ -81,6 +82,13 @@ public class __map extends Value {
   }
 
   @Override
+  public Value __extract() {
+    Iterator<Value> iterator = javaValue.keySet().iterator();
+
+    return iterator.hasNext() ? iterator.next() : iTerms.valueEmpty;
+  }
+
+  @Override
   public Value __contains(Value r) {
     if (javaValue.containsKey(r)) return iTerms.valueBoolTrue;
 
@@ -90,6 +98,38 @@ public class __map extends Value {
   @Override
   public Value __remove(Value r) {
     javaValue.remove(r);
+    return this;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Value __union(Value r) {
+    if (!(r instanceof __map)) throw new ValueException("arguments of __union must both be of type __map");
+
+    for (Value v : ((HashMap<Value, Value>) r.javaValue()).keySet())
+      javaValue.put(v, ((HashMap<Value, Value>) r.javaValue()).get(v));
+
+    return this;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Value __intersection(Value r) {
+    if (!(r instanceof __map)) throw new ValueException("arguments of __intersection must both be of type __map");
+
+    for (Value v : javaValue.keySet())
+      if (!((HashMap<Value, Value>) r.javaValue()).containsKey(v)) javaValue.remove(v);
+    return this;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Value __difference(Value r) {
+    if (!(r instanceof __map)) throw new ValueException("arguments of __difference must both be of type __map");
+
+    for (Value v : ((HashMap<Value, Value>) r.javaValue()).keySet())
+      javaValue.remove(v);
+
     return this;
   }
 

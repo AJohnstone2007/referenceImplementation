@@ -49,7 +49,7 @@ tr ::= trPremises '---'^ trTransition trEquations
 trPremises ::= #^ | trTransition trPremises^ | trMatch trPremises^
 trTransition ::= trConfiguration TRRELATION trConfiguration
 trNoTransition ::= trConfiguration
-trConfiguration ::= trTerm^^ | trTerm trEntityReferences^ | '<'^ trTerm trEntityReferences^ '>'^
+trConfiguration ::= trTerm | trTerm trEntityReferences^ | '<'^ trTerm trEntityReferences^ '>'^
 trEntityReferences ::= ','^ trTerm | ','^ trTerm trEntityReferences^ | ','^ trNamedTerm | ','^ trNamedTerm  trEntityReferences^
 trNamedTerm ::= ID '='^ trTerm
 trMatch ::= trTerm '|>'^ trTerm
@@ -84,11 +84,11 @@ directiveElement ::=
 | 'start'^^ '#'^ | 'start'^^ cfgNonterminal // Set parser start nonterminal
 | 'rewriter'^^ '#'^ | 'rewriter'^^ rewriterElements^
 | 'configuration'^^ '#'^ | 'configuration'^^ TRRELATION | 'configuration'^^ TRRELATION ','^ trConfiguration
-| 'trace'^^ &INTEGER
+| 'trace'^^ &SIGNED_INTEGER
 | 'print'^^ displayElements^
 | 'show'^^ displayElements^
 | 'log'^^ displayElements^
-| 'try'^^ file | 'try'^^ trTerm | 'try'^^ file '=' trTerm | 'try'^^ trTerm '=' trTerm
+| 'try'^^ file | 'try'^^ trTerm | 'try'^^ file '='^ trConfiguration | 'try'^^ trConfiguration '='^ trConfiguration
 
 file ::= &STRING_PLAIN_SQ
 

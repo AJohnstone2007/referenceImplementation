@@ -14,7 +14,7 @@ public class __string extends Value {
 
   public __string(int termIndex) {
     String label = iTerms.getTermSymbolString(iTerms.getTermChildren(termIndex)[0]);
-    value = label.substring(1, label.length() - 1).translateEscapes();
+    value = label.translateEscapes();
   }
 
   @Override

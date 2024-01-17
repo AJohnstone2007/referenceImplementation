@@ -1,6 +1,5 @@
 package uk.ac.rhul.cs.csle.art.cfg;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -34,8 +33,13 @@ public abstract class ParserBase {
 
       return inputString.substring(positions[inputIndex], right);
     }
-    case CHARACTER:
-      break;
+    case CHARACTER: {
+      int right = positions[inputIndex];
+      while (!LexerBase.isSimpleSpace(inputString.charAt(right)))
+        right++;
+
+      return inputString.substring(positions[inputIndex], right);
+    }
     case CHAR_BQ:
       break;
     case COMMENT_BLOCK_C:
@@ -59,10 +63,22 @@ public abstract class ParserBase {
       return inputString.substring(positions[inputIndex], right);
     }
 
-    case SIGNED_INTEGER:
-      break;
-    case SIGNED_REAL:
-      break;
+    case SIGNED_INTEGER: {
+      int right = positions[inputIndex];
+      while (right < inputString.length() && (Character.isDigit(inputString.charAt(right)) || inputString.charAt(right) == '_'))
+        right++;
+
+      return inputString.substring(positions[inputIndex], right);
+    }
+
+    case SIGNED_REAL: {
+      int right = positions[inputIndex];
+      while (!LexerBase.isSimpleSpace(inputString.charAt(right)))
+        right++;
+
+      return inputString.substring(positions[inputIndex], right);
+    }
+
     case SIMPLE_WHITESPACE:
       break;
     case SINGLETON_CASE_INSENSITIVE:

@@ -386,7 +386,13 @@ private String constructorOf(SPPFN sppfn, GrammarNode gn) {
     return inputString.substring(positions[sppfn.li],right) ;
   }
   case SIGNED_REAL:
-    break;
+  { int right = positions[sppfn.li];
+    if (inputString.charAt(right) == '-') right++;
+    while (right< inputString.length() && Character.isDigit(inputString.charAt(right))) right++;
+    right++; // skip decimal point
+    while (right< inputString.length() && Character.isDigit(inputString.charAt(right))) right++;
+    return inputString.substring(positions[sppfn.li],right) ;
+  }
   case SIMPLE_WHITESPACE:
     break;
   case SINGLETON_CASE_INSENSITIVE:

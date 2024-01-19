@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import uk.ac.rhul.cs.csle.art.term.ITerms;
-import uk.ac.rhul.cs.csle.art.term.ITermsLowLevelAPI;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class ART {
   public static void main(String[] args) {
-    final ITerms iTerms = new ITermsLowLevelAPI();
 
     StringBuilder scriptString = new StringBuilder();
     for (String a : args) {
@@ -30,6 +27,6 @@ public class ART {
     }
     // System.out.println("Script string: " + scriptString);
 
-    new ARTScriptInterpreter(iTerms).interpret(scriptString.toString());
+    new ARTScriptInterpreter().interpret(scriptString.toString());
   }
 }

@@ -9,7 +9,7 @@ import uk.ac.rhul.cs.csle.art.term.ITerms;
 
 public class ChartBase extends ParserBase {
   private final ITerms iTerms;
-  private ArrayList<ArrayList<Set<Integer>>> chart;
+  protected ArrayList<ArrayList<Set<Integer>>> chart;
 
   ChartBase(ITerms iTerms) {
     this.iTerms = iTerms;

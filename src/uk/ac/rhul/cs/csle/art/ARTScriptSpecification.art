@@ -89,6 +89,7 @@ directiveElement ::=
 | 'show'^^ displayElements^
 | 'log'^^ displayElements^
 | 'try'^^ file | 'try'^^ trTerm | 'try'^^ file '='^ trConfiguration | 'try'^^ trConfiguration '='^ trConfiguration
+| 'termTool'^^
 
 file ::= &STRING_PLAIN_SQ
 

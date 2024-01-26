@@ -1,7 +1,7 @@
 package uk.ac.rhul.cs.csle.art.cfg.chart;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import uk.ac.rhul.cs.csle.art.cfg.ParserBase;
@@ -22,7 +22,7 @@ public class ChartBase extends ParserBase {
       ArrayList<Set<Integer>> column;
       chart.add(column = new ArrayList<>(x));
       for (int y = 0; y <= x; y++)
-        column.add(new HashSet<>());
+        column.add(new LinkedHashSet<>());
     }
   }
 
@@ -40,7 +40,7 @@ public class ChartBase extends ParserBase {
     for (int y = 0; y < chart.size(); y++) {
       sb.append(String.format("%2d", y) + ": ");
       for (int x = 0; x < y; x++)
-        sb.append("               ");
+        sb.append("                 ");
       for (int x = y; x < chart.size(); x++)
         sb.append("t[" + String.format("%2d", x) + "," + String.format("%2d", y) + "]=" + chartCellToString(x, y) + " ");
       sb.append("\n");
@@ -51,8 +51,13 @@ public class ChartBase extends ParserBase {
   String chartCellToString(int x, int y) {
     Set<Integer> cell = chart.get(x).get(y);
     StringBuilder sb = new StringBuilder();
+    boolean first = true;
     for (int s : cell) {
-      sb.append(s + " ");
+      if (first)
+        first = false;
+      else
+        sb.append(",");
+      sb.append(String.format("%2d", s));
     }
     sb.append("}");
     return "{" + String.format("%4s", sb.toString());

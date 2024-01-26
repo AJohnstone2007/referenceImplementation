@@ -1,9 +1,14 @@
 package uk.ac.rhul.cs.csle.art.cfg.grammar;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 public class GrammarElement implements Comparable<Object> {
   public int ei;
   public final GrammarKind kind;
   public final String str;
+  public final Set<GrammarElement> first = new TreeSet<>();
+  public final Set<GrammarElement> follow = new TreeSet<>();
 
   public GrammarElement(GrammarKind kind, String s) {
     super();

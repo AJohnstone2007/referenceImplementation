@@ -39,6 +39,7 @@ public class Grammar {
     this.name = name;
     this.iTerms = iTerms;
     endOfStringNode = new GrammarNode(GrammarKind.EOS, "$", this); // Note that this first GNode to be created fills in static grammar field
+    // endOfStringNode = new GrammarNode(endOfStringElement, this); // Note that this first GNode to be created fills in static grammar field
     endOfStringNode.seq = endOfStringNode; // trick to ensure initial call collects rootNode
     whitespaces.add(LKind.SIMPLE_WHITESPACE); // default whitespace if non declared
   }

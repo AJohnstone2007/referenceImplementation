@@ -38,8 +38,6 @@ public class GrammarNode {
     this.giftKind = fold;
     if (previous != null) previous.seq = this;
     if (parent != null) parent.alt = this;
-
-    // if (kind == Kind.EPS || kind == Kind.EOS || kind == Kind.END || kind == Kind.T || kind == Kind.B) first.add(this);
   }
 
   @Override

@@ -167,6 +167,28 @@ public class Grammar {
     }
     whitespacesArray = whitespaces.toArray(new LKind[0]);
 
+    // 2. Compute first and follow and firstInstance and followInstance sets
+    // Initialisation
+    startNonterminal.follow.add(findElement(GrammarKind.EOS, "$"));
+
+    for (GrammarElement e : elements.keySet()) {
+      e.first.add(e);
+      // if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e); gn != null; gn = gn.alt)
+      // e.first.add(gn.seq.elm);
+    }
+
+    computeFirstSets();
+    computeFollowSets();
+  }
+
+  private void computeFollowSets() {
+    // TODO Auto-generated method stub
+
+  }
+
+  private void computeFirstSets() {
+    // TODO Auto-generated method stub
+
   }
 
   // Data access for lexers

@@ -17,6 +17,8 @@ import uk.ac.rhul.cs.csle.art.util.Util;
 public class Grammar {
   public String name = "";
   public final ITerms iTerms;
+  public final Set<GrammarKind> grammarBNFKinds = Set.of(GrammarKind.EOS, GrammarKind.T, GrammarKind.TI, GrammarKind.C, GrammarKind.B, GrammarKind.EPS,
+      GrammarKind.N);
   public final Map<GrammarElement, GrammarElement> elements = new TreeMap<>();
   public final Map<Integer, GrammarElement> elementsByNumber = new TreeMap<>();
   public int lexSize;
@@ -167,18 +169,28 @@ public class Grammar {
     }
     whitespacesArray = whitespaces.toArray(new LKind[0]);
 
+  }
+
+  public void computeSets() {
     // 2. Compute first and follow and firstInstance and followInstance sets
     // Initialisation
-    startNonterminal.follow.add(findElement(GrammarKind.EOS, "$"));
-
-    for (GrammarElement e : elements.keySet()) {
-      e.first.add(e);
-      // if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e); gn != null; gn = gn.alt)
-      // e.first.add(gn.seq.elm);
-    }
-
+    // startNonterminal.follow.add(findElement(GrammarKind.EOS, "$"));
+    computerSetInitialisations();
     computeFirstSets();
     computeFollowSets();
+
+  }
+
+  private void computerSetInitialisations() {
+    for (GrammarElement e : elements.keySet()) {
+      System.out.println("Processing element " + e);
+      e.first.add(e);
+      if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e); gn != null; gn = gn.alt) {
+        System.out.println("At gn: " + gn + " with element " + gn.elm);
+        if (gn.seq != null && grammarBNFKinds.contains(gn.seq.elm.kind)) e.first.add(gn.seq.elm);
+      }
+
+    }
   }
 
   private void computeFollowSets() {
@@ -286,8 +298,17 @@ public class Grammar {
   }
 
   /* Text rendering */
+
+  public String toStringProperties() {
+    return toStringBody(true);
+  }
+
   @Override
   public String toString() {
+    return toStringBody(false);
+  }
+
+  private String toStringBody(boolean showProperties) {
     if (empty) return "Grammar has no rules";
     StringBuilder sb = new StringBuilder();
     if (startNonterminal != null)
@@ -309,9 +330,17 @@ public class Grammar {
     }
 
     sb.append("Grammar elements:\n");
-    for (GrammarElement s : elements.keySet())
-      sb.append(" " + s + "\n");
-
+    for (GrammarElement s : elements.keySet()) {
+      sb.append(" " + s);
+      if (showProperties && grammarBNFKinds.contains(s.kind)) {
+        sb.append(" first = {");
+        sb.append(s.first);
+        sb.append("} follow = {");
+        sb.append(s.follow);
+        sb.append("}");
+      }
+      sb.append("\n");
+    }
     sb.append("Grammar nodes:\n");
     for (int i : nodesByNumber.keySet())
       sb.append(" " + i + ": " + nodesByNumber.get(i).toStringAsProduction() + "\n");
@@ -393,4 +422,5 @@ public class Grammar {
   public static boolean isLHS(GrammarNode gn) {
     return gn.elm.kind == GrammarKind.N && gn.seq == null;
   }
+
 }

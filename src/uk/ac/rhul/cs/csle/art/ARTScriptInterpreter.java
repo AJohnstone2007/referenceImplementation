@@ -266,6 +266,12 @@ public class ARTScriptInterpreter {
           System.out.println("current Grammar: " + currentGrammar);
           break;
 
+        case "grammarProperties":
+          currentGrammar.normalise();
+          currentGrammar.computeSets(); // DEBUG
+          System.out.println("current Grammar: " + currentGrammar.toStringProperties());
+          break;
+
         case "derivationTerm":
           // Switch comments if you wanted one line or indented derivations
           System.out.println("Current derivation term: [" + currentDerivationTerm + "]\n" + iTerms.toString(currentDerivationTerm, false, -1, null));

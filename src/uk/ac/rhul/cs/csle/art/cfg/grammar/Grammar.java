@@ -25,6 +25,7 @@ public class Grammar {
   public final Map<Integer, GrammarNode> nodesByNumber = new TreeMap<>();
   public final Set<LKind> whitespaces = new HashSet<>();
   public final Map<GrammarElement, GrammarNode> rules = new TreeMap<>(); // Map from nonterminals to list of productions represented by their LHS node
+  public GrammarElement endOfStringElement;
   public final GrammarNode endOfStringNode;
 
   public LKind[] lexicalKindsArray;
@@ -173,15 +174,13 @@ public class Grammar {
 
   public void computeSets() {
     // 2. Compute first and follow and firstInstance and followInstance sets
-    // Initialisation
-    // startNonterminal.follow.add(findElement(GrammarKind.EOS, "$"));
     computerSetInitialisations();
     computeFirstSets();
     computeFollowSets();
-
   }
 
   private void computerSetInitialisations() {
+    if (startNonterminal != null) startNonterminal.follow.add(endOfStringElement);
     for (GrammarElement e : elements.keySet()) {
       System.out.println("Processing element " + e);
       e.first.add(e);
@@ -331,12 +330,12 @@ public class Grammar {
 
     sb.append("Grammar elements:\n");
     for (GrammarElement s : elements.keySet()) {
-      sb.append(" " + s);
+      sb.append(" (" + s.toStringDetailed() + ") " + s);
       if (showProperties && grammarBNFKinds.contains(s.kind)) {
         sb.append(" first = {");
-        sb.append(s.first);
+        appendElements(sb, s.first);
         sb.append("} follow = {");
-        sb.append(s.follow);
+        appendElements(sb, s.follow);
         sb.append("}");
       }
       sb.append("\n");
@@ -350,6 +349,17 @@ public class Grammar {
       sb.append(" " + a);
     sb.append("\nWhitespaces: " + whitespaces);
     return sb.toString();
+  }
+
+  private void appendElements(StringBuilder sb, Set<GrammarElement> elements) {
+    boolean first = true;
+    for (GrammarElement e : elements) {
+      if (first)
+        first = false;
+      else
+        sb.append(" ");
+      sb.append(e.toString());
+    }
   }
 
   public void show(String filename) {

@@ -16,9 +16,40 @@ public class GrammarElement implements Comparable<Object> {
     this.str = s;
   }
 
+  public String toStringDetailed() {
+    return ei + ": " + kind + " " + str;
+  }
+
   @Override
   public String toString() {
-    return ei + ": " + kind + " " + str;
+    switch (kind) {
+    case EOS:
+      return "$";
+    case T:
+      return "'" + str + "'";
+    case C:
+      return "`" + str;
+    case B:
+      return "&" + str;
+    case EPS:
+      return "#";
+    case N:
+      return str;
+    case ALT:
+      return "|";
+    case END:
+      return "END";
+    case DO:
+      return ")";
+    case OPT:
+      return ")?";
+    case POS:
+      return ")+";
+    case KLN:
+      return ")*";
+    default:
+      return "???";
+    }
   }
 
   @Override

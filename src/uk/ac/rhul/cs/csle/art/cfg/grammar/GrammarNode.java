@@ -28,7 +28,7 @@ public class GrammarNode {
    */
   public GrammarNode(GrammarKind kind, String str, Grammar grammar) {
     GrammarNode.grammar = grammar;
-    elm = GrammarNode.grammar.findElement(kind, "");
+    grammar.endOfStringElement = elm = GrammarNode.grammar.findElement(kind, "");
   }
 
   public GrammarNode(GrammarKind kind, String str, int action, GIFTKind fold, GrammarNode previous, GrammarNode parent) {

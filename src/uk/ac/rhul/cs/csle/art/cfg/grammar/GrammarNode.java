@@ -1,5 +1,7 @@
 package uk.ac.rhul.cs.csle.art.cfg.grammar;
 
+import java.util.Set;
+
 import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class GrammarNode {
@@ -16,11 +18,8 @@ public class GrammarNode {
   public GIFTKind giftKind = GIFTKind.NONE;
   public int action; // Holds an action term used by attribute evaluators
 
-  // public final Set<GNode> first = new HashSet<>();
-  // public final Set<GNode> follow = new HashSet<>();
-  // public final Set<GNode> select = new HashSet<>();
-  //
-  // public boolean derivationFindTweak;
+  public Set<GrammarElement> instanceFirst = null;
+  public Set<GrammarElement> instanceFollow = null;
 
   /*
    * compute as gn.prev != null && gn.prev.prev == null && gn.seq.kind != gnKind.END && (gn.prev.kind == gn.Kind.TERMINALLC || (gn.prev.kind ==

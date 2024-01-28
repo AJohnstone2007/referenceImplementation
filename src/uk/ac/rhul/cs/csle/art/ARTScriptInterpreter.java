@@ -268,7 +268,7 @@ public class ARTScriptInterpreter {
 
         case "grammarProperties":
           currentGrammar.normalise();
-          currentGrammar.computeSets(); // DEBUG
+          currentGrammar.firstAndFollowSetsBNFOnly(); // DEBUG
           System.out.println("current Grammar: " + currentGrammar.toStringProperties());
           break;
 

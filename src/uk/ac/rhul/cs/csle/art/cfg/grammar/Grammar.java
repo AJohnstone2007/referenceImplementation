@@ -17,7 +17,7 @@ import uk.ac.rhul.cs.csle.art.util.Util;
 public class Grammar {
   public String name = "";
   public final ITerms iTerms;
-  public final Set<GrammarKind> grammarBNFKinds = Set.of(GrammarKind.EOS, GrammarKind.T, GrammarKind.TI, GrammarKind.C, GrammarKind.B, GrammarKind.EPS,
+  public final static Set<GrammarKind> grammarBNFKinds = Set.of(GrammarKind.EOS, GrammarKind.T, GrammarKind.TI, GrammarKind.C, GrammarKind.B, GrammarKind.EPS,
       GrammarKind.N);
   public final Map<GrammarElement, GrammarElement> elements = new TreeMap<>();
   public final Map<Integer, GrammarElement> elementsByNumber = new TreeMap<>();
@@ -25,6 +25,7 @@ public class Grammar {
   public final Map<Integer, GrammarNode> nodesByNumber = new TreeMap<>();
   public final Set<LKind> whitespaces = new HashSet<>();
   public final Map<GrammarElement, GrammarNode> rules = new TreeMap<>(); // Map from nonterminals to list of productions represented by their LHS node
+  public GrammarElement epsilonElement;
   public GrammarElement endOfStringElement;
   public final GrammarNode endOfStringNode;
 
@@ -42,9 +43,13 @@ public class Grammar {
     this.name = name;
     this.iTerms = iTerms;
     endOfStringNode = new GrammarNode(GrammarKind.EOS, "$", this); // Note that this first GNode to be created fills in static grammar field
-    // endOfStringNode = new GrammarNode(endOfStringElement, this); // Note that this first GNode to be created fills in static grammar field
     endOfStringNode.seq = endOfStringNode; // trick to ensure initial call collects rootNode
+    epsilonElement = findElement(GrammarKind.EPS, "#");
     whitespaces.add(LKind.SIMPLE_WHITESPACE); // default whitespace if non declared
+  }
+
+  boolean isBNFElement(GrammarElement e) {
+    return grammarBNFKinds.contains(e.kind);
   }
 
   public void normalise() {
@@ -172,34 +177,64 @@ public class Grammar {
 
   }
 
-  public void computeSets() {
-    // 2. Compute first and follow and firstInstance and followInstance sets
-    computerSetInitialisations();
-    computeFirstSets();
-    computeFollowSets();
-  }
-
-  private void computerSetInitialisations() {
+  public void firstAndFollowSetsBNFOnly() {
+    // Initialise sets
     if (startNonterminal != null) startNonterminal.follow.add(endOfStringElement);
-    for (GrammarElement e : elements.keySet()) {
-      System.out.println("Processing element " + e);
-      e.first.add(e);
-      if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e); gn != null; gn = gn.alt) {
-        System.out.println("At gn: " + gn + " with element " + gn.elm);
-        if (gn.seq != null && grammarBNFKinds.contains(gn.seq.elm.kind)) e.first.add(gn.seq.elm);
-      }
 
+    for (GrammarElement e : elements.keySet()) {
+      if (isBNFElement(e)) e.first.add(e);
+      if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt)
+        for (GrammarNode gs = gn.seq; gs.elm.kind != GrammarKind.END; gs = gs.seq) {
+          // System.out.println("Initialising " + gs.toStringDot());
+          gs.instanceFirst = new TreeSet<>();
+          gs.instanceFollow = new TreeSet<>();
+        }
+    }
+
+    int newArity = 0, oldArity = firstAndFollowSetArities();
+
+    while (newArity != oldArity) {
+      for (GrammarElement e : elements.keySet())
+        if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt) {
+          firstAndFollowSetsProductionRec(gn.seq, e);
+          // System.out.println("Adding to element " + e + " in instanceFirst for " + gn.seq.toStringDot());
+          e.first.addAll(gn.seq.instanceFirst);
+          // System.out.println("First now " + e.first);
+        }
+      oldArity = newArity;
+      newArity = firstAndFollowSetArities();
     }
   }
 
-  private void computeFollowSets() {
-    // TODO Auto-generated method stub
-
+  private void firstAndFollowSetsProductionRec(GrammarNode gn, GrammarElement lhs) { // Work backwards to reduce number of passes
+    // System.out.println("ffSetsRec at " + gn.toStringDot());
+    if (gn.elm.kind == GrammarKind.END) return;
+    firstAndFollowSetsProductionRec(gn.seq, lhs);
+    gn.instanceFirst.add(gn.elm);
+    if (gn.seq.elm.kind == GrammarKind.END) // Last element in production
+      gn.instanceFollow.addAll(lhs.follow);
+    else {
+      gn.instanceFirst.addAll(gn.elm.first);
+      if (gn.elm.first.contains(epsilonElement)) gn.elm.first.addAll(gn.instanceFollow);
+      Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
+      tmp.remove(epsilonElement);
+      gn.instanceFollow.addAll(tmp);
+      gn.elm.follow.addAll(tmp);
+    }
   }
 
-  private void computeFirstSets() {
-    // TODO Auto-generated method stub
-
+  private int firstAndFollowSetArities() {
+    int ret = 0;
+    for (GrammarElement e : elements.keySet()) {
+      ret += e.first.size();
+      ret += e.follow.size();
+      if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt)
+        if (gn.instanceFirst != null) {
+          ret += gn.instanceFirst.size();
+          ret += gn.instanceFollow.size();
+        }
+    }
+    return ret;
   }
 
   // Data access for lexers
@@ -341,9 +376,18 @@ public class Grammar {
       sb.append("\n");
     }
     sb.append("Grammar nodes:\n");
-    for (int i : nodesByNumber.keySet())
-      sb.append(" " + i + ": " + nodesByNumber.get(i).toStringAsProduction() + "\n");
-
+    for (int i : nodesByNumber.keySet()) {
+      GrammarNode gn = nodesByNumber.get(i);
+      sb.append(" " + i + ": " + gn.toStringAsProduction());
+      if (showProperties && gn.instanceFirst != null) {
+        sb.append(" first = {");
+        appendElements(sb, gn.instanceFirst);
+        sb.append("} follow = {");
+        appendElements(sb, gn.instanceFollow);
+        sb.append("}");
+      }
+      sb.append("\n");
+    }
     sb.append("Accepting node" + (acceptingNodeNumbers.size() == 1 ? "" : "s") + ":");
     for (Integer a : acceptingNodeNumbers)
       sb.append(" " + a);

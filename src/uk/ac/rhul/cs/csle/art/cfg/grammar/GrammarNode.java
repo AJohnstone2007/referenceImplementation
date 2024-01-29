@@ -20,6 +20,7 @@ public class GrammarNode {
 
   public Set<GrammarElement> instanceFirst = null;
   public Set<GrammarElement> instanceFollow = null;
+  public boolean isInitialSlot = false, isPenultimateSlot = false, isFinalSlot = false;
 
   /*
    * compute as gn.prev != null && gn.prev.prev == null && gn.seq.kind != gnKind.END && (gn.prev.kind == gn.Kind.TERMINALLC || (gn.prev.kind ==

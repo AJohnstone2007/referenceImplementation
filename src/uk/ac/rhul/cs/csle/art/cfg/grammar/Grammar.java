@@ -139,7 +139,6 @@ public class Grammar {
 
   private void computeAttributes() {
     // 1. Compute lexical data
-
     lexicalKindsArray = new LKind[lexSize];
     lexicalStringsArray = new String[lexSize];
 
@@ -175,6 +174,21 @@ public class Grammar {
     }
     whitespacesArray = whitespaces.toArray(new LKind[0]);
 
+    // 2. Positional attributes
+    for (GrammarElement e : elements.keySet())
+      if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt) {
+        GrammarNode gs = gn.seq;
+        gs.isInitialSlot = true;
+        while (true)
+          if (gs.seq.elm.kind == GrammarKind.END) {
+            gs.isPenultimateSlot = true;
+            gs.seq.isFinalSlot = true;
+            break;
+          } else
+            gs = gs.seq;
+      }
+
+    // 3. First and follow sets
   }
 
   public void firstAndFollowSetsBNFOnly() {
@@ -183,12 +197,15 @@ public class Grammar {
 
     for (GrammarElement e : elements.keySet()) {
       if (isBNFElement(e)) e.first.add(e);
-      if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt)
-        for (GrammarNode gs = gn.seq; gs.elm.kind != GrammarKind.END; gs = gs.seq) {
-          // System.out.println("Initialising " + gs.toStringDot());
+      if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt) {
+        GrammarNode gs = gn;
+        do {
+          gs = gs.seq;
+
           gs.instanceFirst = new TreeSet<>();
           gs.instanceFollow = new TreeSet<>();
-        }
+        } while (gs.elm.kind != GrammarKind.END);
+      }
     }
 
     int newArity = 0, oldArity = firstAndFollowSetArities();
@@ -197,9 +214,7 @@ public class Grammar {
       for (GrammarElement e : elements.keySet())
         if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt) {
           firstAndFollowSetsProductionRec(gn.seq, e);
-          // System.out.println("Adding to element " + e + " in instanceFirst for " + gn.seq.toStringDot());
           e.first.addAll(gn.seq.instanceFirst);
-          // System.out.println("First now " + e.first);
         }
       oldArity = newArity;
       newArity = firstAndFollowSetArities();
@@ -208,19 +223,21 @@ public class Grammar {
 
   private void firstAndFollowSetsProductionRec(GrammarNode gn, GrammarElement lhs) { // Work backwards to reduce number of passes
     // System.out.println("ffSetsRec at " + gn.toStringDot());
+
     if (gn.elm.kind == GrammarKind.END) return;
-    firstAndFollowSetsProductionRec(gn.seq, lhs);
-    gn.instanceFirst.add(gn.elm);
-    if (gn.seq.elm.kind == GrammarKind.END) // Last element in production
+    firstAndFollowSetsProductionRec(gn.seq, lhs); // Work in reverse order to reduce the number of passes
+
+    if (gn.isPenultimateSlot) {// Last element in production
       gn.instanceFollow.addAll(lhs.follow);
-    else {
-      gn.instanceFirst.addAll(gn.elm.first);
-      if (gn.elm.first.contains(epsilonElement)) gn.elm.first.addAll(gn.instanceFollow);
-      Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
-      tmp.remove(epsilonElement);
-      gn.instanceFollow.addAll(tmp);
-      gn.elm.follow.addAll(tmp);
+      if (gn.elm.kind != GrammarKind.EPS) gn.elm.follow.addAll(lhs.follow);
     }
+    Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
+    tmp.remove(epsilonElement);
+    gn.instanceFollow.addAll(tmp);
+    gn.elm.follow.addAll(tmp);
+
+    gn.instanceFirst.addAll(gn.elm.first);
+    if (gn.elm.kind != GrammarKind.EPS && gn.elm.first.contains(epsilonElement)) gn.elm.first.addAll(gn.instanceFollow);
   }
 
   private int firstAndFollowSetArities() {
@@ -343,12 +360,13 @@ public class Grammar {
   }
 
   private String toStringBody(boolean showProperties) {
-    if (empty) return "Grammar has no rules";
     StringBuilder sb = new StringBuilder();
     if (startNonterminal != null)
       sb.append("Grammar " + name + " with start nonterminal " + startNonterminal.str + "\n");
     else
       sb.append("Grammar " + name + " with empty start nonterminal\n");
+
+    if (empty) return "Grammar has no rules";
 
     sb.append("Grammar rules:\n");
     for (GrammarElement n : rules.keySet()) {
@@ -379,12 +397,18 @@ public class Grammar {
     for (int i : nodesByNumber.keySet()) {
       GrammarNode gn = nodesByNumber.get(i);
       sb.append(" " + i + ": " + gn.toStringAsProduction());
-      if (showProperties && gn.instanceFirst != null) {
-        sb.append(" first = {");
-        appendElements(sb, gn.instanceFirst);
-        sb.append("} follow = {");
-        appendElements(sb, gn.instanceFollow);
-        sb.append("}");
+      if (showProperties) {
+        if (gn.isInitialSlot) sb.append(" Initial");
+        if (gn.isPenultimateSlot) sb.append(" Penultimate");
+        if (gn.isFinalSlot) sb.append(" Final");
+
+        if (gn.instanceFirst != null && gn.elm.kind != GrammarKind.END) {
+          sb.append(" first = {");
+          appendElements(sb, gn.instanceFirst);
+          sb.append("} follow = {");
+          appendElements(sb, gn.instanceFollow);
+          sb.append("}");
+        }
       }
       sb.append("\n");
     }

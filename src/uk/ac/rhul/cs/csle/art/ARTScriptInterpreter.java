@@ -191,7 +191,7 @@ public class ARTScriptInterpreter {
       break;
 
     case "clearRules":
-      currentGrammar = new Grammar("Current grammar", iTerms);
+      currentGrammar = new Grammar("currentGrammar", iTerms);
       break;
     // case "adl":
     // if (currentDerivationTerm == 0) break;
@@ -263,13 +263,13 @@ public class ARTScriptInterpreter {
         switch (iTerms.getTermSymbolString(iTerms.getSubterm(term, 0, i))) {
         case "grammar":
           currentGrammar.normalise();
-          System.out.println("current Grammar: " + currentGrammar);
+          System.out.println(currentGrammar);
           break;
 
         case "grammarProperties":
           currentGrammar.normalise();
           currentGrammar.firstAndFollowSetsBNFOnly(); // DEBUG
-          System.out.println("current Grammar: " + currentGrammar.toStringProperties());
+          System.out.println(currentGrammar.toStringProperties());
           break;
 
         case "derivationTerm":
@@ -364,7 +364,7 @@ public class ARTScriptInterpreter {
   }
 
   public void interpret(String scriptString) {
-    currentGrammar = new Grammar("Current grammar", iTerms); // Set up a fresh grammar for the
+    currentGrammar = new Grammar("currentGrammar", iTerms);
     // Lex the script string
     scriptParser.inputString = scriptString;
     scriptParser.accepted = false;

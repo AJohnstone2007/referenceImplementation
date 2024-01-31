@@ -77,7 +77,8 @@ chooseShorter ::= '<<'^
 directive ::= directiveElement
 
 directiveElement ::=
-  'lexer'^^ '#'^ | 'lexer'^^ lexerElements 
+  'include' file
+| 'lexer'^^ '#'^ | 'lexer'^^ lexerElements 
 | 'whitespace'^^ '#'^ | 'whitespace'^^ whiteSpaceElements^ | 'whitespace'^^ '('^ whiteSpaceElements^ ')'^
 | 'paraterminal'^^ '#'^ | 'paraterminal'^^ paraterminalElements^
 | 'parser'^^ '#'^ | 'parser'^^ parserElements^
@@ -88,8 +89,10 @@ directiveElement ::=
 | 'print'^^ displayElements^
 | 'show'^^ displayElements^
 | 'log'^^ displayElements^
-| 'try'^^ file | 'try'^^ trTerm | 'try'^^ file '='^ trConfiguration | 'try'^^ trConfiguration '='^ trConfiguration
+| 'try'^^ file | 'try'^^ trConfiguration | 'try'^^ __string 
+| 'try'^^ file '='^ trConfiguration | 'try'^^ trConfiguration '='^ trConfiguration | 'try'^^ __string '='^ trConfiguration
 | 'termTool'^^
+| 'nop'^^
 
 file ::= &STRING_PLAIN_SQ
 
@@ -116,7 +119,7 @@ __bool ::= 'true' | 'false'
 __char ::= &CHAR_BQ
 __int32 ::= &SIGNED_INTEGER
 __real64 ::= &SIGNED_REAL 
-__string ::= &STRING_DQ | &STRING_SQ
+__string ::= &STRING_DQ
 ID ::= &ID^^
 ID_ATTRIBUTE ::= &ID '.'^ &ID
 STRING_DQ ::= &STRING_DQ^^ 

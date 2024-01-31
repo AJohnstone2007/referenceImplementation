@@ -237,7 +237,7 @@ public class Grammar {
     gn.elm.follow.addAll(tmp);
 
     gn.instanceFirst.addAll(gn.elm.first);
-    if (gn.elm.kind != GrammarKind.EPS && gn.elm.first.contains(epsilonElement)) gn.elm.first.addAll(gn.instanceFollow);
+    if (gn.elm.kind != GrammarKind.EPS && gn.elm.first.contains(epsilonElement)) gn.elm.first.addAll(gn.seq.instanceFirst);
   }
 
   private int firstAndFollowSetArities() {
@@ -398,9 +398,9 @@ public class Grammar {
       GrammarNode gn = nodesByNumber.get(i);
       sb.append(" " + i + ": " + gn.toStringAsProduction());
       if (showProperties) {
-        if (gn.isInitialSlot) sb.append(" Initial");
-        if (gn.isPenultimateSlot) sb.append(" Penultimate");
-        if (gn.isFinalSlot) sb.append(" Final");
+        // if (gn.isInitialSlot) sb.append(" Initial");
+        // if (gn.isPenultimateSlot) sb.append(" Penultimate");
+        // if (gn.isFinalSlot) sb.append(" Final");
 
         if (gn.instanceFirst != null && gn.elm.kind != GrammarKind.END) {
           sb.append(" first = {");

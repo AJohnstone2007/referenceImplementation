@@ -1,6 +1,11 @@
 package uk.ac.rhul.cs.csle.art.term;
 
-public class ARTPlugin implements PluginInterface {
+public class ValueUserPlugin implements ValueUserPluginInterface {
+
+  @Override
+  public boolean useFX() {
+    return false;
+  }
 
   @Override
   public String name() {
@@ -22,4 +27,5 @@ public class ARTPlugin implements PluginInterface {
     }
     return new __string("Default");
   }
+
 }

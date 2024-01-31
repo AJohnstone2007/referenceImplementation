@@ -1,10 +1,15 @@
-import uk.ac.rhul.cs.csle.art.term.PluginInterface;
 import uk.ac.rhul.cs.csle.art.term.Value;
 import uk.ac.rhul.cs.csle.art.term.ValueException;
+import uk.ac.rhul.cs.csle.art.term.ValueUserPluginInterface;
 import uk.ac.rhul.cs.csle.art.term.__string;
 
 // Rename this class to ARTPlugin if you want to develop plugins within the Eclipse workspace; but chnge it back again before distribution
-public class XARTPlugin implements PluginInterface {
+public class XXXValueUserPlugin implements ValueUserPluginInterface {
+
+  @Override
+  public boolean useFX() {
+    return false;
+  }
 
   @Override
   public String name() {
@@ -25,4 +30,5 @@ public class XARTPlugin implements PluginInterface {
     }
     return new __string("Return value from text example plugin");
   }
+
 }

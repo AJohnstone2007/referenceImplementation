@@ -35,7 +35,7 @@ import uk.ac.rhul.cs.csle.art.term.TermTraverserText;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class ARTScriptInterpreter {
-  private final ITerms iTerms = new ITermsLowLevelAPI();
+  public final ITerms iTerms = new ITermsLowLevelAPI();
 
   private final GLLBaseLine scriptParser = new GLLBaseLine();
   private final LexerLM scriptLexer = new LexerLM();
@@ -363,6 +363,29 @@ public class ARTScriptInterpreter {
     }
   }
 
+  // This version is used to process command line arguments
+  public void interpret(String[] args) {
+    StringBuilder scriptString = new StringBuilder();
+    for (String a : args) {
+      scriptString.append(" ");
+      if (a.endsWith(".art"))
+        try {
+          scriptString.append(Files.readString(Paths.get((a))));
+        } catch (IOException e) {
+          Util.fatal("Unable to open script file " + a);
+        }
+      else if (a.endsWith(".str")) {
+        scriptString.append("!try file(\"");
+        scriptString.append(a);
+        scriptString.append("\")");
+      } else
+        scriptString.append(a);
+    }
+    // System.out.println("Script string: " + scriptString);
+    interpret(scriptString.toString());
+  }
+
+  // This version interprets the string with no tricks
   public void interpret(String scriptString) {
     currentGrammar = new Grammar("currentGrammar", iTerms);
     // Lex the script string

@@ -18,7 +18,7 @@ public abstract class ITerms {
   protected int firstSpecialSymbolIndex;
   protected int firstNormalSymbolIndex;
 
-  public PluginInterface plugin = new ARTPlugin();
+  public ValueUserPluginInterface plugin = new ValueUserPlugin();
 
   public int bottomTermIndex;
   public int doneTermIndex;
@@ -127,16 +127,16 @@ public abstract class ITerms {
     tt.addAction(-1, (Integer t) -> tt.append(escapeMeta(getTermSymbolString(t)) + (getTermArity(t) == 0 ? "" : "(")), (Integer t) -> tt.append(", "),
         (Integer t) -> tt.append(getTermArity(t) == 0 ? "" : ")"));
 
-    plugin = new ARTPlugin();
+    plugin = new ValueUserPlugin();
     // Try and find a plugin for __user() calls
     Class<?> pluginClass;
     try {
-      pluginClass = getClass().getClassLoader().loadClass("ARTPlugin");
-      plugin = (PluginInterface) pluginClass.getDeclaredConstructor().newInstance();
+      pluginClass = getClass().getClassLoader().loadClass("ValueUserPlugin");
+      plugin = (ValueUserPluginInterface) pluginClass.getDeclaredConstructor().newInstance();
     } catch (Exception e) {
-      // Silently ignore failure to locate any plugin
+      // Util.fatal("Internal error - failed to locate defaultValueUserPlugin");
     }
-    if (plugin.name() != null) System.out.println("Attached to plugin: " + plugin.name());
+    // if (plugin.name() != null) System.out.println("Attached to plugin: " + plugin.name());
   }
 
   public String toString(int term) {

@@ -15,8 +15,7 @@ xcopy /S \adrian\eclipse\referenceImplementation\examples\*.* examples
 
 rem compile everything
 cd bin
-javac -d . -cp ..\src ..\src\uk\ac\rhul\cs\csle\art\ART.java
-javac -d . -cp ..\src ..\src\uk\ac\rhul\cs\csle\art\ARTFX.java --module-path="C:\openJFX\javafx-sdk-17.0.9\lib" --add-modules=javafx.controls
+javac -d . -cp ..\src ..\src\uk\ac\rhul\cs\csle\art\ART.java --module-path="C:\openJFX\javafx-sdk-17.0.9\lib" --add-modules=javafx.controls
 rem make the jar file
 jar cfm ..\art.jar ..\manifest.local *
 

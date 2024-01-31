@@ -17,8 +17,7 @@ import uk.ac.rhul.cs.csle.art.util.Util;
 public class Grammar {
   public String name = "";
   public final ITerms iTerms;
-  public final static Set<GrammarKind> grammarBNFKinds = Set.of(GrammarKind.EOS, GrammarKind.T, GrammarKind.TI, GrammarKind.C, GrammarKind.B, GrammarKind.EPS,
-      GrammarKind.N);
+  public final static Set<GrammarKind> grammarBNFKinds = Set.of(GrammarKind.T, GrammarKind.TI, GrammarKind.C, GrammarKind.B, GrammarKind.EPS, GrammarKind.N);
   public final Map<GrammarElement, GrammarElement> elements = new TreeMap<>();
   public final Map<Integer, GrammarElement> elementsByNumber = new TreeMap<>();
   public int lexSize;
@@ -425,7 +424,7 @@ public class Grammar {
       if (first)
         first = false;
       else
-        sb.append(" ");
+        sb.append(",");
       sb.append(e.toString());
     }
   }

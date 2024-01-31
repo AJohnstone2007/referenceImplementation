@@ -18,7 +18,7 @@ public class ART {
     int state = ideState;
     int i = 0;
     while (i < args.length) {
-      System.out.println("State " + state + " testing args[" + i + "]: " + args[i]);
+      // System.out.println("State " + state + " testing args[" + i + "]: " + args[i]);
       sb.append(" ");
       switch (state) {
       case ideState:
@@ -54,7 +54,7 @@ public class ART {
       }
     }
 
-    System.out.println("IDE: " + useIDE + " Script string: " + sb);
+    // System.out.println("IDE: " + useIDE + " Script string: " + sb);
 
     // Now run the interpeter, optionally under Java FX
     ARTScriptInterpreter artScriptInterpreter = new ARTScriptInterpreter();

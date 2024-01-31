@@ -4,7 +4,7 @@ import uk.ac.rhul.cs.csle.art.term.ValueUserPluginInterface;
 import uk.ac.rhul.cs.csle.art.term.__string;
 
 // Rename this class to ARTPlugin if you want to develop plugins within the Eclipse workspace; but chnge it back again before distribution
-public class XXXValueUserPlugin implements ValueUserPluginInterface {
+public class ValueUserPlugin_CLI implements ValueUserPluginInterface {
 
   @Override
   public boolean useFX() {

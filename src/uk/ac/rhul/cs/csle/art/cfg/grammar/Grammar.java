@@ -223,20 +223,27 @@ public class Grammar {
   private void firstAndFollowSetsProductionRec(GrammarNode gn, GrammarElement lhs) { // Work backwards to reduce number of passes
     // System.out.println("ffSetsRec at " + gn.toStringDot());
 
+    // 1 - manage recursion giving reverse order traversal
     if (gn.elm.kind == GrammarKind.END) return;
     firstAndFollowSetsProductionRec(gn.seq, lhs); // Work in reverse order to reduce the number of passes
 
-    if (gn.isPenultimateSlot) {// Last element in production
-      gn.instanceFollow.addAll(lhs.follow);
-      if (gn.elm.kind != GrammarKind.EPS) gn.elm.follow.addAll(lhs.follow);
-    }
-    Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
-    tmp.remove(epsilonElement);
-    gn.instanceFollow.addAll(tmp);
-    gn.elm.follow.addAll(tmp);
+    // 2 - process first sets
+    gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
+    if (gn.instanceFirst.contains(epsilonElement)) gn.instanceFirst.addAll(gn.seq.instanceFirst); // If we are a nullable slot, fold in our successor's instance
+                                                                                                  // first set
 
-    gn.instanceFirst.addAll(gn.elm.first);
-    if (gn.elm.kind != GrammarKind.EPS && gn.elm.first.contains(epsilonElement)) gn.elm.first.addAll(gn.seq.instanceFirst);
+    // 3 - process follow set for rightmost element
+    if (gn.isPenultimateSlot) {
+      gn.instanceFollow.addAll(lhs.follow);
+      gn.elm.follow.addAll(gn.instanceFollow);
+    } else {
+
+      // 4 - process follow set for 'interior' elements
+      Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
+      tmp.remove(epsilonElement);
+      gn.instanceFollow.addAll(tmp);
+      gn.elm.follow.addAll(tmp);
+    }
   }
 
   private int firstAndFollowSetArities() {

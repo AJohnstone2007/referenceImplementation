@@ -1,0 +1,16 @@
+!?
+!#
+!>
+!> filename
+!< filename
+!!
+!^
+!@ filename
+
+#adrian = A(Y, Z)
+
+adrian ( _1,2.3:\_a, X : int, 'fgd\'', _*, _1*)
+
+#adrian
+
+#adrian |> A(_1, _2) <| mul(_1, _2) 

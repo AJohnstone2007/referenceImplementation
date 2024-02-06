@@ -1,0 +1,41 @@
+!whitespace &SIMPLE_WHITESPACE
+!whitespace &COMMENT_NEST_ART 
+!whitespace &COMMENT_LINE_C 
+ 
+rules ::= rule | rule rules
+rule  ::= ID '::=' alts
+
+alts ::= alt | alt '|' alts
+alt  ::= actions '#'  
+       | { g.altAction(); } elems actions (* final actions *) { g.endAction(actions1.v); } 
+
+elems ::= elem | elem elems 
+elem  ::= prim
+        | { g.optionalAction(""); g.altAction(); } prim '?' { g.endAction(actions1.v); } 
+        | { g.positiveAction(""); g.altAction(); } prim '+' { g.endAction(actions1.v); } 
+        | { g.kleeneAction  (""); g.altAction(); } prim '*' { g.endAction(actions1.v); } 
+
+        | actions '(' { g.doFirstAction (actions1.v); } alts ')'  
+        | actions '(' { g.optionalAction(actions1.v); } alts ')' '?'
+        | actions '(' { g.positiveAction(actions1.v); } alts ')' '+'
+        | actions '(' { g.kleeneAction  (actions1.v); } alts ')' '*'
+
+prim ::= actions ID        { g.nonterminalAction (ID1.v, actions1.v); }
+       | actions '&' ID    { g.builtinAction     (ID1.v, actions1.v); }
+       | actions STRING_SQ { g.terminalLCAction  (STRING_SQ1.v, actions1.v); } 
+       | actions CHAR_BQ   { g.terminalCharAction(CHAR_BQ1.v, actions1.v); } 
+
+// An ususual formation here - an entire sequence of actions is gathered up into a single string by noting the left
+// and right extent of the top level rules, hence actions is a little like a lexical rule
+actions<v:String leftExtent:int rightExtent:int> ::= # { actions.v = ""; } | action actions { actions.v = artLexeme(actions.leftExtent, actions.rightExtent); }
+action  ::= attribute '=' term
+attribute ::= &ID '.' &ID 
+term ::= baseTerm | &ID '(' ')' | &ID '(' arguments ')'
+baseTerm ::= attribute | &INTEGER | &REAL | &STRING_DQ 
+arguments ::= baseTerm | baseTerm ',' arguments
+
+// Lexical rules
+ID <v:String leftExtent:int rightExtent:int> ::=  &ID^ { ID.v = artLexemeAsID(ID.leftExtent, ID.rightExtent); }
+STRING_SQ <v:String leftExtent:int rightExtent:int> ::= &STRING_SQ^ {STRING_SQ.v = artLexemeAsString(STRING_SQ.leftExtent, STRING_SQ.rightExtent); } 
+CHAR_BQ <leftExtent:int rightExtent:int lexeme:String v:String> ::= &CHAR_BQ^ { CHAR_BQ.v = artLexemeAsString(CHAR_BQ.leftExtent, CHAR_BQ.rightExtent, 1, 0); } 
+

@@ -1,0 +1,317 @@
+(* ARTV4inV3ASpecification.art - ART front end grammar (c) Adrian Johnstone 2015-22 *)
+(* This is the specification of the ARTV4 syntax in ARTV3A syntax for use as a half bootstrap *)
+
+!whitespace &SIMPLE_WHITESPACE 
+!whitespace &COMMENT_NEST_ART 
+!whitespace &COMMENT_LINE_C 
+
+text ::= textElement | textElement text
+textElement ::= cfgRule^^ | trRule^^ | chooseRule^^ | directive^^
+
+(* Context Free Grammar rules ***********************************************************)
+cfgRule ::= cfgNonterminal '::='^  cfgRHS^
+cfgRHS ::= cfgCat | cfgCat '|'^  cfgRHS^ 
+cfgAlt ::= cfgCat^^ |            (* This cat is double hatted onto the alt so that we do not have a singleton alt *)
+           cfgCat '|'^ cfgAlt1^  (* alt1 matches the same language as alt, but has different hat behaviour *)
+cfgAlt1 ::= cfgCat | cfgCat '|'^ cfgAlt1^ 
+cfgCat::= cfgSlot cfgCatTail^
+cfgCatTail ::=  cfgAbbrev cfgSlot | cfgAbbrev cfgSlot cfgCatTail^
+cfgSlot ::= #^| cfgAttributeEquation | cfgNativeAction
+cfgAbbrev ::= cfgIter^^ | cfgIter cfgKleeneClosure^^ | cfgIter cfgPositiveClosure^^ | cfgIter cfgOptional^^
+cfgKleeneClosure ::= '*'^
+cfgPositiveClosure ::= '+'^
+cfgOptional ::= '?'^
+cfgIter ::= cfgDiff^^ | cfgDiff '@'^^ cfgIter^ 
+cfgDiff ::= cfgUnion^^ | cfgDiff^ '\\'^ cfgUnion 
+cfgUnion ::= cfgNot^^ | cfgUnion^ '||'^ cfgNot
+cfgNot ::=  cfgElement^^ | '\\'^ cfgElement 
+
+cfgAttributeEquation ::= ID_ATTRIBUTE '='^ trTerm
+cfgNativeAction ::= STRING_BRACE_NEST
+
+
+cfgElement ::= cfgAtom^^ | cfgAtom^^ cfgGrammarAnnotations | cfgDoFirst^^
+
+cfgAtom ::= 
+  cfgEpsilon^^ | cfgNonterminal^^ | cfgSlotSymbol^^
+| cfgCaseSensitiveTerminal^^ | cfgCaseInsensitiveTerminal^^ | cfgCharacterTerminal^^ | cfgCharacterRangeTerminal^^ | cfgBuiltinTerminal^^ 
+cfgGrammarAnnotations ::= cfgDelay^^ | cfgFoldNone^^ | cfgFoldUnder^^ | cfgFoldOver^^ | cfgGather^^ | cfgInsert^^
+cfgDoFirst ::= '('^ cfgAlt ')'^
+
+cfgDelay ::= '<'^ 
+cfgFoldNone ::= '^_'^
+cfgFoldUnder ::= '^'^
+cfgFoldOver ::= '^^'^
+cfgGather ::= '^^^'^ ID
+cfgInsert ::= '^+'^ ID
+cfgTear ::= '^-'^ ID
+
+cfgNonterminal ::= ID | STRING_DOLLAR
+cfgCaseSensitiveTerminal ::= STRING_PLAIN_SQ
+cfgCaseInsensitiveTerminal ::= STRING_DQ
+cfgCharacterTerminal ::= CHAR_BQ
+cfgCharacterRangeTerminal ::= CHAR_BQ '..'^ CHAR_BQ
+cfgBuiltinTerminal ::= '&'^ ID
+cfgEpsilon ::= '#'^
+cfgSlotSymbol ::= '.'
+
+cfgAtoms ::= cfgAtom | cfgAtom ','^ cfgAtoms^
+cfgNonterminals ::= cfgNonterminal | cfgNonterminal ','^ cfgNonterminals^
+
+(* term rewrite rules ************************************************************)
+trRule ::= trLabel tr 
+trLabel ::= #^ | '-'^ ID | '-'^ STRING_DQ  
+tr ::= trPremises '---'^ trTransition trEquations | trPremises '---'^ trTransition
+trPremises ::= #^ | trTransition trPremises^ | trMatch trPremises^
+trTransition ::= trConfiguration TRRELATION trConfiguration 
+trConfiguration ::= trTerm^^ | trTerm trEntityReferences^ | '<'^ trTerm trEntityReferences^ '>'^
+trEntityReferences ::= ','^ trTerm | ','^ trTerm trEntityReferences^ | ','^ trNamedTerm | ','^ trNamedTerm  trEntityReferences^
+trNamedTerm ::= ID '='^ trTerm
+trMatch ::= trTerm '|>'^ trTerm
+
+trTerm ::= 
+  __bool^^ | __int32^^ | __real64^^ | __string^^ | __char^^ 
+| ID^^ | ID^^ '('^ ')'^ | ID^^  '('^ trSubterms^ ')'^
+| ID_ATTRIBUTE
+| STRING_PLAIN_SQ^^ (* very special case: string as constructor with strops *)
+
+trSubterms ::= trTerm | trTerm  ','^ trSubterms^ | trTerm  trSubterms^
+trEquations ::= cfgAttributeEquation | cfgAttributeEquation ','^ trEquations^
+
+(* choose rules ***************************************************************)
+chooseRule ::= chooseDiff chooserOp chooseDiff 
+
+chooseDiff ::= chooseUnionIntersection^^ | chooseDiff '\'^ chooseUnionIntersection
+
+chooseUnionIntersection ::= chooseElement^^ | chooseUnionIntersection chooseUnion^^ chooseElement | chooseUnionIntersection chooseIntersection^^ chooseElement
+chooseUnion ::= '|'^
+chooseIntersection ::= '/'^
+
+chooseElement<v:String> ::= 
+  cfgNonterminal 
+| cfgCharacterTerminal
+| cfgBuiltinTerminal
+| cfgCaseInsensitiveTerminal
+| cfgCaseSensitiveTerminal
+| choosePredefinedSet
+| '('^ chooseDiff ')'^
+    
+choosePredefinedSet ::=
+  'anyCharacterTerminal' 
+| 'anyBuiltinTerminal'   
+| 'anyCaseSensitiveTerminal' 
+| 'anyCaseInsensitiveTerminal'
+| 'anyNonterminal'
+
+| 'anyParaterminal'
+| 'anyLiteralTerminal'
+| 'anyTerminal'
+
+chooserOp ::= chooseHigher^^ | chooseLower^^ | chooseLonger^^ | chooseShorter^^
+chooseHigher ::= '>'^
+chooseLower ::= '<'^
+chooseLonger ::= '>>'^
+chooseShorter ::= '<<'^
+ 
+(* directives ***************************************************************)
+idART ::= ID | ID '.art'^
+idRAW ::= ID | ID '.raw'^
+idJAVA ::= ID | ID '.java'^
+idSML ::= ID | ID '.sml'^
+
+directive ::= '!'^ directiveName^
+
+directiveName ::= 
+(* library control *)
+  'merge' idART // Pull idART into current module and merge rules - this is effectively an include operation
+| 'module' ID // Open new module 
+| 'use' useElements // Locate modules by looking first within the merged term, and then on artpath 
+
+| 'v3' | 'v4' | 'v4old' // These is just to absorb the version selectors
+
+
+(* standalone tools *)
+| 'grammarWrite' idART
+| 'termTool'
+| 'unicodeAsEscapeSequences' idJAVA idJAVA
+| 'compressWhitespaceJava' idJAVA idJAVA
+| 'compressWhitespaceSML' idSML idSML
+| 'extractJLS' idRAW idRAW idRAW idART ID
+ 
+(* Grammar control *)
+| 'cfgElements' cfgElementDeclarations // ensure synchronisation of grammar element enumeration across specifications by adding elements
+| 'paraterminal' paraterminalisers^
+| 'alphabet' cfgNonterminals
+
+(* logging and output formatting *)
+| 'latex' latexDeclarations
+| 'verbosity' __int32
+| 'statistics' __int32
+| 'trace' __int32
+
+(* Grammar transformation *)
+| 'cfgClone' ID // Make a fresh copy of the current main module with name ID and set it to be main
+| 'cfgFBNF' // remove closures and optionals 
+| 'cfgBNF'// remove closures, optionals and parentheses
+| 'cfgAugment' // Create a new default start rule
+| 'cfgTerminalise' // Create a rule X ::= y for each terminal y
+| 'cfgTwoForm' // 
+| 'cfgRemoveEpsilon' // remove epsilon rules of the form X ::= #
+| 'cfgRemoveUnit' // remove unit rules of the form X ::= Y by back substitution
+| 'cfgCNF' // create Chomsky Normal Form version of current main module in new module ID
+
+(* lexer control *)
+| 'lexDFA' trueFalse | 'lexGLL' trueFalse | 'lexHardCoded' trueFalse
+| 'lexWSSuffix' trueFalse
+| 'whitespace' cfgNonterminal
+| 'absorb' cfgNonterminal   | 'absorb' '#'^
+| 'injectInstance' cfgRHS   | 'injectInstance' '#' 
+| 'injectProduction' cfgRHS | 'injectProduction' '#'^ 
+
+(* TWE set analysis *)
+| 'tweTokenWrite' trueFalse
+| 'tweLexicalisations' trueFalse | 'tweExtents' trueFalse | 'tweSegments' trueFalse | 'tweRecursive' trueFalse
+
+(* TWE set chooser control *)
+| 'tweLongest' trueFalse | 'twePriority' trueFalse | 'tweDead' trueFalse 
+
+(* TWE set ouutputs *)
+| 'tweCounts' trueFalse
+| 'twePrintFull' trueFalse
+| 'twePrint' trueFalse
+| 'tweWrite' trueFalse
+| 'tweShow' trueFalse
+| 'tweDump' trueFalse
+
+(* Builtin standalone parsers *)
+| 'parseSML97'
+| 'parseJLS18BNF' 
+
+(* Parse algorithms *)
+| 'parseOSBRD'                                                                                     
+| 'parseTwoFormMemo'
+| 'parseEarley2007'
+| 'parseEarley'
+| 'parseEarleyTable'
+| 'parseCNP'
+| 'parseLCNP'
+| 'parseGLL'
+| 'parseGLLTWE'
+| 'parseGLLClustered'                          
+| 'parseMGLL'  
+
+(* GLL template control *)
+| 'parseGLLPredictivePops' trueFalse
+| 'parseGLLFIFODescriptors' trueFalse
+| 'parseGLLSuppressPopGuard' trueFalse
+| 'parseGLLSuppressProductionGuard' trueFalse
+| 'parseGLLSuppressTestRepeat' trueFalse
+| 'parseGLLSuppressSemantics' trueFalse
+
+(* Parser data struture style *)
+| 'parseControlTerm' 
+| 'parseControlTable'
+| 'parseSupportAPI'
+| 'parseSupportHashPool'
+
+(* Parser modes *)
+| 'parseInterpret'
+| 'parseGenerate'
+
+(* Generated parser control *)
+| 'parseOutputDirectory' STRING_PLAIN_SQ | 'parseNamespace' STRING_PLAIN_SQ | 'parseName' STRING_PLAIN_SQ           
+| 'parseGenerateDynamic' | 'parseGenerateStatic' | 'parseGenerateState' | 'parseGenerateFragment' 
+| 'parseGenerateJava' | 'parseGenerateC++' | 'parseGenerateML'     
+
+(* Java insertions for generated parsers *)
+| 'parseFileInjection' STRING_BRACE_NEST                                   
+| 'parseClassInjection' STRING_BRACE_NEST
+
+(* parser runtime *)
+| 'parseCounts' trueFalse
+| 'sppfLongest' trueFalse | 'sppfPriority' trueFalse               
+| 'sppfToTWE' trueFalse
+
+(* parser data structure outputs *)
+| 'gssPrint' trueFalse  | 'gssWrite' trueFalse | 'gssShow' trueFalse
+| 'sppfPrint' trueFalse | 'sppfWrite' trueFalse | 'sppfShow' trueFalse
+| 'treePrint' trueFalse | 'treeWrite' trueFalse | 'treeShow' trueFalse
+| 'termPrint' trueFalse | 'termWrite' trueFalse | 'termShow' trueFalse
+
+(* rewriter configuration *)
+| 'rewriteConfiguration' TRRELATION^ ','^ trEntities
+
+| 'rewriteDisable' trueFalse
+
+| 'rewritePure' trueFalse (* Default *)
+| 'rewritePreorder' trueFalse
+| 'rewritePostorder' trueFalse 
+
+| 'rewriteOneStep' trueFalse
+| 'rewriteResume' trueFalse
+| 'rewriteContractum' trueFalse
+
+(* trys *)
+| 'main' idART // Set module ID as the main module 
+| 'start' cfgNonterminal // Set parser start nonterminal
+| 'start' TRRELATION // Set term rewriter start relation
+| 'input' tryArgument // Set input string or term
+| 'inputPrint' trueFalse
+| 'result' tryArgument // Set test term
+
+| 'try' // Run pipeline with previously set input and test
+| 'try' tryArgument // Run pipeline on tryArgument
+| 'try' tryArgument '='^ tryArgument // Run pipeline on first tryArgument and test outcome against second argument
+
+| ID // This is a catch-all to allow incorrectly spelled directives to be passed to ART for checking
+
+trueFalse ::= #^^ | __bool^^ 
+
+tryArgument ::= STRING_PLAIN_SQ^^ | STRING_DQ^^ | trConfiguration^^ 
+
+latexDeclarations ::= latexDeclaration | latexDeclaration ','^ latexDeclarations^
+latexDeclaration ::= __string '='^ __string
+
+cfgElementDeclarations::= cfgElementDeclaration | cfgElementDeclaration ','^ cfgElementDeclarations^
+cfgElementDeclaration ::= cfgAtom | cfgAtom '='^ ID
+
+paraterminalisers ::=
+  aliasedCFGNonterminal 
+| aliasedCFGNonterminal ','^ paraterminalisers^
+
+aliasedCFGNonterminal ::= cfgNonterminal  | cfgNonterminal '='^ __string
+
+useElements::= idART | idART ','^ useElements^
+
+trEntities ::= trTerm | trTerm ':'^ trEntityKind | trTerm ','^ trEntities | trTerm ':'^ trEntityKind ','^ trEntities
+trEntityKind ::= 'map' | 'mapFixed' | 'listIn' | 'listOut' | 'singleton' | 'untyped' 
+
+(* lexical elements ***********************************************************)
+
+(*  Need to turn these builtins into space stripping elements as per standard grammar  *)
+__bool ::= True | False
+True ::= 'True'^
+False ::='False'^
+
+__char ::= &CHAR_BQ
+__int32 ::= &SIGNED_INTEGER
+__real64 ::= &SIGNED_REAL 
+__string ::= &STRING_DQ | &STRING_SQ
+
+ID ::= &ID^^
+ID_ATTRIBUTE ::= &ID '.'^ &ID
+STRING_DQ ::= &STRING_DQ^^ 
+STRING_DOLLAR ::= &STRING_DOLLAR^^
+STRING_PLAIN_SQ ::= &STRING_PLAIN_SQ^^
+CHAR_BQ ::= &CHAR_BQ^^
+
+STRING_BRACE_NEST ::= &STRING_BRACE_NEST^^
+STRING_BRACKET_NEST ::= &STRING_BRACKET_NEST^^
+
+TRRELATION ::= '->'  | '->*'  | '->>' | 	
+               '=>'  | '=>*'  | '=>>' |
+	       '-\'  | '-\*'  | '-\>' |
+	       '-/'  | '-/*'  | '-/>' |
+	       '~>'  | '~>*'  | '~>>'  
+
+

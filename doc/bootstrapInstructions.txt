@@ -25,3 +25,23 @@ src\uk\ac\rhul\cs\csle\art\cfg\referenceFamily\ReferenceGrammarParser.art
 10. Add !print(derivation), parse and then update uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference.scriptParserTermString to be assigned the printed derivation term
 
 11. Parse test.str against test.art and look for message Bootstrap achieved: ...
+
+
+7 February 2024
+
+For the main V5 specification grammar, we keep the most recent and the current term 
+1. The reference script grammar is in the file 
+
+src\uk\ac\rhul\cs\csle\art\ARTScriptSpecification.art
+
+2. The derivation term is held in the first variable declared in ARTScriptInterpreter.java
+
+private final String scriptParserTermString = ...
+
+3. Edit ARTSPecification.art to suit new ideas
+
+4. Parse ARTSpecification.art against itself and output the derivation with directive !print derivation
+
+5. Replace scriptParserTermString with the new term, remembering the old one in case we break things
+
+6. Repeat 3-5 until the 'Bootstrap achieved' message appears

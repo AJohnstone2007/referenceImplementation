@@ -12,7 +12,7 @@ import uk.ac.rhul.cs.csle.art.old.v3.ARTV3;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class ART {
-  static final Pattern filenamePattern = Pattern.compile("[a-zA-Z0-9/\\\\]+.[a-zA-Z0-9]+"); // NB this is a limited idea of what a filename looks like
+  static final Pattern filenamePattern = Pattern.compile("[a-zA-Z0-9/\\\\]+\\.[a-zA-Z0-9]+"); // NB this is a limited idea of what a filename looks like
 
   public static void main(String[] args) {
     if (args.length == 0) Util.fatal("ART " + Version.version() + ": no arguments supplied");
@@ -50,20 +50,21 @@ public class ART {
     for (int argp = startArg; argp < args.length; argp++) {
       sb.append(" ");
       if (filenamePattern.matcher(args[argp]).matches()) { // Process args that look like filenames
+        // System.out.println("Argument " + argp + " " + args[argp] + " looks like a file");
         if (args[argp].endsWith(".art")) {
           /* When we have include working, replace this insertion with an !include directive */
           try {
-            sb.append(Files.readString(Paths.get((args[argp++]))));
+            sb.append(Files.readString(Paths.get((args[argp]))));
           } catch (IOException e) {
             Util.fatal("Unable to open script file " + args[argp]);
           }
-          // sb.append("!include '" + args[i++] + "'");
+          // sb.append("!include '" + args[i] + "'");
         } else
-          sb.append("!try '" + args[argp++] + "'");
+          sb.append("!try '" + args[argp] + "'");
       } else
-        sb.append(args[argp++]);
+        sb.append(args[argp]);
     }
-    System.out.println(" Script string: " + sb);
+    // System.out.println(" Script string: " + sb);
     return sb.toString();
   }
 

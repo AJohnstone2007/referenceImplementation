@@ -5,9 +5,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
+import uk.ac.rhul.cs.csle.art.cfg.grammar.Grammar;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarElement;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarKind;
 import uk.ac.rhul.cs.csle.art.old.core.ARTV4;
 import uk.ac.rhul.cs.csle.art.old.core.ARTV5Transition;
 import uk.ac.rhul.cs.csle.art.old.v3.ARTV3;
+import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.ARTGrammar;
+import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementNonterminal;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class ART {
@@ -32,7 +37,7 @@ public class ART {
       new ARTV5Transition(buildScriptString(args, 1));
       break;
     case "ajDebug":
-      ajDebugCode(artScriptInterpreter, buildScriptString(args, 1));
+      ajDebugCode(artScriptInterpreter, args);
       break;
     default:
       if (artScriptInterpreter.iTerms.plugin.useFX()) // does the user code need JavaFX?
@@ -68,8 +73,26 @@ public class ART {
   }
 
   // Adrian's debug comparison sand pit - undocumented
-  private static void ajDebugCode(ARTScriptInterpreter artScriptInterpreter, String buildScriptString) {
+  private static void ajDebugCode(ARTScriptInterpreter artScriptInterpreter, String[] args) {
+    System.out.println("AJ debug");
+    String scriptString = buildScriptString(args, 1);
+    artScriptInterpreter.interpret(scriptString);
 
+    ARTV3 artV3 = new ARTV3(buildScriptString(args, 1));
+
+    ARTGrammar grammarV3 = artV3.artManager.addGrammar("Parser grammar", artV3.artManager.getDefaultMainModule(), false, artV3.artManager.artDirectives);
+
+    System.out.print("V3 grammar\n" + grammarV3);
+    Grammar grammarV5 = artScriptInterpreter.currentGrammar;
+    grammarV5.normalise();
+    grammarV5.firstAndFollowSetsBNFOnly(); // DEBUG
+    System.out.println("V5 grammar " + grammarV5.toStringBody(true));
+
+    for (ARTGrammarElementNonterminal v3Nonterminal : grammarV3.getNonterminals()) {
+      System.out.println("V3 nonterminal " + v3Nonterminal + " first " + v3Nonterminal.getFirst() + " follow " + v3Nonterminal.getFollow());
+      GrammarElement v5Nonterminal = grammarV5.elements.get(new GrammarElement(GrammarKind.N, v3Nonterminal.getId()));
+      System.out.println("V5 nonterminal " + v5Nonterminal + " first " + v5Nonterminal.first + " follow " + v5Nonterminal.follow + "\n");
+    }
   }
 
 }

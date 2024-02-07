@@ -54,7 +54,7 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
 
   private ParserBase currentParser = new GLLBaseLine(); // default current parser is GLL base line - change to MGLL when available
   private final LexerLM currentLexer = new LexerLM(); // default current lexer is longest match - change to TWE set lexer when available
-  private Grammar currentGrammar; // scriptTraverser builds grammar rules into this grammar
+  Grammar currentGrammar; // scriptTraverser builds grammar rules into this grammar
   private int currentDerivationTerm = 0;
   private int currentConfiguration = 0;
   private final Chooser currentChooser;

@@ -195,7 +195,7 @@ public class Grammar {
     if (startNonterminal != null) startNonterminal.follow.add(endOfStringElement);
 
     for (GrammarElement e : elements.keySet()) {
-      if (isBNFElement(e)) e.first.add(e);
+      if (isBNFElement(e) && e.kind != GrammarKind.N) e.first.add(e);
       if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt) {
         GrammarNode gs = gn;
         do {
@@ -365,7 +365,7 @@ public class Grammar {
     return toStringBody(false);
   }
 
-  private String toStringBody(boolean showProperties) {
+  public String toStringBody(boolean showProperties) {
     StringBuilder sb = new StringBuilder();
     if (startNonterminal != null)
       sb.append("Grammar " + name + " with start nonterminal " + startNonterminal.str + "\n");
@@ -504,7 +504,7 @@ public class Grammar {
   /** Static methods *********************************************************/
 
   public static boolean isLHS(GrammarNode gn) {
-    return gn.elm.kind == GrammarKind.N && gn.seq == null;
+    return gn.elm != null && gn.elm.kind == GrammarKind.N && gn.seq == null;
   }
 
 }

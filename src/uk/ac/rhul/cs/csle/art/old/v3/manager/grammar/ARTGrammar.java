@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import uk.ac.rhul.cs.csle.art.old.core.ARTUncheckedException;
-import uk.ac.rhul.cs.csle.art.old.core.OLDDirectives;
+import uk.ac.rhul.cs.csle.art.old.core.Directives;
 import uk.ac.rhul.cs.csle.art.old.term.ITerms;
 import uk.ac.rhul.cs.csle.art.old.term.ITermsLowLevelAPI;
 import uk.ac.rhul.cs.csle.art.old.util.bitset.ARTBitSet;
@@ -69,7 +69,7 @@ public class ARTGrammar {
   private final ARTV3Module ARTV3Module;
   private final String id;
   // private final ARTDirectiveBlock optionBlock;
-  public final OLDDirectives artDirectives;
+  public final Directives artDirectives;
   private boolean isEBNF;
   private boolean isFBNF;
   private final ARTGrammarElementNonterminal unaugmentedStartNonterminal;
@@ -134,7 +134,7 @@ public class ARTGrammar {
     this(artManager, id, ARTV3Module, ARTV3Module.getDefaultStart(), augment);
   }
 
-  public ARTGrammar(ARTManager artManager, String id, ARTV3Module ARTV3Module, OLDDirectives artDirectives) {
+  public ARTGrammar(ARTManager artManager, String id, ARTV3Module ARTV3Module, Directives artDirectives) {
     this(artManager, id, ARTV3Module, ARTV3Module.getDefaultStart(), false);
   }
 
@@ -142,7 +142,7 @@ public class ARTGrammar {
     this.id = id;
     this.artManager = artManager;
     this.ARTV3Module = ARTV3Module;
-    this.artDirectives = new OLDDirectives(artManager.artDirectives);
+    this.artDirectives = new Directives(artManager.artDirectives);
 
     ARTGrammarElementNonterminal nonterminal;
     ARTGrammarElementModuleNonterminal moduleStart = artManager.getDefaultMainModule().getDefaultStart();
@@ -1967,7 +1967,7 @@ public class ARTGrammar {
     return lstring.equals(string);
   }
 
-  public OLDDirectives getDirectives() {
+  public Directives getDirectives() {
     return artDirectives;
   }
 

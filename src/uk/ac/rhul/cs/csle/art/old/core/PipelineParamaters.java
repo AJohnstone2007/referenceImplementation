@@ -13,11 +13,11 @@ import uk.ac.rhul.cs.csle.art.old.term.ITerms;
 import uk.ac.rhul.cs.csle.art.old.term.RewriterESOS;
 import uk.ac.rhul.cs.csle.art.old.term.TermTraverserText;
 
-public class OLDPipelineParamaters {
+public class PipelineParamaters {
   public final ITerms iTerms;
-  public final Map<Integer, OLDModule> modules = new LinkedHashMap<>();
+  public final Map<Integer, Module> modules = new LinkedHashMap<>();
 
-  public OLDModule mainModule = null;
+  public Module mainModule = null;
 
   public final TermTraverserText moduleBuilderTraverser;
   public final TermTraverserText tt;
@@ -59,7 +59,7 @@ public class OLDPipelineParamaters {
   public boolean rewriteTraverse = false;
   public boolean rewriteActive = false;
 
-  public OLDPipelineParamaters(ITerms iTerms) {
+  public PipelineParamaters(ITerms iTerms) {
     this.iTerms = iTerms;
     moduleBuilderTraverser = new TermTraverserText(iTerms, "module builder traverser");
     tt = new TermTraverserText(iTerms, "text traverser");

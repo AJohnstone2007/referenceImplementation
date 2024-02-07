@@ -7,7 +7,7 @@ import uk.ac.rhul.cs.csle.art.old.cfg.CFGDFA;
 import uk.ac.rhul.cs.csle.art.old.cfg.CFGNFA;
 import uk.ac.rhul.cs.csle.art.old.cfg.Lexer;
 import uk.ac.rhul.cs.csle.art.old.core.ARTUncheckedException;
-import uk.ac.rhul.cs.csle.art.old.core.OLDModule;
+import uk.ac.rhul.cs.csle.art.old.core.Module;
 import uk.ac.rhul.cs.csle.art.old.term.ITerms;
 import uk.ac.rhul.cs.csle.art.old.term.TermTraverserText;
 import uk.ac.rhul.cs.csle.art.old.util.graph.ARTAbstractVertex;
@@ -22,7 +22,7 @@ import uk.ac.rhul.cs.csle.art.old.v3.lex.ARTLexerV3;
  */
 public class ARTLexDFA extends Lexer {
   final ITerms iTerms;
-  OLDModule module;
+  Module module;
   final TermTraverserText tt;
 
   CFGNFA nfa;// , nfaReverse, nfaMinimised;
@@ -31,7 +31,7 @@ public class ARTLexDFA extends Lexer {
   Integer stateNumber = 0;
   Set<Integer> emptySet = new HashSet<>();
 
-  public ARTLexDFA(OLDModule module, ITerms iTerms) {
+  public ARTLexDFA(Module module, ITerms iTerms) {
     this.module = module;
     this.iTerms = module.iTerms;
     this.tt = module.tt;

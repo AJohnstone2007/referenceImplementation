@@ -15,7 +15,7 @@ import java.util.Set;
 import uk.ac.rhul.cs.csle.art.old.term.ITerms;
 import uk.ac.rhul.cs.csle.art.old.term.TermTraverserText;
 
-public class OLDModule {
+public class Module {
   /**
   *
   */
@@ -50,7 +50,7 @@ public class OLDModule {
   public final Map<Integer, Map<Integer, Integer>> variableNamesByRule = new HashMap<>(); // Map from term to the variable aliases used in that term
   public final Map<Integer, Map<Integer, Integer>> reverseVariableNamesByRule = new HashMap<>(); // Map from term to the variable aliases used in that term
 
-  public OLDModule(OLDPipelineParamaters pp, int nameTerm) {
+  public Module(PipelineParamaters pp, int nameTerm) {
     this.iTerms = pp.iTerms;
     this.tt = pp.tt;
     this.nameTerm = nameTerm;

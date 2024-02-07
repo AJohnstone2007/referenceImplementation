@@ -8,13 +8,13 @@ import uk.ac.rhul.cs.csle.art.old.v3.manager.mode.ARTModeAlgorithm;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.mode.ARTModeDespatch;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.mode.ARTModeSupport;
 
-public class OLDDirectives {
+public class Directives {
   public final ArrayList<String> inputs = new ArrayList<>();
   public final ArrayList<String> inputFilenames = new ArrayList<>();
 
   private final Map<String, Object> directives;
 
-  public OLDDirectives() {
+  public Directives() {
     directives = new HashMap<>();
     directives.put("verbosity", 0);
     directives.put("trace", false);
@@ -109,7 +109,7 @@ public class OLDDirectives {
     directives.put("actionSuppress", false);
   }
 
-  public OLDDirectives(OLDDirectives artDirectives) {
+  public Directives(Directives artDirectives) {
     directives = new HashMap<>(artDirectives.directives);
   }
 

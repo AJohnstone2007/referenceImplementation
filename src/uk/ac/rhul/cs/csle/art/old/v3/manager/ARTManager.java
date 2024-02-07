@@ -3,7 +3,7 @@ package uk.ac.rhul.cs.csle.art.old.v3.manager;
 import java.util.HashMap;
 
 import uk.ac.rhul.cs.csle.art.old.core.ARTUncheckedException;
-import uk.ac.rhul.cs.csle.art.old.core.OLDDirectives;
+import uk.ac.rhul.cs.csle.art.old.core.Directives;
 import uk.ac.rhul.cs.csle.art.old.util.graph.ARTTree;
 import uk.ac.rhul.cs.csle.art.old.util.text.ARTText;
 import uk.ac.rhul.cs.csle.art.old.util.text.ARTTextHandlerConsole;
@@ -25,7 +25,7 @@ import uk.ac.rhul.cs.csle.art.old.v3.manager.parser.ARTV3Parser.ARTAT_ART_text;
 
 public class ARTManager {
   // private ARTText text;
-  public final OLDDirectives artDirectives = new OLDDirectives();
+  public final Directives artDirectives = new Directives();
 
   private final ARTV3Parser parser;
   private final HashMap<String, ARTV3Module> modules = new HashMap<String, ARTV3Module>();
@@ -105,7 +105,7 @@ public class ARTManager {
     return parser.artRDT;
   }
 
-  public ARTGrammar addGrammar(String id, ARTV3Module module, boolean augment, OLDDirectives artDirectives) {
+  public ARTGrammar addGrammar(String id, ARTV3Module module, boolean augment, Directives artDirectives) {
     ARTGrammar ret = new ARTGrammar(this, id, module, augment);
     // System.out.println("ART manager added grammar: ");
     // ret.prettyPrint();

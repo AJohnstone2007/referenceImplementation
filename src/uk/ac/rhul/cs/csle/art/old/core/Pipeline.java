@@ -8,14 +8,14 @@ import uk.ac.rhul.cs.csle.art.old.term.TermTool;
 import uk.ac.rhul.cs.csle.art.old.term.__int32;
 import uk.ac.rhul.cs.csle.art.old.util.text.ARTText;
 
-public class OLDPipeline {
-  private final OLDPipelineParamaters pp;
+public class Pipeline {
+  private final PipelineParamaters pp;
 
-  public OLDPipeline(OLDPipelineParamaters pp) {
+  public Pipeline(PipelineParamaters pp) {
     this.pp = pp;
   }
 
-  public void interpretDynamicDirectives(OLDModule module) {
+  public void interpretDynamicDirectives(Module module) {
     pp.startNonterminal = module.defaultStartNonterminal;
     pp.startRelation = module.defaultStartRelation;
 
@@ -32,7 +32,7 @@ public class OLDPipeline {
 
       switch (directiveName) {
       case "main": {
-        OLDModule newMain = pp.modules.get(firstArgument);
+        Module newMain = pp.modules.get(firstArgument);
 
         if (newMain == null) throw new ARTUncheckedException("unknown module in directive !main " + pp.tt.toString(firstArgument));
 

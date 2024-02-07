@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Date;
 
-import uk.ac.rhul.cs.csle.art.old.core.OLDDirectives;
+import uk.ac.rhul.cs.csle.art.old.core.Directives;
 import uk.ac.rhul.cs.csle.art.old.util.bitset.ARTBitSet;
 import uk.ac.rhul.cs.csle.art.old.util.histogram.ARTHistogram;
 import uk.ac.rhul.cs.csle.art.old.util.slotarray.ARTSlotArray;
@@ -29,7 +29,7 @@ public abstract class ARTParserBase {
   /**
    * Defaut options for generated parsers
    */
-  public final OLDDirectives artDirectives;
+  public final Directives artDirectives;
   /**
    * local text handlers - initialised by ART generated constructor
    */
@@ -189,7 +189,7 @@ public abstract class ARTParserBase {
     if (artGrammar != null)
       artDirectives = artGrammar.artDirectives;
     else
-      artDirectives = new OLDDirectives();
+      artDirectives = new Directives();
     artText = new ARTText(new ARTTextHandlerConsole());
     this.artLexer = artLexer;
     if (artLexer != null) artLexer.artSetParser(this);

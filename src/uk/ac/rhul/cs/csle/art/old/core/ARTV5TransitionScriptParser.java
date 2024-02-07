@@ -18,7 +18,7 @@ import uk.ac.rhul.cs.csle.art.old.cfg.referenceFamily.grammar.GNode;
 import uk.ac.rhul.cs.csle.art.old.cfg.referenceFamily.grammar.Grammar;
 import uk.ac.rhul.cs.csle.art.old.core.ARTUncheckedException;
 
-public class ARTV4ScriptParser extends ReferenceParser {
+public class ARTV5TransitionScriptParser extends ReferenceParser {
   @Override
   public void visualise() {
     new GSS2Dot(gss, "gssA.dot");

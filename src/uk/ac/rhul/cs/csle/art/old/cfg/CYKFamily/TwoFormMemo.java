@@ -6,13 +6,13 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ac.rhul.cs.csle.art.old.cfg.Parser;
-import uk.ac.rhul.cs.csle.art.old.core.OLDPipelineParamaters;
+import uk.ac.rhul.cs.csle.art.old.core.PipelineParamaters;
 
 public class TwoFormMemo extends Parser {
   private Map<IntegerPair, Set<Integer>> rMap;
-  private final OLDPipelineParamaters pp;
+  private final PipelineParamaters pp;
 
-  public TwoFormMemo(OLDPipelineParamaters pp) {
+  public TwoFormMemo(PipelineParamaters pp) {
     this.pp = pp;
   }
 

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import uk.ac.rhul.cs.csle.art.old.core.ARTV5Transition;
 import uk.ac.rhul.cs.csle.art.old.core.ARTV4;
-import uk.ac.rhul.cs.csle.art.old.core.ARTV4OLD;
 import uk.ac.rhul.cs.csle.art.old.core.Version;
 import uk.ac.rhul.cs.csle.art.old.v3.ARTV3;
 
@@ -43,9 +43,9 @@ public class ART {
     if (specification.contains("!v3"))
       new ARTV3(specification);
     else if (specification.contains("!v4old "))
-      new ARTV4OLD(specification);
-    else
       new ARTV4(specification);
+    else
+      new ARTV5Transition(specification);
 
   }
 }

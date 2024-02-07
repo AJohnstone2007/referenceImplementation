@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 
 import uk.ac.rhul.cs.csle.art.old.cfg.rdFamily.ARTOSBRDGenerator;
 import uk.ac.rhul.cs.csle.art.old.core.ARTUncheckedException;
-import uk.ac.rhul.cs.csle.art.old.core.OLDDirectives;
+import uk.ac.rhul.cs.csle.art.old.core.Directives;
 import uk.ac.rhul.cs.csle.art.old.util.slotarray.ARTSlotArray;
 import uk.ac.rhul.cs.csle.art.old.util.text.ARTText;
 import uk.ac.rhul.cs.csle.art.old.util.text.ARTTextHandlerFile;
@@ -124,7 +124,7 @@ public class ARTV3 {
       break;
 
     case lexerData: {
-      OLDDirectives ob = artManager.artDirectives;
+      Directives ob = artManager.artDirectives;
       if (artManager.artDirectives.inputs.isEmpty()) throw new ARTUncheckedException("No input specified");
       String input = artManager.artDirectives.inputs.get(0);
 
@@ -138,7 +138,7 @@ public class ARTV3 {
       break;
 
     case lexDFA: {
-      OLDDirectives ob = artManager.artDirectives;
+      Directives ob = artManager.artDirectives;
 
       String input = ARTText.readFile("test.str");
       // System.out.println("Lexing " + input);

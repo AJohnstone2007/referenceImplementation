@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import uk.ac.rhul.cs.csle.art.old.core.ARTUncheckedException;
-import uk.ac.rhul.cs.csle.art.old.core.OLDDirectives;
+import uk.ac.rhul.cs.csle.art.old.core.Directives;
 import uk.ac.rhul.cs.csle.art.old.util.text.ARTText;
 import uk.ac.rhul.cs.csle.art.old.util.text.ARTTextHandlerSink;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.ARTChooserSet;
@@ -41,7 +41,7 @@ public class ARTGLLGenerator {
 
   ARTGeneratorTranslate gt;
   ARTGrammar grammar;
-  OLDDirectives directives;
+  Directives directives;
 
   int lhsTemplateCount = 0;
   int epsilonTemplateCount = 0;
@@ -61,7 +61,7 @@ public class ARTGLLGenerator {
 
   private final boolean mgllOrGllGeneratorPool;
 
-  public ARTGLLGenerator(ARTGrammar grammar, OLDDirectives directives) {
+  public ARTGLLGenerator(ARTGrammar grammar, Directives directives) {
     this.grammar = grammar;
     this.directives = directives;
     mgllOrGllGeneratorPool = directives.algorithmMode() == ARTModeAlgorithm.mgllGeneratorPool

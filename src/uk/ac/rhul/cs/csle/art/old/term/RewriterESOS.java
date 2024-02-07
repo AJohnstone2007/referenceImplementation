@@ -6,12 +6,12 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ac.rhul.cs.csle.art.old.core.ARTUncheckedException;
-import uk.ac.rhul.cs.csle.art.old.core.OLDPipelineParamaters;
+import uk.ac.rhul.cs.csle.art.old.core.PipelineParamaters;
 
 public class RewriterESOS extends Rewriter {
-  private final OLDPipelineParamaters pp;
+  private final PipelineParamaters pp;
 
-  public RewriterESOS(OLDPipelineParamaters pp) {
+  public RewriterESOS(PipelineParamaters pp) {
     this.pp = pp;
   }
 

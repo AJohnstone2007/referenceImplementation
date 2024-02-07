@@ -14,7 +14,7 @@ import java.util.TreeSet;
 import uk.ac.rhul.cs.csle.art.old.cfg.CFGDFA;
 import uk.ac.rhul.cs.csle.art.old.cfg.CFGNFA;
 import uk.ac.rhul.cs.csle.art.old.core.ARTUncheckedException;
-import uk.ac.rhul.cs.csle.art.old.core.OLDDirectives;
+import uk.ac.rhul.cs.csle.art.old.core.Directives;
 import uk.ac.rhul.cs.csle.art.old.util.bitset.ARTBitSet;
 import uk.ac.rhul.cs.csle.art.old.util.graph.ARTAbstractVertex;
 import uk.ac.rhul.cs.csle.art.old.util.graph.ARTGraphEdge;
@@ -53,7 +53,7 @@ public class ARTLexerV3 {
   private ARTGrammar grammar; // The grammar containing the lexical definitions
   protected ARTParserBase artParser;
 
-  public OLDDirectives artDirectives;
+  public Directives artDirectives;
 
   private final int paraterminalCount; // the number of distinct tokens (paraterminals) for the grammar we are processing
   public String artInputString; // The input as a String
@@ -109,7 +109,7 @@ public class ARTLexerV3 {
   }
 
   // This constructor is called from generated parsers with explicit parameters
-  public ARTLexerV3(ARTBitSet[] higher, ARTBitSet[] longer, String inputString, int inputStringLength, int eos, String[] labelStrings, OLDDirectives artDirectives,
+  public ARTLexerV3(ARTBitSet[] higher, ARTBitSet[] longer, String inputString, int inputStringLength, int eos, String[] labelStrings, Directives artDirectives,
       int paraterminalCount) {
     this.paraterminalCount = paraterminalCount;
     this.artDirectives = artDirectives;

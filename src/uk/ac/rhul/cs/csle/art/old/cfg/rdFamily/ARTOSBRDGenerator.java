@@ -1,6 +1,6 @@
 package uk.ac.rhul.cs.csle.art.old.cfg.rdFamily;
 
-import uk.ac.rhul.cs.csle.art.old.core.OLDDirectives;
+import uk.ac.rhul.cs.csle.art.old.core.Directives;
 import uk.ac.rhul.cs.csle.art.old.util.text.ARTText;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.ARTGrammar;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementAttribute;
@@ -15,9 +15,9 @@ import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.instance.ARTGrammarInstance
 
 public class ARTOSBRDGenerator {
   ARTGrammar artGrammar;
-  OLDDirectives artDirectives;
+  Directives artDirectives;
 
-  public ARTOSBRDGenerator(ARTGrammar artGrammar, OLDDirectives artDirectives) {
+  public ARTOSBRDGenerator(ARTGrammar artGrammar, Directives artDirectives) {
     this.artGrammar = artGrammar;
     this.artDirectives = artDirectives;
   }

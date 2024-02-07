@@ -6,7 +6,7 @@ Our goals are (a) to provide a 'programmer friendly' route into GLL (b) to provi
 
 The initial version of this work was presented at the Software Language Engineering 2023 conference near Lisbon. You can read the associated paper [here](https://pure.royalholloway.ac.uk/en/publications/a-reference-gll-implementation). The slides from that presentation are in __doc/referenceImplementationSlides.pdf__
 
-We continue to extend the code and the associated grammars and test corprora. For a current account of this work, please read the Technical Report _The GLL algorithm and its variants - a reference implementation_ which you will find in __doc/referenceImplementationReport.pdf__
+We continue to extend the code and the associated grammars and test corprora. For a current account of this work, please read the Technical Report _The GLL algorithm and its variants - a reference implementation_ which you will find in __doc/referenceImplementationReport.pdf__ (Note: currently not in the archive whilst we do major updates: email Adrian for a quick guide.)
 
 You may also find the following pages useful.
 
@@ -14,6 +14,6 @@ Our reference programming language exmples at https://github.com/AJohnstone2007/
 
 Our research papers at https://pure.royalholloway.ac.uk/en/persons/adrian-johnstone/publications
 
-The code and other material in this repository &copy; 2023 by Adrian Johnstone is licensed under CC BY 4.0
+The code and other material in this repository &copy; 2010-2024 by Adrian Johnstone is licensed under CC BY 4.0
 
 Adrian Johnstone, a.johnstone@rhul.ac.uk

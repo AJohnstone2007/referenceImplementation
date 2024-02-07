@@ -13,7 +13,7 @@ public class Util {
   }
 
   public static void fatal(String msg) {
-    System.out.println("Fatal error: " + msg);
+    System.out.println(msg);
     System.exit(1);
   }
 

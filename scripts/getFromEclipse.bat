@@ -5,6 +5,12 @@ rd /s/q src
 rd /s/q bin
 rd /s/q examples
 
+rem update build version
+pushd \adrian\eclipse\referenceImplementation\bin
+java uk.ac.rhul.cs.csle.art.ARTVersionUpdate
+move ARTVersion.java.new \adrian\eclipse\referenceImplementation\src\uk\ac\rhul\cs\csle\art\ARTVersion.java
+move manifest.local.new \csle\dev\referenceImplementation\manifest.local
+popd
 
 rem copy src directory from Adrian's Eclipse workspace
 md src

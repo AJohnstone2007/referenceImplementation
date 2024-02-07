@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import uk.ac.rhul.cs.csle.art.old.core.ARTV4;
 import uk.ac.rhul.cs.csle.art.old.core.ARTV5Transition;
-import uk.ac.rhul.cs.csle.art.old.core.Version;
 import uk.ac.rhul.cs.csle.art.old.v3.ARTV3;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
@@ -15,7 +14,7 @@ public class ART {
   static final Pattern filenamePattern = Pattern.compile("[a-zA-Z0-9/\\\\]+\\.[a-zA-Z0-9]+"); // NB this is a limited idea of what a filename looks like
 
   public static void main(String[] args) {
-    if (args.length == 0) Util.fatal("ART " + Version.version() + ": no arguments supplied");
+    if (args.length == 0) Util.fatal("ART " + ARTVersion.version() + ": no arguments supplied");
 
     ARTScriptInterpreter artScriptInterpreter = new ARTScriptInterpreter();
 

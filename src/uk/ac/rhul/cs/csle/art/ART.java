@@ -2,9 +2,12 @@ package uk.ac.rhul.cs.csle.art;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import uk.ac.rhul.cs.csle.art.cfg.grammar.Grammar;
 import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarElement;
@@ -75,11 +78,32 @@ public class ART {
 
   // Adrian's debug comparison sand pit - undocumented
   private static void ajDebugCode(ARTScriptInterpreter artScriptInterpreter, String[] args) {
-    System.out.println("AJ debug");
-    String scriptString = buildScriptString(args, 1);
+    try {
+      Path inputDir = Paths.get("rhulTests");
+      if (Files.isDirectory(inputDir)) {
+        List<Path> filePaths;
+        filePaths = Files.list(inputDir).collect(Collectors.toList());
+        for (Path filePath : filePaths) {
+          if (filePath.toString().endsWith(".art")) {
+            System.out.println("File " + filePath);
+            v5v3RegressionFirstAndFollowSets(Files.readString(filePath));
+          }
+        }
+      }
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  private static void v5v3RegressionFirstAndFollowSets(String scriptString) {
+    ARTScriptInterpreter artScriptInterpreter = new ARTScriptInterpreter();
+
+    System.out.println("v5v3RegressionFirstAndFollowSets");
+
     artScriptInterpreter.interpret(scriptString);
 
-    ARTV3 artV3 = new ARTV3(buildScriptString(args, 1));
+    ARTV3 artV3 = new ARTV3(scriptString);
 
     ARTGrammar grammarV3 = artV3.artManager.addGrammar("Parser grammar", artV3.artManager.getDefaultMainModule(), false, artV3.artManager.artDirectives);
 
@@ -87,7 +111,7 @@ public class ART {
     Grammar grammarV5 = artScriptInterpreter.currentGrammar;
     grammarV5.normalise();
     grammarV5.firstAndFollowSetsBNFOnly(); // DEBUG
-    System.out.println("V5 " + grammarV5.toStringBody(true));
+    // System.out.println("V5 " + grammarV5.toStringBody(true));
 
     for (ARTGrammarElementNonterminal v3Nonterminal : grammarV3.getNonterminals()) {
       System.out.println(

@@ -233,18 +233,16 @@ public class Grammar {
     if (gn.instanceFirst.contains(epsilonElement)) gn.instanceFirst.addAll(gn.seq.instanceFirst); // If we are a nullable slot, fold in our successor's instance
                                                                                                   // first set
 
-    // 3 - process follow set for rightmost element
-    if (gn.isPenultimateSlot) {
-      gn.instanceFollow.addAll(lhs.follow);
-      gn.elm.follow.addAll(gn.instanceFollow);
-    } else {
+    // 3 - If we have a nullable suffix, fold into the LHS follow set
+    if (gn.instanceFirst.contains(epsilonElement) || gn.isPenultimateSlot) gn.instanceFollow.addAll(lhs.follow);
 
-      // 4 - process follow set for 'interior' elements
-      Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
-      tmp.remove(epsilonElement);
-      gn.instanceFollow.addAll(tmp);
-      gn.elm.follow.addAll(tmp);
-    }
+    // 4 - process follow set for 'interior' elements
+    Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
+    tmp.remove(epsilonElement);
+    gn.instanceFollow.addAll(tmp);
+
+    // 5. Update the element's follow set
+    gn.elm.follow.addAll(gn.instanceFollow);
   }
 
   private int firstAndFollowSetArities() {

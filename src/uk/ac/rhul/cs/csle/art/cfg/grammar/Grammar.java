@@ -228,6 +228,7 @@ public class Grammar {
     firstAndFollowSetsProductionRec(gn.seq, lhs); // Work in reverse order to reduce the number of passes
 
     // 2 - process first sets
+    gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets
     gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
     if (gn.instanceFirst.contains(epsilonElement)) gn.instanceFirst.addAll(gn.seq.instanceFirst); // If we are a nullable slot, fold in our successor's instance
                                                                                                   // first set

@@ -3,6 +3,7 @@ package uk.ac.rhul.cs.csle.art;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import uk.ac.rhul.cs.csle.art.cfg.grammar.Grammar;
@@ -82,14 +83,15 @@ public class ART {
 
     ARTGrammar grammarV3 = artV3.artManager.addGrammar("Parser grammar", artV3.artManager.getDefaultMainModule(), false, artV3.artManager.artDirectives);
 
-    System.out.print("V3 grammar\n" + grammarV3);
+    // System.out.print("V3 grammar\n" + grammarV3);
     Grammar grammarV5 = artScriptInterpreter.currentGrammar;
     grammarV5.normalise();
     grammarV5.firstAndFollowSetsBNFOnly(); // DEBUG
-    System.out.println("V5 grammar " + grammarV5.toStringBody(true));
+    System.out.println("V5 " + grammarV5.toStringBody(true));
 
     for (ARTGrammarElementNonterminal v3Nonterminal : grammarV3.getNonterminals()) {
-      System.out.println("V3 nonterminal " + v3Nonterminal + " first " + v3Nonterminal.getFirst() + " follow " + v3Nonterminal.getFollow());
+      System.out.println(
+          "V3 nonterminal " + v3Nonterminal + " first " + new TreeSet<>(v3Nonterminal.getFirst()) + " follow " + new TreeSet<>(v3Nonterminal.getFollow()));
       GrammarElement v5Nonterminal = grammarV5.elements.get(new GrammarElement(GrammarKind.N, v3Nonterminal.getId()));
       System.out.println("V5 nonterminal " + v5Nonterminal + " first " + v5Nonterminal.first + " follow " + v5Nonterminal.follow + "\n");
     }

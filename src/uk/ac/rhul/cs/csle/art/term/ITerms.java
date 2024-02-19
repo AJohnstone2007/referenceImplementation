@@ -134,9 +134,9 @@ public abstract class ITerms {
       pluginClass = getClass().getClassLoader().loadClass("ValueUserPlugin");
       plugin = (ValueUserPluginInterface) pluginClass.getDeclaredConstructor().newInstance();
     } catch (Exception e) {
-      // Silently ansorb exception - when the default is used
+      // Silently absorb exception - when the default is used
     }
-    if (plugin.name() != null) System.out.println("Attached to plugin: " + plugin.name());
+    // if (plugin.name() != null) System.out.println("Attached to plugin: " + plugin.name());
   }
 
   public String toString(int term) {

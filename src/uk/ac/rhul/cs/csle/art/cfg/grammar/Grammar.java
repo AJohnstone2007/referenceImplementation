@@ -188,76 +188,118 @@ public class Grammar {
       }
 
     // 3. First and follow sets
+    firstAndFollowSetsEBNF();
   }
 
-  public void firstAndFollowSetsBNFOnly() {
-    // Initialise sets
+  private boolean changed;
+
+  private void firstAndFollowSetsEBNF() {
     if (startNonterminal != null) startNonterminal.follow.add(endOfStringElement);
 
-    for (GrammarElement e : elements.keySet()) {
-      if (isBNFElement(e) && e.kind != GrammarKind.N) e.first.add(e);
-      if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt) {
-        GrammarNode gs = gn;
-        do {
-          gs = gs.seq;
-
-          gs.instanceFirst = new TreeSet<>();
-          gs.instanceFollow = new TreeSet<>();
-        } while (gs.elm.kind != GrammarKind.END);
-      }
-    }
-
-    int newArity = 0, oldArity = firstAndFollowSetArities();
-
-    while (newArity != oldArity) {
+    changed = true;
+    while (changed) {
+      changed = false;
       for (GrammarElement e : elements.keySet())
         if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt) {
-          firstAndFollowSetsProductionRec(gn.seq, e);
-          e.first.addAll(gn.seq.instanceFirst);
+          if (firstSetsEBNFRec(gn.seq, e)) e.first.add(epsilonElement); // Seen only nullable
+          Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
+          tmp.remove(epsilonElement);
+          changed |= e.first.addAll(tmp);
         }
-      oldArity = newArity;
-      newArity = firstAndFollowSetArities();
     }
   }
 
-  private void firstAndFollowSetsProductionRec(GrammarNode gn, GrammarElement lhs) { // Work backwards to reduce number of passes
+  private boolean firstSetsEBNFRec(GrammarNode gn, GrammarElement lhs) {
     // System.out.println("ffSetsRec at " + gn.toStringDot());
 
+    boolean seenOnlyNullable = true;
+
     // 1 - manage recursion giving reverse order traversal
-    if (gn.elm.kind == GrammarKind.END) return;
-    firstAndFollowSetsProductionRec(gn.seq, lhs); // Work in reverse order to reduce the number of passes
+    if (gn.elm.kind == GrammarKind.END) return true;
+    seenOnlyNullable &= firstSetsEBNFRec(gn.seq, lhs); // Work in reverse order to reduce the number of passes
 
     // 2 - process first sets
-    gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets
-    gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
-    if (gn.instanceFirst.contains(epsilonElement)) gn.instanceFirst.addAll(gn.seq.instanceFirst); // If we are a nullable slot, fold in our successor's instance
-                                                                                                  // first set
+    changed |= gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets
+    changed |= gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
+    if (gn.instanceFirst.contains(epsilonElement))
+      changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);// If we are a nullable slot, fold in our successor's instance first sets
+    else
+      seenOnlyNullable = false;
 
-    // 3 - If we have a nullable suffix, fold into the LHS follow set
-    if (gn.instanceFirst.contains(epsilonElement) || gn.isPenultimateSlot) gn.instanceFollow.addAll(lhs.follow);
-
-    // 4 - process follow set for 'interior' elements
-    Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
-    tmp.remove(epsilonElement);
-    gn.instanceFollow.addAll(tmp);
-
-    // 5. Update the element's follow set
-    gn.elm.follow.addAll(gn.instanceFollow);
+    return seenOnlyNullable;
   }
 
-  private int firstAndFollowSetArities() {
-    int ret = 0;
-    for (GrammarElement e : elements.keySet()) {
-      ret += e.first.size();
-      ret += e.follow.size();
-      if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt)
-        if (gn.instanceFirst != null) {
-          ret += gn.instanceFirst.size();
-          ret += gn.instanceFollow.size();
-        }
-    }
-    return ret;
-  }
+  // public void firstAndFollowSetsBNFOnly() {
+  // // Initialise sets
+  // if (startNonterminal != null) startNonterminal.follow.add(endOfStringElement);
+  //
+  // for (GrammarElement e : elements.keySet()) {
+  // if (isBNFElement(e) && e.kind != GrammarKind.N) e.first.add(e);
+  // if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt) {
+  // GrammarNode gs = gn;
+  // do {
+  // gs = gs.seq;
+  //
+  // gs.instanceFirst = new TreeSet<>();
+  // gs.instanceFollow = new TreeSet<>();
+  // } while (gs.elm.kind != GrammarKind.END);
+  // }
+  // }
+  //
+  // int newArity = 0, oldArity = firstAndFollowSetArities();
+  //
+  // while (newArity != oldArity) {
+  // for (GrammarElement e : elements.keySet())
+  // if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt) {
+  // firstAndFollowSetsProductionRec(gn.seq, e);
+  // e.first.addAll(gn.seq.instanceFirst);
+  // }
+  // oldArity = newArity;
+  // newArity = firstAndFollowSetArities();
+  // }
+  // }
+  //
+  // private void firstAndFollowSetsProductionRec(GrammarNode gn, GrammarElement lhs) { // Work backwards to reduce number of passes
+  // // System.out.println("ffSetsRec at " + gn.toStringDot());
+  //
+  // // 1 - manage recursion giving reverse order traversal
+  // if (gn.elm.kind == GrammarKind.END) return;
+  // firstAndFollowSetsProductionRec(gn.seq, lhs); // Work in reverse order to reduce the number of passes
+  //
+  // // 2 - process first sets
+  // gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets
+  // gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
+  // if (gn.instanceFirst.contains(epsilonElement)) gn.instanceFirst.addAll(gn.seq.instanceFirst); // If we are a nullable slot, fold in our successor's
+  // instance
+  // // first set
+  //
+  // // 3 - If we have a nullable suffix, fold into the LHS follow set
+  // if (gn.instanceFirst.contains(epsilonElement) || gn.isPenultimateSlot) gn.instanceFollow.addAll(lhs.follow);
+  //
+  // // 4 - process follow set for 'interior' elements
+  // Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
+  // tmp.remove(epsilonElement);
+  // gn.instanceFollow.addAll(tmp);
+  //
+  // // 5. Update the element's follow set
+  // gn.elm.follow.addAll(gn.instanceFollow);
+  // }
+
+  // private int firstAndFollowSetArities() {
+  // int ret = 0;
+  // for (GrammarElement e : elements.keySet()) {
+  // if (e.first != null) {
+  // ret += e.first.size();
+  // ret += e.follow.size();
+  // }
+  // if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt)
+  // if (gn.instanceFirst != null) {
+  // ret += gn.instanceFirst.size();
+  // ret += gn.instanceFollow.size();
+  // }
+  // }
+  // return ret;
+  // }
 
   // Data access for lexers
   public LKind[] lexicalKindsArray() {
@@ -389,7 +431,7 @@ public class Grammar {
     sb.append("Grammar elements:\n");
     for (GrammarElement s : elements.keySet()) {
       sb.append(" (" + s.toStringDetailed() + ") " + s);
-      if (showProperties && grammarBNFKinds.contains(s.kind)) {
+      if (showProperties && s.first != null) {
         sb.append(" first = {");
         appendElements(sb, s.first);
         sb.append("} follow = {");
@@ -408,9 +450,9 @@ public class Grammar {
         // if (gn.isFinalSlot) sb.append(" Final");
 
         if (gn.instanceFirst != null && gn.elm.kind != GrammarKind.END) {
-          sb.append(" first = {");
+          sb.append(" instfirst = {");
           appendElements(sb, gn.instanceFirst);
-          sb.append("} follow = {");
+          sb.append("} instfollow = {");
           appendElements(sb, gn.instanceFollow);
           sb.append("}");
         }

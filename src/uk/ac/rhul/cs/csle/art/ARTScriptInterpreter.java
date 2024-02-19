@@ -270,7 +270,7 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
 
         case "grammarProperties":
           currentGrammar.normalise();
-          currentGrammar.firstAndFollowSetsBNFOnly(); // DEBUG
+          // currentGrammar.firstAndFollowSetsBNFOnly(); // DEBUG
           System.out.println(currentGrammar.toStringProperties());
           break;
 

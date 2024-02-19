@@ -4,16 +4,22 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class GrammarElement implements Comparable<Object> {
+  private static Set<GrammarKind> hasSet = Set.of(GrammarKind.B, GrammarKind.C, GrammarKind.EPS, GrammarKind.N, GrammarKind.T, GrammarKind.TI);
   public int ei;
   public final GrammarKind kind;
   public final String str;
-  public final Set<GrammarElement> first = new TreeSet<>();
-  public final Set<GrammarElement> follow = new TreeSet<>();
+  public final Set<GrammarElement> first;
+  public final Set<GrammarElement> follow;
 
   public GrammarElement(GrammarKind kind, String s) {
     super();
     this.kind = kind;
     this.str = s;
+    if (hasSet.contains(kind)) {
+      first = new TreeSet<>();
+      follow = new TreeSet<>();
+    } else
+      first = follow = null;
   }
 
   public String toStringDetailed() {

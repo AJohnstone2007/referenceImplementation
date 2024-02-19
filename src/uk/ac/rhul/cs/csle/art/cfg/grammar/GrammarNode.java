@@ -1,6 +1,7 @@
 package uk.ac.rhul.cs.csle.art.cfg.grammar;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 import uk.ac.rhul.cs.csle.art.util.Util;
 
@@ -18,8 +19,8 @@ public class GrammarNode {
   public GIFTKind giftKind = GIFTKind.NONE;
   public int action; // Holds an action term used by attribute evaluators
 
-  public Set<GrammarElement> instanceFirst = null;
-  public Set<GrammarElement> instanceFollow = null;
+  public final Set<GrammarElement> instanceFirst = new TreeSet<>();
+  public final Set<GrammarElement> instanceFollow = new TreeSet<>();
   public boolean isInitialSlot = false, isPenultimateSlot = false, isFinalSlot = false;
 
   /*

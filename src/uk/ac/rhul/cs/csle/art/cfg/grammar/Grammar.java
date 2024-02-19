@@ -220,18 +220,20 @@ public class Grammar {
   private boolean firstSetsEBNFSeqRec(GrammarNode gn) {
     boolean seenOnlyNullable = true;
 
-    // 1 - manage recursion giving reverse order traversal
     if (gn.elm.kind == GrammarKind.END) return true;
     seenOnlyNullable &= firstSetsEBNFSeqRec(gn.seq); // Work in reverse order to reduce the number of passes
 
-    // 2 - process first sets
-    changed |= gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets
-    changed |= gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
-    if (gn.instanceFirst.contains(epsilonElement))
-      changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);// If we are a nullable slot, fold in our successor's instance first sets
-    else
-      seenOnlyNullable = false;
-
+    if (gn.alt == null) { // BNF nodes
+      changed |= gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets
+      changed |= gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
+      if (gn.instanceFirst.contains(epsilonElement))
+        changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);// If we are a nullable slot, fold in our successor's instance first sets
+      else
+        seenOnlyNullable = false;
+    } else { // Handle EBNF subrules
+      firstSetsEBNFAltRec(gn);
+      if (gn.elm.kind == GrammarKind.KLN || gn.elm.kind == GrammarKind.OPT) gn.instanceFirst.add(epsilonElement);
+    }
     return seenOnlyNullable;
   }
 

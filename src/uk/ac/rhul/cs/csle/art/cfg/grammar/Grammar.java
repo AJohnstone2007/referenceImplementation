@@ -226,14 +226,16 @@ public class Grammar {
     if (gn.alt == null) { // BNF nodes
       changed |= gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets
       changed |= gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
-      if (gn.instanceFirst.contains(epsilonElement))
-        changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);// If we are a nullable slot, fold in our successor's instance first sets
-      else
-        seenOnlyNullable = false;
     } else { // Handle EBNF subrules
       firstSetsEBNFAltRec(gn);
       if (gn.elm.kind == GrammarKind.KLN || gn.elm.kind == GrammarKind.OPT) gn.instanceFirst.add(epsilonElement);
     }
+
+    if (gn.instanceFirst.contains(epsilonElement))
+      changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);// If we are a nullable slot, fold in our successor's instance first sets
+    else
+      seenOnlyNullable = false;
+
     return seenOnlyNullable;
   }
 

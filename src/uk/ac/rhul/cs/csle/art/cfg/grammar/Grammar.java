@@ -200,23 +200,29 @@ public class Grammar {
     while (changed) {
       changed = false;
       for (GrammarElement e : elements.keySet())
-        if (e.kind == GrammarKind.N) for (GrammarNode gn = rules.get(e).alt; gn != null; gn = gn.alt) {
-          if (firstSetsEBNFRec(gn.seq, e)) e.first.add(epsilonElement); // Seen only nullable
-          Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
-          tmp.remove(epsilonElement);
-          changed |= e.first.addAll(tmp);
+        if (e.kind == GrammarKind.N) {
+          GrammarNode lhsNode = rules.get(e);
+          firstSetsEBNFAltRec(lhsNode);
+          e.first.addAll(lhsNode.instanceFirst);
         }
     }
   }
 
-  private boolean firstSetsEBNFRec(GrammarNode gn, GrammarElement lhs) {
-    // System.out.println("ffSetsRec at " + gn.toStringDot());
+  private void firstSetsEBNFAltRec(GrammarNode root) {
+    for (GrammarNode gn = root.alt; gn != null; gn = gn.alt) {
+      if (firstSetsEBNFSeqRec(gn.seq)) root.instanceFirst.add(epsilonElement); // Seen only nullable
+      Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
+      tmp.remove(epsilonElement);
+      changed |= root.instanceFirst.addAll(tmp);
+    }
+  }
 
+  private boolean firstSetsEBNFSeqRec(GrammarNode gn) {
     boolean seenOnlyNullable = true;
 
     // 1 - manage recursion giving reverse order traversal
     if (gn.elm.kind == GrammarKind.END) return true;
-    seenOnlyNullable &= firstSetsEBNFRec(gn.seq, lhs); // Work in reverse order to reduce the number of passes
+    seenOnlyNullable &= firstSetsEBNFSeqRec(gn.seq); // Work in reverse order to reduce the number of passes
 
     // 2 - process first sets
     changed |= gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets

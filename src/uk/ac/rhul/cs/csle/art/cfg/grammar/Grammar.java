@@ -203,30 +203,38 @@ public class Grammar {
         if (e.kind == GrammarKind.N) {
           GrammarNode lhsNode = rules.get(e);
           firstSetsEBNFAltRec(lhsNode);
-          e.first.addAll(lhsNode.instanceFirst);
+          changed |= e.first.addAll(lhsNode.instanceFirst);
         }
 
       for (GrammarElement e : elements.keySet())
         if (e.kind == GrammarKind.N) {
           GrammarNode lhsNode = rules.get(e);
-          followSetsEBNFAltRec(lhsNode);
-          e.first.addAll(lhsNode.instanceFirst);
+          followSetsEBNFAltRec(lhsNode, lhsNode.elm);
+          changed |= e.first.addAll(lhsNode.instanceFirst);
         }
     }
   }
 
-  private void followSetsEBNFAltRec(GrammarNode root) {
+  private void followSetsEBNFAltRec(GrammarNode root, GrammarElement lhs) {
     for (GrammarNode gn = root.alt; gn != null; gn = gn.alt)
-      followSetsEBNFSeqRec(gn.seq);
+      followSetsEBNFSeqRec(gn.seq, lhs);
   }
 
-  private void followSetsEBNFSeqRec(GrammarNode seq) {
+  // Debug BNF only
+  private void followSetsEBNFSeqRec(GrammarNode gn, GrammarElement lhs) {
+    if (gn.elm.kind == GrammarKind.END) return;
 
+    followSetsEBNFSeqRec(gn.seq, lhs); // Work in reverse order for compatability with first set construction
+    Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
+    tmp.remove(epsilonElement);
+    changed |= gn.instanceFollow.addAll(tmp);
+    changed |= gn.elm.follow.addAll(tmp);
+    if (gn.seq.isNullableSlot) changed |= gn.elm.follow.addAll(lhs.follow);
   }
 
   private void firstSetsEBNFAltRec(GrammarNode root) {
     for (GrammarNode gn = root.alt; gn != null; gn = gn.alt) {
-      if (firstSetsEBNFSeqRec(gn.seq)) root.instanceFirst.add(epsilonElement); // Seen only nullable
+      if (firstSetsEBNFSeqRec(gn.seq)) changed |= root.instanceFirst.add(epsilonElement); // Seen only nullable
       Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
       tmp.remove(epsilonElement);
       changed |= root.instanceFirst.addAll(tmp);
@@ -244,13 +252,15 @@ public class Grammar {
       changed |= gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
     } else { // Handle EBNF subrules
       firstSetsEBNFAltRec(gn);
-      if (gn.elm.kind == GrammarKind.KLN || gn.elm.kind == GrammarKind.OPT) gn.instanceFirst.add(epsilonElement);
+      if (gn.elm.kind == GrammarKind.KLN || gn.elm.kind == GrammarKind.OPT) changed |= gn.instanceFirst.add(epsilonElement);
     }
 
     if (gn.instanceFirst.contains(epsilonElement))
       changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);// If we are a nullable slot, fold in our successor's instance first sets
     else
       seenOnlyNullable = false;
+
+    gn.isNullableSlot = seenOnlyNullable;
 
     return seenOnlyNullable;
   }
@@ -399,9 +409,10 @@ public class Grammar {
       GrammarNode gn = nodesByNumber.get(i);
       sb.append(" " + i + ": " + gn.toStringAsProduction());
       if (showProperties) {
-        // if (gn.isInitialSlot) sb.append(" Initial");
-        // if (gn.isPenultimateSlot) sb.append(" Penultimate");
-        // if (gn.isFinalSlot) sb.append(" Final");
+        if (gn.isInitialSlot) sb.append(" Initial");
+        if (gn.isPenultimateSlot) sb.append(" Penultimate");
+        if (gn.isFinalSlot) sb.append(" Final");
+        if (gn.isNullableSlot) sb.append(" Nullable");
 
         if (gn.instanceFirst != null && gn.elm.kind != GrammarKind.END) {
           sb.append(" instfirst = {");

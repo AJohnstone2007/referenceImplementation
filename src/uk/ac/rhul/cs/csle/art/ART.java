@@ -136,10 +136,10 @@ public class ART {
         good = false;
       }
 
-      // if (!v5v3ElementSetSame(v5Nonterminal.follow, new TreeSet<>(v3Nonterminal.getFollow()), artV3.artManager.getDefaultMainModule())) {
-      // System.out.println("Follow for " + v5Nonterminal + " differ: V5 " + v5Nonterminal.follow + " V3 " + new TreeSet<>(v3Nonterminal.getFollow()) + "\n");
-      // good = false;
-      // }
+      if (!v5v3ElementSetSame(v5Nonterminal.follow, new TreeSet<>(v3Nonterminal.getFollow()), artV3.artManager.getDefaultMainModule())) {
+        System.out.println("Follow for " + v5Nonterminal + " differ: V5 " + v5Nonterminal.follow + " V3 " + new TreeSet<>(v3Nonterminal.getFollow()) + "\n");
+        good = false;
+      }
 
     }
     return good;

@@ -209,32 +209,35 @@ public class Grammar {
       for (GrammarElement e : elements.keySet())
         if (e.kind == GrammarKind.N) {
           GrammarNode lhsNode = rules.get(e);
-          followSetsEBNFAltRec(lhsNode, lhsNode);
+          followSetsEBNFAltRec(lhsNode);
           changed |= e.first.addAll(lhsNode.instanceFirst);
         }
     }
   }
 
-  private void followSetsEBNFAltRec(GrammarNode root, GrammarNode lhs) {
+  private void followSetsEBNFAltRec(GrammarNode root) {
+    // System.out.println("FollowAlt with root " + root.num);
     for (GrammarNode gn = root.alt; gn != null; gn = gn.alt)
-      followSetsEBNFSeqRec(gn.seq, lhs);
+      followSetsEBNFSeqRec(gn.seq, root);
   }
 
   // Debug BNF only
-  private void followSetsEBNFSeqRec(GrammarNode gn, GrammarNode lhs) {
+  private void followSetsEBNFSeqRec(GrammarNode gn, GrammarNode root) {
     if (gn.elm.kind == GrammarKind.END) return;
 
-    followSetsEBNFSeqRec(gn.seq, lhs); // Work in reverse order for compatability with first set construction
+    followSetsEBNFSeqRec(gn.seq, root); // Work in reverse order for compatability with first set construction
 
-    if (gn.alt == null) { // BNF nodes
+    if (gn.alt == null)
+      ; // BNF nodes
+    else
+      followSetsEBNFAltRec(gn);
 
-      Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
-      tmp.remove(epsilonElement);
-      changed |= gn.instanceFollow.addAll(tmp);
-      changed |= gn.elm.follow.addAll(tmp);
-      if (gn.seq.isNullableSlot) changed |= gn.elm.follow.addAll(lhs.elm.follow);
-    } else
-      followSetsEBNFAltRec(gn, gn);
+    Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
+    tmp.remove(epsilonElement);
+    changed |= gn.instanceFollow.addAll(tmp);
+    changed |= gn.elm.follow.addAll(tmp);
+    if (gn.seq.isNullableSlot) changed |= gn.elm.follow.addAll(root.elm.follow);
+
   }
 
   private void firstSetsEBNFAltRec(GrammarNode root) {

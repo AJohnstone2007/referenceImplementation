@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
@@ -26,6 +29,7 @@ import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementTe
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementTerminalCaseInsensitive;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementTerminalCaseSensitive;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementTerminalCharacter;
+import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.instance.ARTGrammarInstance;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.module.ARTV3Module;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
@@ -117,13 +121,16 @@ public class ART {
 
     ARTGrammar grammarV3 = artV3.artManager.addGrammar("Parser grammar", artV3.artManager.getDefaultMainModule(), false, artV3.artManager.artDirectives);
 
-    // System.out.print("V3 grammar\n" + grammarV3);
+    System.out.print("\n*** V3 grammar\n" + grammarV3.toString());
     Grammar grammarV5 = artScriptInterpreter.currentGrammar;
     grammarV5.normalise();
-    // System.out.println("V5 " + grammarV5.toStringBody(true));
+    grammarV5.show("grammar.dot");
+
+    System.out.println("\n*** V5 grammar\n" + grammarV5.toStringBody(true));
 
     boolean good = true;
 
+    // First check the nonterminals
     for (ARTGrammarElementNonterminal v3Nonterminal : grammarV3.getNonterminals()) {
       GrammarElement v5Nonterminal = grammarV5.elements.get(new GrammarElement(GrammarKind.N, v3Nonterminal.getId()));
 
@@ -140,9 +147,31 @@ public class ART {
         System.out.println("Follow for " + v5Nonterminal + " differ: V5 " + v5Nonterminal.follow + " V3 " + new TreeSet<>(v3Nonterminal.getFollow()) + "\n");
         good = false;
       }
-
     }
+
+    // Now work through instance sets
+
+    v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec((ARTGrammarInstance) grammarV3.getInstanceTree().getRoot());
+    good = v5v3RegressionCheckFirstAndFollowInstanceSetsRec(null);
     return good;
+  }
+
+  private static boolean v5v3RegressionCheckFirstAndFollowInstanceSetsRec(Object object) {
+    return false;
+  }
+
+  static Map<String, Set<ARTGrammarElement>> v3InstanceFirsts = new HashMap<>(), v3InstanceFollows = new HashMap<>();
+  static Set<String> checked = new HashSet<>();
+
+  static void v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec(ARTGrammarInstance v3) {
+    boolean ret = true;
+
+    if (v3 == null) return;
+    v3InstanceFirsts.put(v3.toGrammarString(".").replaceAll("\\s", ""), v3.first);
+    v3InstanceFollows.put(v3.toGrammarString(".").replaceAll("\\s", ""), v3.follow);
+
+    v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec(v3.getChild());
+    v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec(v3.getSibling());
   }
 
   private static boolean v5v3ElementSetSame(Set<GrammarElement> v5, Set<ARTGrammarElement> v3, ARTV3Module artv3Module) {

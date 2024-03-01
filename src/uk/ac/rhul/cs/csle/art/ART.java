@@ -31,6 +31,7 @@ import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementTe
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementTerminalCaseSensitive;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementTerminalCharacter;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.instance.ARTGrammarInstance;
+import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.instance.ARTGrammarInstanceSlot;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.module.ARTV3Module;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
@@ -110,6 +111,9 @@ public class ART {
     }
   }
 
+  static Grammar grammarV5; // regression V5 grammar
+  static ARTGrammar grammarV3; // regression V3 grammar
+
   private static boolean v5v3RegressionFirstAndFollowSets(String scriptString) {
     ARTScriptInterpreter artScriptInterpreter = new ARTScriptInterpreter();
 
@@ -119,10 +123,10 @@ public class ART {
 
     ARTV3 artV3 = new ARTV3(scriptString);
 
-    ARTGrammar grammarV3 = artV3.artManager.addGrammar("Parser grammar", artV3.artManager.getDefaultMainModule(), false, artV3.artManager.artDirectives);
+    grammarV3 = artV3.artManager.addGrammar("Parser grammar", artV3.artManager.getDefaultMainModule(), false, artV3.artManager.artDirectives);
 
     // System.out.print("\n*** V3 grammar\n" + grammarV3.toString());
-    Grammar grammarV5 = artScriptInterpreter.currentGrammar;
+    grammarV5 = artScriptInterpreter.currentGrammar;
     grammarV5.normalise();
     grammarV5.show("grammar.dot");
 
@@ -151,46 +155,46 @@ public class ART {
 
     // Now work through instance sets
     v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec((ARTGrammarInstance) grammarV3.getInstanceTree().getRoot());
-    good |= v5v3RegressionCheckFirstAndFollowInstanceSets(grammarV5, artV3);
+    good &= v5v3RegressionCheckFirstAndFollowInstanceSets(grammarV5, artV3);
     return good;
   }
 
   private static boolean v5v3RegressionCheckFirstAndFollowInstanceSetsRec(GrammarNode v5, ARTV3 artV3) {
-    boolean ret = true;
-
     if (v5 == null) return true;
-    String key = v5.toStringAsProduction().replaceAll("\\s", "");
-    System.out.println("V5 instance " + key + " first " + v5.instanceFirst + " follow " + v5.instanceFollow);
 
+    boolean good = true;
+    String key = v5.toStringAsProduction().replaceAll("\\s", "");
+    // System.out.println("V5 instance " + key + " first " + v5.instanceFirst + " follow " + v5.instanceFollow);
     Set<ARTGrammarElement> v3InstanceFirst = v3InstanceFirsts.get(key), v3InstanceFollow = v3InstanceFollows.get(key);
 
     if (v3InstanceFirsts.get(key) == null)
-      System.out.println("  v3 key is missing");
+      // System.out.println(" v3 key is missing")
+      ;
     else {
       if (!v5v3ElementSetSame(v5.instanceFirst, v3InstanceFirst, artV3.artManager.getDefaultMainModule())) {
-        System.out.println("Instance first differ: V5 " + v5.instanceFirst + " V3 " + v3InstanceFirst + "\n");
-        ret |= false;
+        System.out.println("Instance first differ: V5 " + v5.instanceFirst + " V3 " + v3InstanceFirst);
+        good = false;
       }
-      if (!v5v3ElementSetSame(v5.instanceFollow, v3InstanceFollow, artV3.artManager.getDefaultMainModule())) {
-        System.out.println("Instance first differ: V5 " + v5.instanceFollow + " V3 " + v3InstanceFollow + "\n");
-        ret |= false;
+      if (v5.elm.kind == GrammarKind.N && !v5v3ElementSetSame(v5.instanceFollow, v3InstanceFollow, artV3.artManager.getDefaultMainModule())) {
+        System.out.println("Instance follow differ: V5 " + v5.instanceFollow + " V3 " + v3InstanceFollow);
+        good = false;
       }
-
     }
-    if (v5.elm.kind == GrammarKind.END) return true;
+    // System.out.println();
+    if (v5.elm.kind == GrammarKind.END) return good;
 
-    ret |= v5v3RegressionCheckFirstAndFollowInstanceSetsRec(v5.seq, artV3);
-    ret |= v5v3RegressionCheckFirstAndFollowInstanceSetsRec(v5.alt, artV3);
+    good &= v5v3RegressionCheckFirstAndFollowInstanceSetsRec(v5.seq, artV3);
+    good &= v5v3RegressionCheckFirstAndFollowInstanceSetsRec(v5.alt, artV3);
 
-    return ret;
+    return good;
   }
 
   private static boolean v5v3RegressionCheckFirstAndFollowInstanceSets(Grammar grammarV5, ARTV3 artV3) {
-    boolean ret = true;
+    boolean good = true;
     for (GrammarElement e : grammarV5.elements.keySet())
-      if (e.kind == GrammarKind.N) ret |= v5v3RegressionCheckFirstAndFollowInstanceSetsRec(grammarV5.rules.get(e).alt, artV3);
+      if (e.kind == GrammarKind.N) good &= v5v3RegressionCheckFirstAndFollowInstanceSetsRec(grammarV5.rules.get(e).alt, artV3);
 
-    return ret;
+    return good;
   }
 
   static Map<String, Set<ARTGrammarElement>> v3InstanceFirsts = new HashMap<>(), v3InstanceFollows = new HashMap<>();
@@ -200,9 +204,10 @@ public class ART {
     if (v3 == null) return;
     // System.out.println(
     // "v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec at [" + v3.getKey() + "] " + v3.toGrammarString() + " first=" + v3.first + " follow=" + v3.follow);
-    v3InstanceFirsts.put(v3.toGrammarString(".").replaceAll("\\s", ""), v3.first);
-    v3InstanceFollows.put(v3.toGrammarString(".").replaceAll("\\s", ""), v3.follow);
-
+    if (v3 instanceof ARTGrammarInstanceSlot) {
+      v3InstanceFirsts.put(v3.toGrammarString(".").replaceAll("\\s", ""), v3.first); // (v3.getSibling() == null ? v3.first : v3.getSibling().first));
+      v3InstanceFollows.put(v3.toGrammarString(".").replaceAll("\\s", ""), (v3.getSibling() == null ? v3.follow : v3.getSibling().follow));
+    }
     v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec(v3.getChild());
     v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec(v3.getSibling());
   }

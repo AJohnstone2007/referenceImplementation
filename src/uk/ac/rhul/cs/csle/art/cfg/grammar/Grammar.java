@@ -236,7 +236,10 @@ public class Grammar {
     tmp.remove(epsilonElement);
     changed |= gn.instanceFollow.addAll(tmp);
     changed |= gn.elm.follow.addAll(tmp);
-    if (gn.seq.isNullableSlot) changed |= gn.elm.follow.addAll(root.elm.follow);
+    if (gn.seq.isNullableSlot) {
+      changed |= gn.elm.follow.addAll(root.elm.follow);
+      changed |= gn.instanceFollow.addAll(root.elm.follow);
+    }
 
   }
 
@@ -252,7 +255,10 @@ public class Grammar {
   private boolean firstSetsEBNFSeqRec(GrammarNode gn) {
     boolean seenOnlyNullable = true;
 
-    if (gn.elm.kind == GrammarKind.END) return true;
+    if (gn.elm.kind == GrammarKind.END) {
+      changed |= gn.instanceFirst.add(epsilonElement);
+      return true;
+    }
     seenOnlyNullable &= firstSetsEBNFSeqRec(gn.seq); // Work in reverse order to reduce the number of passes
 
     if (gn.alt == null) { // BNF nodes

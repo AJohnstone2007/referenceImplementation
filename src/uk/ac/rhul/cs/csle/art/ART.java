@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import uk.ac.rhul.cs.csle.art.cfg.grammar.Grammar;
 import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarElement;
 import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarKind;
+import uk.ac.rhul.cs.csle.art.cfg.grammar.GrammarNode;
 import uk.ac.rhul.cs.csle.art.old.core.ARTV4;
 import uk.ac.rhul.cs.csle.art.old.core.ARTV5Transition;
 import uk.ac.rhul.cs.csle.art.old.v3.ARTV3;
@@ -105,7 +106,6 @@ public class ART {
           }
       }
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -121,12 +121,12 @@ public class ART {
 
     ARTGrammar grammarV3 = artV3.artManager.addGrammar("Parser grammar", artV3.artManager.getDefaultMainModule(), false, artV3.artManager.artDirectives);
 
-    System.out.print("\n*** V3 grammar\n" + grammarV3.toString());
+    // System.out.print("\n*** V3 grammar\n" + grammarV3.toString());
     Grammar grammarV5 = artScriptInterpreter.currentGrammar;
     grammarV5.normalise();
     grammarV5.show("grammar.dot");
 
-    System.out.println("\n*** V5 grammar\n" + grammarV5.toStringBody(true));
+    // System.out.println("\n*** V5 grammar\n" + grammarV5.toStringBody(true));
 
     boolean good = true;
 
@@ -150,23 +150,56 @@ public class ART {
     }
 
     // Now work through instance sets
-
     v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec((ARTGrammarInstance) grammarV3.getInstanceTree().getRoot());
-    good = v5v3RegressionCheckFirstAndFollowInstanceSetsRec(null);
+    good |= v5v3RegressionCheckFirstAndFollowInstanceSets(grammarV5, artV3);
     return good;
   }
 
-  private static boolean v5v3RegressionCheckFirstAndFollowInstanceSetsRec(Object object) {
-    return false;
+  private static boolean v5v3RegressionCheckFirstAndFollowInstanceSetsRec(GrammarNode v5, ARTV3 artV3) {
+    boolean ret = true;
+
+    if (v5 == null) return true;
+    String key = v5.toStringAsProduction().replaceAll("\\s", "");
+    System.out.println("V5 instance " + key + " first " + v5.instanceFirst + " follow " + v5.instanceFollow);
+
+    Set<ARTGrammarElement> v3InstanceFirst = v3InstanceFirsts.get(key), v3InstanceFollow = v3InstanceFollows.get(key);
+
+    if (v3InstanceFirsts.get(key) == null)
+      System.out.println("  v3 key is missing");
+    else {
+      if (!v5v3ElementSetSame(v5.instanceFirst, v3InstanceFirst, artV3.artManager.getDefaultMainModule())) {
+        System.out.println("Instance first differ: V5 " + v5.instanceFirst + " V3 " + v3InstanceFirst + "\n");
+        ret |= false;
+      }
+      if (!v5v3ElementSetSame(v5.instanceFollow, v3InstanceFollow, artV3.artManager.getDefaultMainModule())) {
+        System.out.println("Instance first differ: V5 " + v5.instanceFollow + " V3 " + v3InstanceFollow + "\n");
+        ret |= false;
+      }
+
+    }
+    if (v5.elm.kind == GrammarKind.END) return true;
+
+    ret |= v5v3RegressionCheckFirstAndFollowInstanceSetsRec(v5.seq, artV3);
+    ret |= v5v3RegressionCheckFirstAndFollowInstanceSetsRec(v5.alt, artV3);
+
+    return ret;
+  }
+
+  private static boolean v5v3RegressionCheckFirstAndFollowInstanceSets(Grammar grammarV5, ARTV3 artV3) {
+    boolean ret = true;
+    for (GrammarElement e : grammarV5.elements.keySet())
+      if (e.kind == GrammarKind.N) ret |= v5v3RegressionCheckFirstAndFollowInstanceSetsRec(grammarV5.rules.get(e).alt, artV3);
+
+    return ret;
   }
 
   static Map<String, Set<ARTGrammarElement>> v3InstanceFirsts = new HashMap<>(), v3InstanceFollows = new HashMap<>();
   static Set<String> checked = new HashSet<>();
 
   static void v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec(ARTGrammarInstance v3) {
-    boolean ret = true;
-
     if (v3 == null) return;
+    // System.out.println(
+    // "v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec at [" + v3.getKey() + "] " + v3.toGrammarString() + " first=" + v3.first + " follow=" + v3.follow);
     v3InstanceFirsts.put(v3.toGrammarString(".").replaceAll("\\s", ""), v3.first);
     v3InstanceFollows.put(v3.toGrammarString(".").replaceAll("\\s", ""), v3.follow);
 

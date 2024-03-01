@@ -282,7 +282,7 @@ public class ARTGrammarInstance extends ARTTreeVertexDoublyLinked implements Com
   }
 
   public String toGrammarString(String slotDesignator) {
-    if (this instanceof ARTGrammarInstanceLHS) return "isLHS: " + payload.toString();
+    if (this instanceof ARTGrammarInstanceLHS) return payload.toString();
 
     abortToGrammarSlotStringRec = false;
     ARTGrammarInstance production = getProductionL();
@@ -296,7 +296,7 @@ public class ARTGrammarInstance extends ARTTreeVertexDoublyLinked implements Com
   }
 
   public String toGrammarString(String slotDesignator, String instanceString, Set<ARTGrammarElementNonterminal> paraterminals) {
-    if (this instanceof ARTGrammarInstanceLHS) return "isLHS: " + payload.toString();
+    if (this instanceof ARTGrammarInstanceLHS) return payload.toString();
 
     abortToGrammarSlotStringRec = false;
     ARTGrammarInstance production = getProductionL();

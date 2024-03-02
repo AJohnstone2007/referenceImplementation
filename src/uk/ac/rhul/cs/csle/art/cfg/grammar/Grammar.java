@@ -188,49 +188,72 @@ public class Grammar {
       }
 
     // 3. First and follow sets
-    firstAndFollowSetsEBNF();
+    firstAndFollowSets();
   }
 
+  /*
+   * 1. Add $ to follow(S)
+   *
+   * 2. while-loop-closure {
+   *
+   *
+   * }
+   */
   private boolean changed;
 
-  private void firstAndFollowSetsEBNF() {
-    if (startNonterminal != null) startNonterminal.follow.add(endOfStringElement);
+  Set<GrammarElement> removeEpsilon(Set<GrammarElement> set) {
+    Set<GrammarElement> tmp = new HashSet<>(set);
+    tmp.remove(epsilonElement);
+    return tmp;
+  }
 
+  private void firstAndFollowSets() {
+    if (startNonterminal != null) startNonterminal.follow.add(endOfStringElement);
     changed = true;
     while (changed) {
       changed = false;
       for (GrammarElement e : elements.keySet())
         if (e.kind == GrammarKind.N) {
           GrammarNode lhsNode = rules.get(e);
-          firstSetsEBNFAltRec(lhsNode);
-          changed |= e.first.addAll(lhsNode.instanceFirst);
-        }
-
-      for (GrammarElement e : elements.keySet())
-        if (e.kind == GrammarKind.N) {
-          GrammarNode lhsNode = rules.get(e);
-          followSetsEBNFAltRec(lhsNode);
+          for (GrammarNode gn = lhsNode.alt; gn != null; gn = gn.alt) {
+            if (firstSetsSeqRec(gn.seq, lhsNode)) changed |= lhsNode.instanceFirst.add(epsilonElement); // Seen only nullable
+            changed |= lhsNode.instanceFirst.addAll(removeEpsilon(gn.seq.instanceFirst));
+          }
           changed |= e.first.addAll(lhsNode.instanceFirst);
         }
     }
   }
 
-  private void followSetsEBNFAltRec(GrammarNode root) {
-    // System.out.println("FollowAlt with root " + root.num);
-    for (GrammarNode gn = root.alt; gn != null; gn = gn.alt)
-      followSetsEBNFSeqRec(gn.seq, root);
-  }
+  private boolean firstSetsSeqRec(GrammarNode gn, GrammarNode root) { // Returns seen only nullable - could be replaced by epsilon in first set
+    boolean seenOnlyNullable = true;
 
-  // Debug BNF only
-  private void followSetsEBNFSeqRec(GrammarNode gn, GrammarNode root) {
-    if (gn.elm.kind == GrammarKind.END) return;
+    if (gn.elm.kind == GrammarKind.END) {
+      changed |= gn.instanceFirst.add(epsilonElement);
+      return true;
+    }
+    seenOnlyNullable &= firstSetsSeqRec(gn.seq, root); // Work in reverse order to reduce the number of passes
 
-    followSetsEBNFSeqRec(gn.seq, root); // Work in reverse order for compatability with first set construction
+    if (gn.alt == null) { // BNF nodes
+      changed |= gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets
+      changed |= gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
+    } else { // Handle EBNF subrules
+      for (GrammarNode gnAlt = gn.alt; gnAlt != null; gnAlt = gnAlt.alt) {
+        if (firstSetsSeqRec(gnAlt.seq, root)) changed |= gn.instanceFirst.add(epsilonElement); // Seen only nullable
+        changed |= gn.instanceFirst.addAll(removeEpsilon(gnAlt.seq.instanceFirst));
+      }
+      if (gn.elm.kind == GrammarKind.KLN || gn.elm.kind == GrammarKind.OPT) changed |= gn.instanceFirst.add(epsilonElement);
+    }
 
-    if (gn.alt == null)
-      ; // BNF nodes
+    if (gn.instanceFirst.contains(epsilonElement))
+      changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);// If we are a nullable slot, fold in our successor's instance first sets
     else
-      followSetsEBNFAltRec(gn);
+      seenOnlyNullable = false;
+
+    gn.isNullableSlot = seenOnlyNullable;
+
+    if (gn.alt != null) // System.out.println("FollowAlt with root " + root.num);
+      for (GrammarNode gnAlt = gn.alt; gnAlt != null; gnAlt = gnAlt.alt)
+      firstSetsSeqRec(gnAlt.seq, gn);
 
     Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
     tmp.remove(epsilonElement);
@@ -241,40 +264,11 @@ public class Grammar {
       changed |= gn.instanceFollow.addAll(root.elm.follow);
     }
 
-  }
-
-  private void firstSetsEBNFAltRec(GrammarNode root) {
-    for (GrammarNode gn = root.alt; gn != null; gn = gn.alt) {
-      if (firstSetsEBNFSeqRec(gn.seq)) changed |= root.instanceFirst.add(epsilonElement); // Seen only nullable
-      Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
-      tmp.remove(epsilonElement);
-      changed |= root.instanceFirst.addAll(tmp);
+    if (gn.elm.kind == GrammarKind.POS || gn.elm.kind == GrammarKind.KLN) {
+      Set<GrammarElement> tmp1 = new HashSet<>(gn.instanceFirst);
+      tmp1.remove(epsilonElement);
+      changed |= gn.instanceFollow.addAll(tmp1);
     }
-  }
-
-  private boolean firstSetsEBNFSeqRec(GrammarNode gn) {
-    boolean seenOnlyNullable = true;
-
-    if (gn.elm.kind == GrammarKind.END) {
-      changed |= gn.instanceFirst.add(epsilonElement);
-      return true;
-    }
-    seenOnlyNullable &= firstSetsEBNFSeqRec(gn.seq); // Work in reverse order to reduce the number of passes
-
-    if (gn.alt == null) { // BNF nodes
-      changed |= gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets
-      changed |= gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
-    } else { // Handle EBNF subrules
-      firstSetsEBNFAltRec(gn);
-      if (gn.elm.kind == GrammarKind.KLN || gn.elm.kind == GrammarKind.OPT) changed |= gn.instanceFirst.add(epsilonElement);
-    }
-
-    if (gn.instanceFirst.contains(epsilonElement))
-      changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);// If we are a nullable slot, fold in our successor's instance first sets
-    else
-      seenOnlyNullable = false;
-
-    gn.isNullableSlot = seenOnlyNullable;
 
     return seenOnlyNullable;
   }

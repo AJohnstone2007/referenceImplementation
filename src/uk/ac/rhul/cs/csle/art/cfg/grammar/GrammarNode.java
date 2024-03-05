@@ -21,7 +21,7 @@ public class GrammarNode {
 
   public final Set<GrammarElement> instanceFirst = new TreeSet<>();
   public final Set<GrammarElement> instanceFollow = new TreeSet<>();
-  public boolean isInitialSlot = false, isPenultimateSlot = false, isFinalSlot = false, isNullableSlot = false;
+  public boolean isInitialSlot = false, isPenultimateSlot = false, isFinalSlot = false, isNullableSlot = true;
 
   /*
    * compute as gn.prev != null && gn.prev.prev == null && gn.seq.kind != gnKind.END && (gn.prev.kind == gn.Kind.TERMINALLC || (gn.prev.kind ==

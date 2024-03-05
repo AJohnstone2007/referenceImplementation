@@ -213,64 +213,59 @@ public class Grammar {
     while (changed) {
       changed = false;
       for (GrammarElement e : elements.keySet())
-        if (e.kind == GrammarKind.N) {
-          GrammarNode lhsNode = rules.get(e);
-          for (GrammarNode gn = lhsNode.alt; gn != null; gn = gn.alt) {
-            if (firstSetsSeqRec(gn.seq, lhsNode)) changed |= lhsNode.instanceFirst.add(epsilonElement); // Seen only nullable
-            changed |= lhsNode.instanceFirst.addAll(removeEpsilon(gn.seq.instanceFirst));
-          }
-          changed |= e.first.addAll(lhsNode.instanceFirst);
-        }
+        firstAndFollowSetsAlt(rules.get(e));
     }
   }
 
-  private boolean firstSetsSeqRec(GrammarNode gn, GrammarNode root) { // Returns seen only nullable - could be replaced by epsilon in first set
-    boolean seenOnlyNullable = true;
+  void firstAndFollowSetsAlt(GrammarNode root) {
+    if (root == null) return;
 
+    for (GrammarNode gnAlt = root.alt; gnAlt != null; gnAlt = gnAlt.alt) {
+      gnAlt.instanceFollow.addAll(root.elm.follow);
+
+      if (firstAndFollowSetsSeqRec(gnAlt.seq, gnAlt)) changed |= gnAlt.instanceFirst.add(epsilonElement); // If the sequence retuned true, then
+                                                                                                          // seenOnlyNullable
+      changed |= gnAlt.instanceFirst.addAll(removeEpsilon(gnAlt.seq.instanceFirst));
+      changed |= root.instanceFirst.addAll(gnAlt.instanceFirst);
+      changed |= root.elm.first.addAll(root.instanceFirst);
+    }
+
+    // For closure nodes, fold first into follow
+    if (root.elm.kind == GrammarKind.POS || root.elm.kind == GrammarKind.KLN) changed |= root.instanceFollow.addAll(removeEpsilon(root.instanceFirst));
+
+  }
+
+  private boolean firstAndFollowSetsSeqRec(GrammarNode gn, GrammarNode rootNode) { // Returns seen only nullable - could be replaced by epsilon in first set
+    // System.out.println("firstAndFollowSetsSeqRec at " + gn.num);
+
+    // 1. Recursion base case: if we are at end of sequence; set instance first to {epsilon}, fold in parent follow set and return
     if (gn.elm.kind == GrammarKind.END) {
       changed |= gn.instanceFirst.add(epsilonElement);
       return true;
     }
-    seenOnlyNullable &= firstSetsSeqRec(gn.seq, root); // Work in reverse order to reduce the number of passes
 
-    if (gn.alt == null) { // BNF nodes
-      changed |= gn.instanceFirst.add(gn.elm); // These are nonterminal-also first sets
-      changed |= gn.instanceFirst.addAll(gn.elm.first); // Fold in the current first for this element
-    } else { // Handle EBNF subrules
-      for (GrammarNode gnAlt = gn.alt; gnAlt != null; gnAlt = gnAlt.alt) {
-        if (firstSetsSeqRec(gnAlt.seq, root)) changed |= gn.instanceFirst.add(epsilonElement); // Seen only nullable
-        changed |= gn.instanceFirst.addAll(removeEpsilon(gnAlt.seq.instanceFirst));
-      }
-      if (gn.elm.kind == GrammarKind.KLN || gn.elm.kind == GrammarKind.OPT) changed |= gn.instanceFirst.add(epsilonElement);
-    }
+    // 2. Recursion case: process postorder to work sequence in reverse; reducing number of passes
+    gn.isNullableSlot = firstAndFollowSetsSeqRec(gn.seq, rootNode);
 
+    // 3. For grammar atoms, fold instance element itself into instanceFirst
+    if (Set.of(GrammarKind.N, GrammarKind.T, GrammarKind.B, GrammarKind.C, GrammarKind.TI, GrammarKind.EPS).contains(gn.elm.kind))
+      changed |= gn.instanceFirst.add(gn.elm);
+
+    // 4. For all nodes, fold into instanceFirst our element's FIRST
+    changed |= gn.instanceFirst.addAll(gn.elm.first);
+
+    // 5. If our instanceFirst contains epsilon, fold in our successor
     if (gn.instanceFirst.contains(epsilonElement))
-      changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);// If we are a nullable slot, fold in our successor's instance first sets
+      changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);
     else
-      seenOnlyNullable = false;
+      gn.isNullableSlot = false;
 
-    gn.isNullableSlot = seenOnlyNullable;
+    // 6. Update follow sets with first set of successor, and update instance element follow set
+    changed |= gn.instanceFollow.addAll(removeEpsilon(gn.seq.instanceFirst));
+    if (gn.seq.isNullableSlot) changed |= gn.instanceFollow.addAll(rootNode.instanceFollow);
+    changed |= gn.elm.follow.addAll(gn.instanceFollow);
 
-    if (gn.alt != null) // System.out.println("FollowAlt with root " + root.num);
-      for (GrammarNode gnAlt = gn.alt; gnAlt != null; gnAlt = gnAlt.alt)
-      firstSetsSeqRec(gnAlt.seq, gn);
-
-    Set<GrammarElement> tmp = new HashSet<>(gn.seq.instanceFirst);
-    tmp.remove(epsilonElement);
-    changed |= gn.instanceFollow.addAll(tmp);
-    changed |= gn.elm.follow.addAll(tmp);
-    if (gn.seq.isNullableSlot) {
-      changed |= gn.elm.follow.addAll(root.elm.follow);
-      changed |= gn.instanceFollow.addAll(root.elm.follow);
-    }
-
-    if (gn.elm.kind == GrammarKind.POS || gn.elm.kind == GrammarKind.KLN) {
-      Set<GrammarElement> tmp1 = new HashSet<>(gn.instanceFirst);
-      tmp1.remove(epsilonElement);
-      changed |= gn.instanceFollow.addAll(tmp1);
-    }
-
-    return seenOnlyNullable;
+    return gn.isNullableSlot;
   }
 
   // Data access for lexers

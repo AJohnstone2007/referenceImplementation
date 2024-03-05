@@ -130,7 +130,7 @@ public class ART {
     grammarV5.normalise();
     grammarV5.show("grammar.dot");
 
-    // System.out.println("\n*** V5 grammar\n" + grammarV5.toStringBody(true));
+    System.out.println("\n*** V5 grammar\n" + grammarV5.toStringBody(true));
 
     boolean good = true;
 
@@ -143,13 +143,22 @@ public class ART {
       // System.out.println("V5 nonterminal " + v5Nonterminal + " first " + v5Nonterminal.first + " follow " + v5Nonterminal.follow + "\n");
 
       if (!v5v3ElementSetSame(v5Nonterminal.first, new TreeSet<>(v3Nonterminal.getFirst()), artV3.artManager.getDefaultMainModule())) {
-        System.out.println("First for " + v5Nonterminal + " differ: V5 " + v5Nonterminal.first + " V3 " + new TreeSet<>(v3Nonterminal.getFirst()) + "\n");
+        System.out.println("First for " + v5Nonterminal + " differ:\nV5 " + v5Nonterminal.first + "\nV3 " + new TreeSet<>(v3Nonterminal.getFirst()) + "\n");
         good = false;
       }
 
       if (!v5v3ElementSetSame(v5Nonterminal.follow, new TreeSet<>(v3Nonterminal.getFollow()), artV3.artManager.getDefaultMainModule())) {
-        System.out.println("Follow for " + v5Nonterminal + " differ: V5 " + v5Nonterminal.follow + " V3 " + new TreeSet<>(v3Nonterminal.getFollow()) + "\n");
-        good = false;
+        // Bug in V3? Spurious $ check
+        Set<GrammarElement> v5prime = new TreeSet<>(v5Nonterminal.follow);
+        v5prime.add(grammarV5.endOfStringElement);
+        // if (!v5v3ElementSetSame(v5prime, new TreeSet<>(v3Nonterminal.getFollow()), artV3.artManager.getDefaultMainModule()))
+        {
+
+          System.out
+              .println("Follow for " + v5Nonterminal + " differ:\nV5 " + v5Nonterminal.follow + "\nV3 " + new TreeSet<>(v3Nonterminal.getFollow()) + "\n");
+          // System.out.println("v5:v3 cardinality " + v5Nonterminal.follow.size() + " : " + v3Nonterminal.getFollow().size() + "\n");
+          good = false;
+        }
       }
     }
 
@@ -232,7 +241,7 @@ public class ART {
   static GrammarElement v3Element2v5Element(ARTGrammarElement elem) {
     if (elem instanceof ARTGrammarElementTerminalBuiltin) return new GrammarElement(GrammarKind.B, ((ARTGrammarElementTerminal) elem).getId());
     if (elem instanceof ARTGrammarElementTerminalCharacter) return new GrammarElement(GrammarKind.C, ((ARTGrammarElementTerminal) elem).getId());
-    if (elem instanceof ARTGrammarElementEoS) return new GrammarElement(GrammarKind.EOS, "");
+    if (elem instanceof ARTGrammarElementEoS) return new GrammarElement(GrammarKind.EOS, "$");
     if (elem instanceof ARTGrammarElementEpsilon) return new GrammarElement(GrammarKind.EPS, "#");
     if (elem instanceof ARTGrammarElementNonterminal) return new GrammarElement(GrammarKind.N, elem.toString());
     if (elem instanceof ARTGrammarElementTerminalCaseSensitive) return new GrammarElement(GrammarKind.T, ((ARTGrammarElementTerminal) elem).getId());

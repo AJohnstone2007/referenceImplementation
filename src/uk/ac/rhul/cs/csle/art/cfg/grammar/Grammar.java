@@ -17,7 +17,6 @@ import uk.ac.rhul.cs.csle.art.util.Util;
 public class Grammar {
   public String name = "";
   public final ITerms iTerms;
-  public final static Set<GrammarKind> grammarBNFKinds = Set.of(GrammarKind.T, GrammarKind.TI, GrammarKind.C, GrammarKind.B, GrammarKind.EPS, GrammarKind.N);
   public final Map<GrammarElement, GrammarElement> elements = new TreeMap<>();
   public final Map<Integer, GrammarElement> elementsByNumber = new TreeMap<>();
   public int lexSize;
@@ -45,10 +44,6 @@ public class Grammar {
     endOfStringNode.seq = endOfStringNode; // trick to ensure initial call collects rootNode
     epsilonElement = findElement(GrammarKind.EPS, "#");
     whitespaces.add(LKind.SIMPLE_WHITESPACE); // default whitespace if non declared
-  }
-
-  boolean isBNFElement(GrammarElement e) {
-    return grammarBNFKinds.contains(e.kind);
   }
 
   public void normalise() {
@@ -221,6 +216,7 @@ public class Grammar {
     if (root == null) return;
 
     for (GrammarNode gnAlt = root.alt; gnAlt != null; gnAlt = gnAlt.alt) {
+      // System.out.println("firstAndFollowAlt at " + gnAlt.num + " with root " + root.num);
       gnAlt.instanceFollow.addAll(root.elm.follow);
 
       if (firstAndFollowSetsSeqRec(gnAlt.seq, gnAlt)) changed |= gnAlt.instanceFirst.add(epsilonElement); // If the sequence retuned true, then
@@ -233,6 +229,7 @@ public class Grammar {
     // For closure nodes, fold first into follow
     if (root.elm.kind == GrammarKind.POS || root.elm.kind == GrammarKind.KLN) changed |= root.instanceFollow.addAll(removeEpsilon(root.instanceFirst));
 
+    if (root.elm.kind == GrammarKind.OPT || root.elm.kind == GrammarKind.KLN) changed |= root.instanceFirst.add(epsilonElement);
   }
 
   private boolean firstAndFollowSetsSeqRec(GrammarNode gn, GrammarNode rootNode) { // Returns seen only nullable - could be replaced by epsilon in first set
@@ -244,23 +241,26 @@ public class Grammar {
       return true;
     }
 
-    // 2. Recursion case: process postorder to work sequence in reverse; reducing number of passes
+    // 2. Seq recursion case: process postorder to work sequence in reverse; reducing number of passes
     gn.isNullableSlot = firstAndFollowSetsSeqRec(gn.seq, rootNode);
 
-    // 3. For grammar atoms, fold instance element itself into instanceFirst
+    // 4. Alt recursion case: process postorder to work sequence in reverse; reducing number of passes
+    if (gn.alt != null) firstAndFollowSetsAlt(gn);
+
+    // 5. For grammar atoms, fold instance element itself into instanceFirst
     if (Set.of(GrammarKind.N, GrammarKind.T, GrammarKind.B, GrammarKind.C, GrammarKind.TI, GrammarKind.EPS).contains(gn.elm.kind))
       changed |= gn.instanceFirst.add(gn.elm);
 
-    // 4. For all nodes, fold into instanceFirst our element's FIRST
+    // 6. For all nodes, fold into instanceFirst our element's FIRST
     changed |= gn.instanceFirst.addAll(gn.elm.first);
 
-    // 5. If our instanceFirst contains epsilon, fold in our successor
+    // 7. If our instanceFirst contains epsilon, fold in our successor
     if (gn.instanceFirst.contains(epsilonElement))
       changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);
     else
       gn.isNullableSlot = false;
 
-    // 6. Update follow sets with first set of successor, and update instance element follow set
+    // 8. Update follow sets with first set of successor, and update instance element follow set
     changed |= gn.instanceFollow.addAll(removeEpsilon(gn.seq.instanceFirst));
     if (gn.seq.isNullableSlot) changed |= gn.instanceFollow.addAll(rootNode.instanceFollow);
     changed |= gn.elm.follow.addAll(gn.instanceFollow);
@@ -309,7 +309,7 @@ public class Grammar {
     stack.push(workingNode);
     while (workingNode.alt != null) // Maintain specification order by adding new alternate at the end
       workingNode = workingNode.alt;
-    workingNode = new GrammarNode(GrammarKind.ALT, "", workingAction, workingFold, null, workingNode);
+    workingNode = new GrammarNode(GrammarKind.ALT, null, workingAction, workingFold, null, workingNode);
     workingAction = 0;
     workingFold = GIFTKind.NONE;
   }

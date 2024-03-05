@@ -21,19 +21,18 @@ public class GrammarNode {
 
   public final Set<GrammarElement> instanceFirst = new TreeSet<>();
   public final Set<GrammarElement> instanceFollow = new TreeSet<>();
-  public boolean isInitialSlot = false, isPenultimateSlot = false, isFinalSlot = false, isNullableSlot = true;
+  public boolean isInitialSlot = false, isPenultimateSlot = false, isFinalSlot = false, isNullableSlot = false;
 
-  /*
-   * compute as gn.prev != null && gn.prev.prev == null && gn.seq.kind != gnKind.END && (gn.prev.kind == gn.Kind.TERMINALLC || (gn.prev.kind ==
-   * gn.Kind.NONTERMINAL && gn.prev.isNullable))
-   */
+  private static int nextUniqueNumericLabel = 1;
+
   public GrammarNode(GrammarKind kind, String str, Grammar grammar) {
     GrammarNode.grammar = grammar;
-    grammar.endOfStringElement = elm = GrammarNode.grammar.findElement(kind, "");
+    grammar.endOfStringElement = elm = GrammarNode.grammar.findElement(kind, str);
   }
 
   public GrammarNode(GrammarKind kind, String str, int action, GIFTKind fold, GrammarNode previous, GrammarNode parent) {
     super();
+    if (str == null) str = "" + nextUniqueNumericLabel++; // EBNF and ALT nodes have null string - uniquify
     this.elm = GrammarNode.grammar.findElement(kind, str);
     this.action = action;
     this.giftKind = fold;

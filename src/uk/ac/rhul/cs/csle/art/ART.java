@@ -95,7 +95,7 @@ public class ART {
   // Adrian's debug comparison sand pit - undocumented
   private static void ajDebugCode(ARTScriptInterpreter artScriptInterpreter, String[] args) {
     try {
-      Path inputDir = Paths.get("rhulTests");
+      Path inputDir = Paths.get(args[1]);
       if (Files.isDirectory(inputDir)) {
         List<Path> filePaths;
         filePaths = Files.list(inputDir).collect(Collectors.toList());

@@ -1,35 +1,6 @@
-31 December 2023
-
-This note explains how to modify the reference implementation's script grammar and update the bootstrap
-
-1. The reference script grammar is in the file 
-
-src\uk\ac\rhul\cs\csle\art\cfg\referenceFamily\ReferenceGrammarParser.art
-
-2. Copy that file to test.art
-
-3. Edit to suit new ideas
-
-4. Test small examples by parsing examples in test.str
-
-5. Repeat 3 and 4 until satisfied
-
-6. copy test.art to test.str
-
-7. Parse test.str against test.art
-
-8. If errors, adjust test.art to suit
-
-9. Repeat 6,7 and 8 until satisfied.
-
-10. Add !print(derivation), parse and then update uk.ac.rhul.cs.csle.art.cfg.referenceFamily.Reference.scriptParserTermString to be assigned the printed derivation term
-
-11. Parse test.str against test.art and look for message Bootstrap achieved: ...
-
-
-7 February 2024
 
 For the main V5 specification grammar, we keep the most recent and the current term 
+
 1. The reference script grammar is in the file 
 
 src\uk\ac\rhul\cs\csle\art\ARTScriptSpecification.art

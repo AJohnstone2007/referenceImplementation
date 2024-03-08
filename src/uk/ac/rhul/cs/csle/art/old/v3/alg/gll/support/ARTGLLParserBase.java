@@ -1452,10 +1452,6 @@ public abstract class ARTGLLParserBase extends ARTParserBase {
      * 8. For node (topdecOp, i, j) with i = j and with child X = (topdecOp ::= topdec . , i), hide X x *
      */
 
-    // if (element == 28446) {
-    // System.out.println("Bang! at 28446");
-    // }
-
     int elementLabel = artSPPFNodeLabel(element);
     int i = artSPPFNodeLeftExtent(element);
     int j = artSPPFNodeRightExtent(element);

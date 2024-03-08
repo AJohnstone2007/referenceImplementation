@@ -31,7 +31,7 @@ public class LexerLM extends LexerBase {
     // System.out.println("Input: " + inputString);
 
     while (inputIndex < input.length) {
-      // Absorb a run of whitespace lexemes
+      // Absorb a run of whitespace tokens
       while (true) {
         int wsStart = inputIndex;
 
@@ -87,6 +87,11 @@ public class LexerLM extends LexerBase {
 
     System.out.print("Tokens: ");
     for (int i : tokenList)
+      System.out.print(i + " ");
+    System.out.println();
+
+    System.out.print("Positions: ");
+    for (int i : positions)
       System.out.print(i + " ");
     System.out.println();
   }

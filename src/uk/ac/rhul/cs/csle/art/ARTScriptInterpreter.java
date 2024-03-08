@@ -124,6 +124,10 @@ private final String scriptParserTermString = "rules(directive(whitespace(cfgBui
         null);
     scriptTraverser.addActionBreak("cfgBuiltinTerminal", (Integer t) -> currentGrammar.updateWorkingNode(GrammarKind.B, childSymbolString(t)), null, null);
 
+    scriptTraverser.addActionBreak("cfgCharacterTerminal", (Integer t) -> currentGrammar.updateWorkingNode(GrammarKind.C, childSymbolString(t)), null, null);
+    scriptTraverser.addActionBreak("cfgCharacterRangeTerminal", (Integer t) -> currentGrammar.updateWorkingNode(GrammarKind.C, childSymbolString(t)), null,
+        null); // Not implemeneted yet
+
     scriptTraverser.addAction("cfgDoFirst", (Integer t) -> currentGrammar.updateWorkingNode(GrammarKind.DO, null), null, null);
     scriptTraverser.addAction("cfgOptional", (Integer t) -> currentGrammar.updateWorkingNode(GrammarKind.OPT, null), null, null);
     scriptTraverser.addAction("cfgKleene", (Integer t) -> currentGrammar.updateWorkingNode(GrammarKind.KLN, null), null, null);

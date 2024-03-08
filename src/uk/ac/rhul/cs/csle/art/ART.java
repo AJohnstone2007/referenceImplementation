@@ -95,18 +95,24 @@ public class ART {
   // Adrian's debug comparison sand pit - undocumented
   private static void ajDebugCode(ARTScriptInterpreter artScriptInterpreter, String[] args) {
     try {
-      System.out.println("ajDebug working on directory " + args[1]);
+      System.out.println("ajDebug " + args[1]);
       Path inputDir = Paths.get(args[1]);
       if (Files.isDirectory(inputDir)) {
         List<Path> filePaths;
         filePaths = Files.list(inputDir).collect(Collectors.toList());
         for (Path filePath : filePaths)
           if (filePath.toString().endsWith(".art")) {
-            System.out.println("File " + filePath);
+            // System.out.println("File " + filePath);
             boolean good = v5v3RegressionFirstAndFollowSets(Files.readString(filePath));
             System.out.println("File " + filePath + " " + (good ? " Good " : "Bad"));
           }
-      }
+      } else if (args[1].endsWith(".art")) {
+        // System.out.println("File " + filePath);
+        boolean good = v5v3RegressionFirstAndFollowSets(Files.readString(Paths.get(args[1])));
+        System.out.println("File " + args[1] + " " + (good ? " Good " : "Bad"));
+
+      } else
+        Util.fatal("ajDebug: argument must be a filename ending with .art or a directory");
     } catch (IOException e) {
       e.printStackTrace();
     }

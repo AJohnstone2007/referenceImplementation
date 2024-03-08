@@ -1117,6 +1117,7 @@ public class ARTGrammar {
   }
 
   private boolean computeSetsRec(ARTGrammarInstance node, int level, ARTGrammarElementNonterminal lhs, ARTGrammarInstance bracketNode) {
+    // System.out.println("computeSetsRec at node " + node);
     boolean changed = false;
 
     if (node == null) return changed;
@@ -1189,6 +1190,7 @@ public class ARTGrammar {
       }
 
       tmp.remove(epsilon);
+
       changed |= node.getGuard().addAll(tmp);
 
       return changed; // Do not recurse into actions!
@@ -1206,8 +1208,16 @@ public class ARTGrammar {
       changed |= node.follow.addAll(tmp);
 
       if (node.getSibling().first.contains(epsilon)) // are we at the end of a rule?
+        if (newBracketNode == null)
         changed |= node.follow.addAll(lhs.getFollow());
+        else {
+          HashSet<ARTGrammarElement> tmp1 = new HashSet<ARTGrammarElement>(newBracketNode.getSibling().getFirst());
+          tmp1.addAll(newBracketNode.getSibling().getGuard()); // Added 8/3/24 to ensure follow set comes down
+          tmp1.remove(epsilon);
+          changed |= node.follow.addAll(tmp1); // fold in follow for this bracket
+        }
 
+      // This is the only place where nonterminal follows are updated
       changed |= nonterminal.getFollow().addAll(node.follow);
     }
 

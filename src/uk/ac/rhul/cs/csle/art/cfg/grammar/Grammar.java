@@ -182,7 +182,14 @@ public class Grammar {
             gs = gs.seq;
       }
 
-    // 3. First and follow sets
+    // 3. Self reference in element first sets
+    for (GrammarElement e : elements.keySet())
+      switch (e.kind) {
+      case T, TI, B, C, EOS, EPS:
+        e.first.add(e);
+      }
+
+    // 4. First and follow sets
     firstAndFollowSets();
   }
 

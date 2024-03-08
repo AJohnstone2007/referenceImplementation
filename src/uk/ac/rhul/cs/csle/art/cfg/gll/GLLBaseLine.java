@@ -134,7 +134,7 @@ public class GLLBaseLine extends ParserBase {
           gn = gn.seq;
           trace(1, "Index " + i + " Node " + gn.num + " Epsilon - continue thread");
           break;
-        case C, B, T:
+        case C, B, T, TI:
           if (match(gn)) {
             trace(1, "Index " + i + " Node " + gn.num + " " + gn + " Terminal match - continue thread");
             du(1);
@@ -358,9 +358,10 @@ private String constructorOf(SPPFN sppfn, GrammarNode gn) {
     return inputString.substring(positions[sppfn.li],right) ;
   }
   case CHARACTER:
-    break;
+    return inputString.substring(positions[sppfn.li]+1,positions[sppfn.li]+2) ;
+
   case CHAR_BQ:
-    break;
+    return inputString.substring(positions[sppfn.li]+1,positions[sppfn.li]+2) ;
   case COMMENT_BLOCK_C:
     break;
   case COMMENT_LINE_C:

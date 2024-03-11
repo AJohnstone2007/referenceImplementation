@@ -185,7 +185,7 @@ public class Grammar {
     // 3. Self reference in element first sets
     for (GrammarElement e : elements.keySet())
       switch (e.kind) {
-      case T, TI, B, C, EOS, EPS:
+      case T, TI, B, C, EOS, EPS, N:
         e.first.add(e);
       }
 

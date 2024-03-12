@@ -33,6 +33,11 @@ import uk.ac.rhul.cs.csle.art.old.v3.manager.module.ARTV3Module;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class AJDebug {
+  Grammar grammarV5; // regression V5 grammar
+  ARTGrammar grammarV3; // regression V3 grammar
+
+  ARTScriptInterpreter regressionScriptInterpreter;
+
   public AJDebug(String[] args) {
     try {
       System.out.println("ajDebug " + args[1]);
@@ -45,22 +50,18 @@ public class AJDebug {
             // System.out.println("File " + filePath);
             boolean good = v5v3RegressionFirstAndFollowSets(Files.readString(filePath));
             System.out.println("File " + filePath + " " + (good ? " Good " : "Bad"));
+            System.out.println("GDG:\n" + grammarV5.gdgToString());
           }
       } else if (args[1].endsWith(".art")) {
         boolean good = v5v3RegressionFirstAndFollowSets(Files.readString(Paths.get(args[1])));
         System.out.println("File " + args[1] + " " + (good ? " Good " : "Bad"));
-
+        System.out.println("GDG:\n" + grammarV5.gdg.toString());
       } else
         Util.fatal("ajDebug: argument must be a filename ending with .art or a directory");
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
-
-  Grammar grammarV5; // regression V5 grammar
-  ARTGrammar grammarV3; // regression V3 grammar
-
-  ARTScriptInterpreter regressionScriptInterpreter;
 
   private boolean v5v3RegressionFirstAndFollowSets(String scriptString) {
     regressionScriptInterpreter = new ARTScriptInterpreter();

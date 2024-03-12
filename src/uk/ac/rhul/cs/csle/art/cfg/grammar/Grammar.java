@@ -37,6 +37,8 @@ public class Grammar {
   private int nextFreeEnumerationElement;
   public boolean empty;
 
+  public Map<GrammarElement, Set<GrammarElement>> gdg = new TreeMap<>();
+
   public Grammar(String name, ITerms iTerms) {
     this.name = name;
     this.iTerms = iTerms;
@@ -59,6 +61,56 @@ public class Grammar {
     // System.out.println(this.toStringDot());
     // System.out.println(this.toString());
     // System.out.println("Grammar " + name + " has whitespace elements: " + whitespaces);
+    gdgBuild();
+  }
+
+  private void gdgBuild() {
+    for (GrammarElement e : elements.keySet())
+      switch (e.kind) {
+      case ALT, DO, END, KLN, OPT, POS:
+        continue;
+      default:
+        gdg.put(e, new TreeSet<>());
+        // gdg.get(e).add(e);
+      }
+
+    for (GrammarElement e : elements.keySet())
+      if (e.kind == GrammarKind.N) gdgLoadRec(e, rules.get(e).alt);
+  }
+
+  private void gdgLoadRec(GrammarElement lhs, GrammarNode gn) {
+    if (gn == null || gn.elm.kind == GrammarKind.END) return;
+    gdgLoadRec(lhs, gn.seq);
+    gdgLoadRec(lhs, gn.alt);
+
+    switch (gn.elm.kind) {
+    case ALT, DO, END, KLN, OPT, POS:
+      break;
+    default:
+      gdg.get(lhs).add(gn.elm);
+    }
+  }
+
+  public String gdgToString() {
+    StringBuilder sb = new StringBuilder();
+    for (GrammarElement n : gdg.keySet()) {
+      sb.append(n + " ->");
+      for (GrammarElement d : gdg.get(n))
+        sb.append(" " + d);
+      sb.append("\n");
+    }
+    return sb.toString();
+  }
+
+  public String gdgToDotString() {
+    StringBuilder sb = new StringBuilder();
+    for (GrammarElement n : gdg.keySet()) {
+      sb.append(n + " ->");
+      for (GrammarElement d : gdg.get(n))
+        sb.append(" " + d);
+      sb.append("\n");
+    }
+    return sb.toString();
   }
 
   private void numberElementsAndNodes() {

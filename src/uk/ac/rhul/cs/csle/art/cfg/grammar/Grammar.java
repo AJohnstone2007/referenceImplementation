@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import uk.ac.rhul.cs.csle.art.term.ITerms;
+import uk.ac.rhul.cs.csle.art.util.Relation;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class Grammar {
@@ -37,7 +38,10 @@ public class Grammar {
   private int nextFreeEnumerationElement;
   public boolean empty;
 
-  public Map<GrammarElement, Set<GrammarElement>> gdg = new TreeMap<>();
+  Set<GrammarKind> lexKinds = Set.of(GrammarKind.B, GrammarKind.C, GrammarKind.T, GrammarKind.TI);
+  Set<GrammarKind> genKinds = Set.of(GrammarKind.B, GrammarKind.C, GrammarKind.T, GrammarKind.TI, GrammarKind.N);
+
+  public Relation<GrammarElement, GrammarElement> gen1 = new Relation<>();
 
   public Grammar(String name, ITerms iTerms) {
     this.name = name;
@@ -61,60 +65,26 @@ public class Grammar {
     // System.out.println(this.toStringDot());
     // System.out.println(this.toString());
     // System.out.println("Grammar " + name + " has whitespace elements: " + whitespaces);
-    gdgBuild();
+    genBuild();
   }
 
-  private void gdgBuild() {
-    for (GrammarElement e : elements.keySet())
-      switch (e.kind) {
-      case ALT, DO, END, KLN, OPT, POS:
-        continue;
-      default:
-        gdg.put(e, new TreeSet<>());
-        // gdg.get(e).add(e);
-      }
+  private void genBuild() {
+    for (GrammarElement e : elements.keySet()) {
+      if (genKinds.contains(e.kind)) gen1.add(e, e);
 
-    for (GrammarElement e : elements.keySet())
-      if (e.kind == GrammarKind.N) gdgLoadRec(e, rules.get(e).alt);
+      if (e.kind == GrammarKind.N) gen1LoadRec(e, rules.get(e).alt);
+    }
   }
 
-  private void gdgLoadRec(GrammarElement lhs, GrammarNode gn) {
+  private void gen1LoadRec(GrammarElement lhs, GrammarNode gn) {
     if (gn == null || gn.elm.kind == GrammarKind.END) return;
-    gdgLoadRec(lhs, gn.seq);
-    gdgLoadRec(lhs, gn.alt);
+    gen1LoadRec(lhs, gn.seq);
+    gen1LoadRec(lhs, gn.alt);
 
-    switch (gn.elm.kind) {
-    case ALT, DO, END, KLN, OPT, POS:
-      break;
-    default:
-      gdg.get(lhs).add(gn.elm);
-    }
-  }
-
-  public String gdgToString() {
-    StringBuilder sb = new StringBuilder();
-    for (GrammarElement n : gdg.keySet()) {
-      sb.append(n + " ->");
-      for (GrammarElement d : gdg.get(n))
-        sb.append(" " + d);
-      sb.append("\n");
-    }
-    return sb.toString();
-  }
-
-  public String gdgToDotString() {
-    StringBuilder sb = new StringBuilder();
-    for (GrammarElement n : gdg.keySet()) {
-      sb.append(n + " ->");
-      for (GrammarElement d : gdg.get(n))
-        sb.append(" " + d);
-      sb.append("\n");
-    }
-    return sb.toString();
+    if (genKinds.contains(gn.elm.kind)) gen1.add(gn.elm, lhs);
   }
 
   private void numberElementsAndNodes() {
-    Set<GrammarKind> lexKinds = Set.of(GrammarKind.B, GrammarKind.C, GrammarKind.T, GrammarKind.TI);
     for (GrammarElement s : elements.keySet()) {
       s.ei = nextFreeEnumerationElement++;
       if (lexKinds.contains(s.kind)) lexSize = s.ei;

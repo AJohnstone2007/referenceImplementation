@@ -1,12 +1,13 @@
 package uk.ac.rhul.cs.csle.art;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -30,6 +31,7 @@ import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementTe
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.instance.ARTGrammarInstance;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.instance.ARTGrammarInstanceSlot;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.module.ARTV3Module;
+import uk.ac.rhul.cs.csle.art.util.Relation;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class AJDebug {
@@ -41,26 +43,36 @@ public class AJDebug {
   public AJDebug(String[] args) {
     try {
       System.out.println("ajDebug " + args[1]);
-      Path inputDir = Paths.get(args[1]);
-      if (Files.isDirectory(inputDir)) {
-        List<Path> filePaths;
-        filePaths = Files.list(inputDir).collect(Collectors.toList());
-        for (Path filePath : filePaths)
-          if (filePath.toString().endsWith(".art")) {
-            // System.out.println("File " + filePath);
-            boolean good = v5v3RegressionFirstAndFollowSets(Files.readString(filePath));
-            System.out.println("File " + filePath + " " + (good ? " Good " : "Bad"));
-            System.out.println("GDG:\n" + grammarV5.gdgToString());
-          }
-      } else if (args[1].endsWith(".art")) {
-        boolean good = v5v3RegressionFirstAndFollowSets(Files.readString(Paths.get(args[1])));
-        System.out.println("File " + args[1] + " " + (good ? " Good " : "Bad"));
-        System.out.println("GDG:\n" + grammarV5.gdg.toString());
+      Path arg1AsPath = Paths.get(args[1]);
+      if (args[1].endsWith(".art"))
+        processFile(arg1AsPath);
+      else if (Files.isDirectory(arg1AsPath)) {
+        for (Path filePath : Files.list(arg1AsPath).collect(Collectors.toList()))
+          if (filePath.toString().endsWith(".art")) processFile(filePath);
       } else
         Util.fatal("ajDebug: argument must be a filename ending with .art or a directory");
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private void processFile(Path filePath) throws IOException {
+    System.out.println("AJDebug on file " + filePath);
+    boolean good = v5v3RegressionFirstAndFollowSets(Files.readString(filePath));
+    System.out.println("File " + filePath + " " + (good ? " Good " : "Bad"));
+
+    System.out.println("gen1:\n" + grammarV5.gen1.toString());
+    PrintStream gen1Out = new PrintStream(new File("gen1.dot"));
+    gen1Out.println(grammarV5.gen1.toDotString());
+    gen1Out.close();
+
+    Relation<GrammarElement, GrammarElement> gen = new Relation<>(grammarV5.gen1);
+    gen.transitiveClosure();
+
+    System.out.println("gen:\n" + gen.toString());
+    PrintStream reachableOut = new PrintStream(new File("gen.dot"));
+    reachableOut.println(gen.toDotString());
+    reachableOut.close();
   }
 
   private boolean v5v3RegressionFirstAndFollowSets(String scriptString) {

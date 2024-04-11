@@ -449,7 +449,8 @@ private String derivationAsTermRec(SPPFN sppfn, LinkedList<Integer> childrenFrom
   }
 
   if (constructor == null) constructor = constructorOf(sppfn, gn); // If there were no OVERs, then set the constructor to be our symbol
-  if (children != childrenFromParent) childrenFromParent.add(grammar.iTerms.findTerm(constructor, children));
+  if (children != childrenFromParent)
+    childrenFromParent.add(grammar.iTerms.findTerm(constructor, children));
 
   visited.remove(sppfn);
   return (gn.giftKind == GIFTKind.OVER) ? constructor : null;

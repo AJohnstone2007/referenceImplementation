@@ -12,7 +12,7 @@ import uk.ac.rhul.cs.csle.art.util.Util;
 public abstract class ParserBase {
   public int traceLevel = 0;
   public Grammar grammar;
-  public String inputString;
+  public String inputString = "";
   public String inputStringName = "";
   public int[] input;
   public int[] positions;
@@ -20,7 +20,7 @@ public abstract class ParserBase {
   public boolean accepted;
   public boolean inadmissable;
   public int rightmostParseIndex;
-  public boolean suppressEcho;
+  public boolean suppressEcho = false;
 
   // TODO: this needs to be merged with gllBaseLine.constructorOf(,)
   protected String lexemeForBuiltin(int inputIndex) {

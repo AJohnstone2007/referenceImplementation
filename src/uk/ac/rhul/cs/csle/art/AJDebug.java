@@ -31,6 +31,7 @@ import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.element.ARTGrammarElementTe
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.instance.ARTGrammarInstance;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.grammar.instance.ARTGrammarInstanceSlot;
 import uk.ac.rhul.cs.csle.art.old.v3.manager.module.ARTV3Module;
+import uk.ac.rhul.cs.csle.art.term.ITermsLowLevelAPI;
 import uk.ac.rhul.cs.csle.art.util.Relation;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
@@ -76,7 +77,7 @@ public class AJDebug {
   }
 
   private boolean v5v3RegressionFirstAndFollowSets(String scriptString) {
-    regressionScriptInterpreter = new ARTScriptInterpreter();
+    regressionScriptInterpreter = new ARTScriptInterpreter(new ITermsLowLevelAPI());
 
     // System.out.print("v5v3RegressionFirstAndFollowSets");
 

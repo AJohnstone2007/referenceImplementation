@@ -36,8 +36,7 @@ public abstract class Value {
   }
 
   public Object javaValue() {
-    operationNotImplemented("javaValue(_)");
-    return null;
+    return this.getClass().getSimpleName();
   }
 
   @Override

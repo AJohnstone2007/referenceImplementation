@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import uk.ac.rhul.cs.csle.art.old.core.ARTV4;
 import uk.ac.rhul.cs.csle.art.old.core.ARTV5Transition;
 import uk.ac.rhul.cs.csle.art.old.v3.ARTV3;
+import uk.ac.rhul.cs.csle.art.term.ITermsLowLevelAPI;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class ART {
@@ -16,7 +17,7 @@ public class ART {
   public static void main(String[] args) {
     if (args.length == 0) Util.fatal("ART " + ARTVersion.version() + ": no arguments supplied");
 
-    ARTScriptInterpreter artScriptInterpreter = new ARTScriptInterpreter();
+    ARTScriptInterpreter artScriptInterpreter = new ARTScriptInterpreter(new ITermsLowLevelAPI());
 
     switch (args[0]) { // Test for initial special mode argument
     case "ide":

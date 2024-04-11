@@ -15,7 +15,7 @@ public class __class extends Value {
   }
 
   public __class(LinkedList<Value> superClasses, int bodyTerm) {
-    System.out.println("Creating __class with superClasses " + superClasses + " and bodyTerm " + bodyTerm);
+    // System.out.println("Creating __class with superClasses " + superClasses + " and bodyTerm " + bodyTerm);
     this.superClasses = superClasses;
     this.bodyTerm = bodyTerm;
   }

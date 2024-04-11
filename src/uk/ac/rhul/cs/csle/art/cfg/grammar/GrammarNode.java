@@ -21,7 +21,7 @@ public class GrammarNode {
 
   public final Set<GrammarElement> instanceFirst = new TreeSet<>();
   public final Set<GrammarElement> instanceFollow = new TreeSet<>();
-  public boolean isInitialSlot = false, isPenultimateSlot = false, isFinalSlot = false, isNullableSlot = false;
+  public boolean isInitialSlot = false, isPenultimateSlot = false, isFinalSlot = false, isNullablePrefix = false, isNullableSuffix = false;
 
   private static int nextUniqueNumericLabel = 1;
 
@@ -38,7 +38,7 @@ public class GrammarNode {
     this.giftKind = fold;
     if (previous != null) previous.seq = this;
     if (parent != null) parent.alt = this;
-    if (kind == GrammarKind.END) isNullableSlot = true;
+    if (kind == GrammarKind.END) isNullableSuffix = true;
   }
 
   @Override

@@ -340,6 +340,7 @@ public class ITermsLowLevelAPI extends ITerms {
 
     // System.out.println(" returns " + ret);
     return ret;
+
   }
 
   @Override
@@ -410,6 +411,7 @@ public class ITermsLowLevelAPI extends ITerms {
     return ret;
   }
 
+  @Override
   public int findTerm(int symbolStringIndex, LinkedList<Integer> children) {
     int nc = 0, newChildren[] = new int[children.size()];
     for (int i : children)

@@ -102,7 +102,7 @@ public class __mapChain extends Value {
 
   @Override
   public Value __put(Value r, Value rr, boolean lock) {
-    if (locks.contains(r)) throw new ValueException("Attempt to modify locked binding");
+    if (locks.contains(r)) throw new ValueException("Attempt to modify locked binding " + r + " with new value " + rr);
     javaValue.put(r, rr);
     if (lock) locks.add(r);
     return this;

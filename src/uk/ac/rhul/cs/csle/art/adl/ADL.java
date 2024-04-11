@@ -48,7 +48,7 @@ public class ADL {
       Util.fatal("Unable to read ADL specification");
     }
     // System.out.println(ADLSpecification);
-    ARTScriptInterpreter artScriptInterpreter = new ARTScriptInterpreter();
+    ARTScriptInterpreter artScriptInterpreter = new ARTScriptInterpreter(iTerms);
     artScriptInterpreter.interpret(ADLSpecification);
     String inputString = "3+4";
 

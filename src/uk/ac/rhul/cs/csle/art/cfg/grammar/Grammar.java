@@ -52,7 +52,7 @@ public class Grammar {
     whitespaces.add(LKind.SIMPLE_WHITESPACE); // default whitespace if non declared
   }
 
-  public void normalise() {
+  public Grammar normalise() {
     nextFreeEnumerationElement = 0;
     numberElementsAndNodes();
 
@@ -66,6 +66,8 @@ public class Grammar {
     // System.out.println(this.toString());
     // System.out.println("Grammar " + name + " has whitespace elements: " + whitespaces);
     genBuild();
+
+    return this;
   }
 
   private void genBuild() {
@@ -271,7 +273,7 @@ public class Grammar {
     }
 
     // 2. Seq recursion case: process postorder to work sequence in reverse; reducing number of passes
-    gn.isNullableSlot = firstAndFollowSetsSeqRec(gn.seq, rootNode);
+    gn.isNullableSuffix = firstAndFollowSetsSeqRec(gn.seq, rootNode);
 
     // 4. Alt recursion case: process postorder to work sequence in reverse; reducing number of passes
     if (gn.alt != null) firstAndFollowSetsAlt(gn);
@@ -287,14 +289,14 @@ public class Grammar {
     if (gn.instanceFirst.contains(epsilonElement))
       changed |= gn.instanceFirst.addAll(gn.seq.instanceFirst);
     else
-      gn.isNullableSlot = false;
+      gn.isNullableSuffix = false;
 
     // 8. Update follow sets with first set of successor, and update instance element follow set
     changed |= gn.instanceFollow.addAll(removeEpsilon(gn.seq.instanceFirst));
-    if (gn.seq.isNullableSlot) changed |= gn.instanceFollow.addAll(rootNode.instanceFollow);
+    if (gn.seq.isNullableSuffix) changed |= gn.instanceFollow.addAll(rootNode.instanceFollow);
     changed |= gn.elm.follow.addAll(gn.instanceFollow);
 
-    return gn.isNullableSlot;
+    return gn.isNullableSuffix;
   }
 
   // Data access for lexers
@@ -444,7 +446,7 @@ public class Grammar {
         if (gn.isInitialSlot) sb.append(" Initial");
         if (gn.isPenultimateSlot) sb.append(" Penultimate");
         if (gn.isFinalSlot) sb.append(" Final");
-        if (gn.isNullableSlot) sb.append(" Nullable");
+        if (gn.isNullableSuffix) sb.append(" Nullable");
 
         if (gn.instanceFirst != null && gn.elm.kind != GrammarKind.END) {
           sb.append(" instfirst = {");

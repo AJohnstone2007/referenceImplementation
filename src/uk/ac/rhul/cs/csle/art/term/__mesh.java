@@ -13,7 +13,7 @@ public class __mesh extends Value {
   // LOM constructor
   // A LOM expects to receive a basePath and an extrsionPath, represented by lists of 3-lists
   public __mesh(Value basePath, Value extrusionPath) {
-    System.out.println("__lom constructor called with basePath " + basePath + " and extrusionPath " + extrusionPath);
+    System.out.println("__lom constructor called with basePath\n" + basePath + "\nand extrusionPath\n" + extrusionPath);
     // Type check
     if (!(basePath instanceof __list)) throw new ValueException("__mesh basePath and extrusionPath must be a __list of __list of three numbers");
 
@@ -31,13 +31,18 @@ public class __mesh extends Value {
   }
 
   private void loadArray(Value pathList, float[] pathArray) {
+    System.out.println("loadArray called with pathList " + pathList);
     int pi = 0;
     for (Value p : ((__list) pathList).javaValue()) {
-      if (!(p instanceof __list && ((int) p.__size().javaValue()) != 3))
+      if (!(p instanceof __list && ((int) p.__size().javaValue()) == 3))
         throw new ValueException("__mesh basePath and extrusionPath must be a __list of __list of three numbers");
       for (Value pe : ((__list) p).javaValue()) {
-        if (!(pe.javaValue() instanceof Number)) throw new ValueException("__mesh basePath and extrusionPath must be a __list of __list of three numbers");
-        pathArray[pi++] = (float) pe.javaValue();
+        if (pe instanceof __real64)
+          pathArray[pi++] = (float) pe.javaValue();
+        else if (pe instanceof __int32)
+          pathArray[pi++] = (int) pe.javaValue();
+        else
+          throw new ValueException("__mesh basePath and extrusionPath must be a __list of __list of three numbers");
       }
     }
   }

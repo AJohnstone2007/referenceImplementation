@@ -154,6 +154,11 @@ public abstract class Value {
     return null;
   }
 
+  public Value __pos() {
+    operationNotImplemented("__pos(_)");
+    return null;
+  }
+
   public Value __neg() {
     operationNotImplemented("__neg(_)");
     return null;

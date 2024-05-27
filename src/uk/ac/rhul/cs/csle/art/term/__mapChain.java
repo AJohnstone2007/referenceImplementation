@@ -105,7 +105,7 @@ public class __mapChain extends Value {
     if (locks.contains(r)) throw new ValueException("Attempt to modify locked binding " + r + " with new value " + rr);
     javaValue.put(r, rr);
     if (lock) locks.add(r);
-    return this;
+    return rr;
   }
 
   @Override
@@ -114,8 +114,7 @@ public class __mapChain extends Value {
     if (javaValue.containsKey(r))
       return javaValue.get(r);
     else if (parent != null) return parent.__get(r);
-
-    return iTerms.valueEmpty;
+    throw new ValueException("Attempt to access unkown binding " + r);
   }
 
   @Override

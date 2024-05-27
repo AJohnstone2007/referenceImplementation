@@ -25,11 +25,11 @@ public class GLLBaseLine extends ParserBase {
     new SPPF2Dot(sppf, sppfRootNode, "sppf_full.dot", SPPF2DotKind.FULL, true, true);
     new SPPF2Dot(sppf, sppfRootNode, "sppf_core.dot", SPPF2DotKind.CORE, true, true);
     if (sppfRootNode == null) return; // Can only visualise derivations of there are some
-    sppfSelectFirst(sppfRootNode);
+    selectFirst();
     new SPPF2Dot(sppf, sppfRootNode, "sppf_derivation_first.dot", SPPF2DotKind.DERIVATION, false, false);
     new SPPF2Dot(sppf, sppfRootNode, "sppf_derivation_annotated_first.dot", SPPF2DotKind.DERIVATION, true, false);
     new SPPF2Dot(sppf, sppfRootNode, "sppf_derivation_annotated_binarised_first.dot", SPPF2DotKind.DERIVATION, true, true);
-    sppfSelectLast(sppfRootNode);
+    selectLast();
     new SPPF2Dot(sppf, sppfRootNode, "sppf_derivation_last.dot", SPPF2DotKind.DERIVATION, false, false);
     new SPPF2Dot(sppf, sppfRootNode, "sppf_derivation_annotated_last.dot", SPPF2DotKind.DERIVATION, true, false);
     new SPPF2Dot(sppf, sppfRootNode, "sppf_derivation_annotated_binarised_last.dot", SPPF2DotKind.DERIVATION, true, true);
@@ -74,12 +74,18 @@ public class GLLBaseLine extends ParserBase {
         p.suppressed = false;
   }
 
+  private Set<SPPFN> visitedSPPFNodes;
+
   @Override
   public void chooseLongestMatch() {
+    visitedSPPFNodes = new HashSet<>();
     chooseLongestMatchRec(sppfRootNode);
   }
 
   private void chooseLongestMatchRec(SPPFN sn) {
+    if (visitedSPPFNodes.contains(sn)) return;
+    visitedSPPFNodes.add(sn);
+
     int rightMostPivot = -1;
     SPPFPN candidate = null;
     for (SPPFPN p : sn.packNS) {
@@ -97,22 +103,49 @@ public class GLLBaseLine extends ParserBase {
 
   @Override
   public void selectFirst() {
-    sppfSelectFirst(sppfRootNode);
-  }
-
-  private void sppfSelectFirst(SPPFN sppfRootNode) {
+    visitedSPPFNodes = new HashSet<>();
     clearSelected();
-    sppfRootNode.selectFirstRec();
+    sppfSelectFirstRec(sppfRootNode);
   }
 
   @Override
   public void selectLast() {
-    sppfSelectLast(sppfRootNode);
+    visitedSPPFNodes = new HashSet<>();
+    clearSelected();
+    sppfSelectLastRec(sppfRootNode);
   }
 
-  private void sppfSelectLast(SPPFN sppfRootNode) {
-    clearSelected();
-    sppfRootNode.selectLastRec();
+  private void sppfSelectFirstRec(SPPFN sn) {
+    if (visitedSPPFNodes.contains(sn)) return;
+    visitedSPPFNodes.add(sn);
+
+    SPPFPN selectedNode = null;
+    for (SPPFPN p : sn.packNS)
+      if (!p.suppressed) {
+        selectedNode = p;
+        break;
+      }
+
+    if (selectedNode != null) {
+      selectedNode.selected = true;
+      if (selectedNode.leftChild != null) sppfSelectFirstRec(selectedNode.leftChild);
+      if (selectedNode.rightChild != null) sppfSelectFirstRec(selectedNode.rightChild);
+    }
+  }
+
+  private void sppfSelectLastRec(SPPFN sn) {
+    if (visitedSPPFNodes.contains(sn)) return;
+    visitedSPPFNodes.add(sn);
+
+    SPPFPN selectedNode = null;
+    for (SPPFPN p : sn.packNS)
+      if (!p.suppressed) selectedNode = p;
+
+    if (selectedNode != null) {
+      selectedNode.selected = true;
+      if (selectedNode.leftChild != null) sppfSelectLastRec(selectedNode.leftChild);
+      if (selectedNode.rightChild != null) sppfSelectLastRec(selectedNode.rightChild);
+    }
   }
 
   private GrammarNode rules(GrammarNode gn) {
@@ -669,33 +702,6 @@ class SPPFN {
     sb.append(")");
     return sb.toString();
   }
-
-  public void selectFirstRec() {
-    SPPFPN selectedNode = null;
-    for (SPPFPN p : packNS)
-      if (!p.suppressed) {
-        selectedNode = p;
-        break;
-      }
-
-    if (selectedNode != null) {
-      selectedNode.selected = true;
-      if (selectedNode.leftChild != null) selectedNode.leftChild.selectFirstRec();
-      if (selectedNode.rightChild != null) selectedNode.rightChild.selectFirstRec();
-    }
-  }
-
-  public void selectLastRec() {
-    SPPFPN selectedNode = null;
-    for (SPPFPN p : packNS)
-      if (!p.suppressed) selectedNode = p;
-
-    if (selectedNode != null) {
-      selectedNode.selected = true;
-      if (selectedNode.leftChild != null) selectedNode.leftChild.selectLastRec();
-      if (selectedNode.rightChild != null) selectedNode.rightChild.selectLastRec();
-    }
-  }
 }
 
 class SPPFPN {
@@ -745,7 +751,6 @@ class SPPFPN {
     builder.append(selected ? "(selected)" : "");
     return builder.toString();
   }
-
 }
 
 enum SPPF2DotKind {

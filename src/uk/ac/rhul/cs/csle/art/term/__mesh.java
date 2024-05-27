@@ -1,6 +1,7 @@
 package uk.ac.rhul.cs.csle.art.term;
 
 import uk.ac.rhul.cs.csle.art.term.mesh.AleroMesh;
+import uk.ac.rhul.cs.csle.art.term.mesh.CSG;
 
 public class __mesh extends Value {
   final AleroMesh javaValue;
@@ -10,12 +11,16 @@ public class __mesh extends Value {
     return javaValue;
   }
 
+  public __mesh(AleroMesh aleroMesh) {
+    javaValue = aleroMesh;
+  }
+
   // LOM constructor
   // A LOM expects to receive a basePath and an extrsionPath, represented by lists of 3-lists
   public __mesh(Value basePath, Value extrusionPath) {
     System.out.println("__lom constructor called with basePath\n" + basePath + "\nand extrusionPath\n" + extrusionPath);
     // Type check
-    if (!(basePath instanceof __list)) throw new ValueException("__mesh basePath and extrusionPath must be a __list of __list of three numbers");
+    if (!(basePath instanceof __list)) throw new ValueException("__mesh basePath must be a __list of __list of three numbers: found " + basePath);
 
     int basePathLength = ((int) basePath.__size().javaValue());
     int extrusionPathLength = ((int) extrusionPath.__size().javaValue());
@@ -45,5 +50,20 @@ public class __mesh extends Value {
           throw new ValueException("__mesh basePath and extrusionPath must be a __list of __list of three numbers");
       }
     }
+  }
+
+  @Override
+  public Value __union(Value r) {
+    return new __mesh(new AleroMesh(new CSG(javaValue).union(new CSG(((__mesh) r).javaValue))));
+  }
+
+  @Override
+  public Value __difference(Value r) {
+    return new __mesh(new AleroMesh(new CSG(javaValue).difference(new CSG(((__mesh) r).javaValue))));
+  }
+
+  @Override
+  public Value __intersection(Value r) {
+    return new __mesh(new AleroMesh(new CSG(javaValue).intersection(new CSG(((__mesh) r).javaValue))));
   }
 }

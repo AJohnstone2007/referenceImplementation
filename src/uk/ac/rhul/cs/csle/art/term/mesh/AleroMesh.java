@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javafx.collections.ObservableFloatArray;
 import javafx.collections.ObservableIntegerArray;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.ObservableFaceArray;
 import javafx.scene.shape.TriangleMesh;
 import uk.ac.rhul.cs.csle.art.term.ValueException;
@@ -21,6 +22,7 @@ import uk.ac.rhul.cs.csle.art.term.ValueException;
 public class AleroMesh extends TriangleMesh {
 
   public boolean isLOM = false;
+  public Color colour = Color.BLANCHEDALMOND;
 
   public AleroMesh() {
   }
@@ -148,15 +150,24 @@ public class AleroMesh extends TriangleMesh {
     StringBuilder sb = new StringBuilder();
 
     ObservableFloatArray p = getPoints();
-    sb.append(getVertexFormat());
-    sb.append("Points array has " + p.size() + " elements");
+    ObservableIntegerArray f = getFaces();
+    sb.append("AleroMesh(" + p.size() + " points, " + f.size() / 6 + " triangles)");
+    return sb.toString();
+  }
+
+  public String toStringFull() {
+    if (isLOM) return toStringLOM();
+    StringBuilder sb = new StringBuilder();
+
+    ObservableFloatArray p = getPoints();
+    ObservableIntegerArray f = getFaces();
+    sb.append("AleroMesh(" + p.size() + " points, " + f.size() / 6 + " triangles\n");
     for (int i = 0; i < p.size(); i += 3)
       sb.append("<" + p.get(i) + "," + p.get(i + 1) + "," + p.get(i + 2) + ">");
 
-    ObservableIntegerArray f = getFaces();
-    sb.append("\nFaces array has " + f.size() + " elements");
     for (int i = 0; i < f.size(); i++)
       sb.append(" " + i + ":" + f.get(i));
+    sb.append(")");
     return sb.toString();
   }
 
@@ -310,11 +321,14 @@ public class AleroMesh extends TriangleMesh {
 
   }
 
-  /*** Transformations hard wired into the points array ***/
-  public void scale(double factor) {
+  /*** Transformations hard wired into the points array - these are slow, but allow me to develop my understanding ***/
+  public void scale(float scaleX, float scaleY, float scaleZ) {
     ObservableFloatArray p = getPoints();
-    for (int i = 0; i < p.size(); i++)
-      p.set(i, (float) (p.get(i) * factor));
+    for (int i = 0; i < p.size(); i += 3) {
+      p.set(i, p.get(i) * scaleX);
+      p.set(i + 1, p.get(i + 1) * scaleY);
+      p.set(i + 2, p.get(i + 2) * scaleZ);
+    }
   }
 
   public void translate(float offsetX, float offsetY, float offsetZ) {
@@ -323,6 +337,76 @@ public class AleroMesh extends TriangleMesh {
       p.set(i, p.get(i) + offsetX);
       p.set(i + 1, p.get(i + 1) + offsetY);
       p.set(i + 2, p.get(i + 2) + offsetZ);
+    }
+  }
+
+  //@formatter:off
+  /*
+   * Rotation matrices for cardinal axes R_x(T)
+   *
+   * R_x:
+   *  1     0     0
+   *  0     cosT  sinT
+   *  0    -sinT  cosT
+   *
+   * R_y:
+   *  cosT 0     -sinT
+   *  0    1      0
+   *  sinT 0      cosT
+   *
+   * R_z:
+   *  cosT  sinT  0
+   * -sinT  cosT  0
+   *  0     0     1
+   *
+   */
+  //@formatter:on
+  public void rotateX(float theta) { // rotate around the X axis. When looking from the origin towards X+, positive angle implies clockwise rotation
+    if (theta == 0) return;
+    ObservableFloatArray p = getPoints();
+    double thetaR = Math.toRadians(theta);
+    float cosTheta = (float) Math.cos(thetaR);
+    float sinTheta = (float) Math.sin(thetaR);
+    for (int i = 0; i < p.size(); i += 3) {
+      int yi = i + 1;
+      float y = p.get(yi);
+      int zi = i + 2;
+      float z = p.get(zi);
+      // x point unchanged
+      p.set(yi, y * cosTheta - z * sinTheta); // y point
+      p.set(zi, y * sinTheta + z * cosTheta); // z point
+    }
+  }
+
+  public void rotateY(float theta) { // rotate around the Y axis. When looking from the origin towards Y+, positive angle implies clockwise rotation
+    if (theta == 0) return;
+    ObservableFloatArray p = getPoints();
+    double thetaR = Math.toRadians(theta);
+    float cosTheta = (float) Math.cos(thetaR);
+    float sinTheta = (float) Math.sin(thetaR);
+    for (int i = 0; i < p.size(); i += 3) {
+      float x = p.get(i);
+      int zi = i + 2;
+      float z = p.get(zi);
+      p.set(i, x * cosTheta + z * sinTheta); // x point
+      // y point unchanged
+      p.set(zi, x * -sinTheta + z * cosTheta); // z point
+    }
+  }
+
+  public void rotateZ(float theta) { // rotate around the Z axis. When looking from the origin towards Z+, positive angle implies clockwise rotation
+    if (theta == 0) return;
+    ObservableFloatArray p = getPoints();
+    double thetaR = Math.toRadians(theta);
+    float cosTheta = (float) Math.cos(thetaR);
+    float sinTheta = (float) Math.sin(thetaR);
+    for (int i = 0; i < p.size(); i += 3) {
+      float x = p.get(i);
+      int yi = i + 1;
+      float y = p.get(yi);
+      p.set(i, x * cosTheta - y * sinTheta); // x point
+      p.set(yi, x * sinTheta + y * cosTheta); // y point
+      // z point unchanged
     }
   }
 
@@ -482,6 +566,7 @@ public class AleroMesh extends TriangleMesh {
 
   // Generate mesh from basePath extruded through extrurionPath with scaleFactors applied: no other transform allowed
   public AleroMesh(float[] basePath, float[] extrusionPath) throws ValueException {
+    isLOM = true;
     ringVertexCount = basePath.length / 3;
     extrusionVertexCount = extrusionPath.length / 3;
 

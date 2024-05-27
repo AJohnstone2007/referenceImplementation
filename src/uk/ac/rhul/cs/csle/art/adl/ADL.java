@@ -97,7 +97,7 @@ public class ADL {
                         System.out.println("Applying procedure");
                          __mapChain callEnv = new __mapChain(env);
                          Value argument = interpret(c, env);
-                         Iterator<__quote> parameterIterator = ((__proc) ret).getParameters().keySet().iterator();
+                         Iterator<Value> parameterIterator = ((__proc) ret).getParameters().keySet().iterator();
 
                          if (argument instanceof __list) {
                            Iterator<Value> argumentIterator = ((__list) argument).javaValue().iterator();
@@ -161,7 +161,7 @@ public class ADL {
     case "__real64": return new __real64(term);
     case "__string": return new __string(term);
     case "use":      return env.__get(new __quote(children[0]));
-    case "lambda":   LinkedHashMap<__quote, Value> parameters = new LinkedHashMap<>();
+    case "lambda":   LinkedHashMap<Value, Value> parameters = new LinkedHashMap<>();
                      if (children.length == 1) return new __proc(parameters, children[0]);
                      else {
                        for (int i: iTerms.getTermChildren(children[0])) parameters.put(new __quote(i), iTerms.valueEmpty);

@@ -4,10 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class __proc extends Value {
-  private final LinkedHashMap<__quote, Value> parameters;
+  private final LinkedHashMap<Value, Value> parameters;
   private final int bodyTerm;
 
-  public LinkedHashMap<__quote, Value> getParameters() {
+  public LinkedHashMap<Value, Value> getParameters() {
     return parameters;
   }
 
@@ -15,14 +15,14 @@ public class __proc extends Value {
     return bodyTerm;
   }
 
-  public __proc(LinkedHashMap<__quote, Value> parameters, int bodyTerm) {
+  public __proc(LinkedHashMap<Value, Value> parameters, int bodyTerm) {
     this.parameters = parameters;
     this.bodyTerm = bodyTerm;
   }
 
   @Override
   public Object javaValue() {
-    return null;
+    return toString();
   }
 
   @Override

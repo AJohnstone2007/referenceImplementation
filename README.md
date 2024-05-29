@@ -1,5 +1,7 @@
 # ART reference implementation
 
+# As of 29 May 2024, this repo is frozen; the work has been embedded in the main ART repo at [https://github.com/AJohnstone2007/ART](https://github.com/AJohnstone2007/ART)
+
 This is the reference implementation of the Royal Holloway software language engineering tool ART written by Adrian Johnstone and tested by Elizabeth Scott; we are the authors of the GLL, RNGLR and BRNGLR algorithms.
 
 Our goals are (a) to provide a 'programmer friendly' route into GLL (b) to provide a baseline for principled performance testing of GLL implementations and (c) extend the approach to other general parsing algorithms.

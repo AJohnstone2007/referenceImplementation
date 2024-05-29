@@ -36,6 +36,7 @@ import uk.ac.rhul.cs.csle.art.util.Relation;
 import uk.ac.rhul.cs.csle.art.util.Util;
 
 public class AJDebug {
+  /* AJ debug material below this line */
   Grammar grammarV5; // regression V5 grammar
   ARTGrammar grammarV3; // regression V3 grammar
 
@@ -168,13 +169,15 @@ public class AJDebug {
     return good;
   }
 
-  Map<String, Set<ARTGrammarElement>> v3InstanceFirsts = new HashMap<>(), v3InstanceFollows = new HashMap<>();
+  Map<String, Set<ARTGrammarElement>> v3InstanceFirsts = new HashMap<>();
+  Map<String, Set<ARTGrammarElement>> v3InstanceFollows = new HashMap<>();
   Set<String> checked = new HashSet<>();
 
   void v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec(ARTGrammarInstance v3) {
     if (v3 == null) return;
     // System.out.println(
-    // "v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec at [" + v3.getKey() + "] " + v3.toGrammarString() + " first=" + v3.first + " follow=" + v3.follow);
+    // "v5v3RegressionGatherV3FirstAndFollowInstanceSetsRec at [" + v3.getKey() + "] " + v3.toGrammarString() + " first=" + v3.first + " follow=" +
+    // v3.follow);
     if (v3 instanceof ARTGrammarInstanceSlot) {
       v3InstanceFirsts.put(v3.toGrammarString(".").replaceAll("\\s", ""), v3.first); // (v3.getSibling() == null ? v3.first : v3.getSibling().first));
       v3InstanceFollows.put(v3.toGrammarString(".").replaceAll("\\s", ""), (v3.getSibling() == null ? v3.follow : v3.getSibling().follow));
@@ -235,5 +238,4 @@ public class AJDebug {
     }
     return null; // To settle the Java control flow analyser - the above case list should be complete
   }
-
 }

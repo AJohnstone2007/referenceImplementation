@@ -2,18 +2,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import uk.ac.rhul.cs.csle.art.term.ARTPluginInterface;
 import uk.ac.rhul.cs.csle.art.term.Value;
 import uk.ac.rhul.cs.csle.art.term.ValueException;
-import uk.ac.rhul.cs.csle.art.term.ValueUserPluginInterface;
 import uk.ac.rhul.cs.csle.art.term.__string;
 
 // Rename this class to ARTPlugin if you want to develop plugins within the Eclipse workspace; but change it back again before distribution
-public class ValueUserPlugin_FX implements ValueUserPluginInterface {
-
-  @Override
-  public boolean useFX() {
-    return true;
-  }
+public class ARTPlugin implements ARTPluginInterface {
 
   @Override
   public String name() {

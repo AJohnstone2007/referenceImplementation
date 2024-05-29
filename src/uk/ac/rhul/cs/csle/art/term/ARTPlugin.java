@@ -1,15 +1,10 @@
 package uk.ac.rhul.cs.csle.art.term;
 
-public class ValueUserPlugin implements ValueUserPluginInterface {
-
-  @Override
-  public boolean useFX() {
-    return false;
-  }
+public class ARTPlugin implements ARTPluginInterface {
 
   @Override
   public String name() {
-    return "Default ART plugin";
+    return "Default ARTPlugin";
   }
 
   @Override

@@ -18,7 +18,7 @@ public abstract class ITerms {
   protected int firstSpecialSymbolIndex;
   protected int firstNormalSymbolIndex;
 
-  public ValueUserPluginInterface plugin = new ValueUserPlugin();
+  public ARTPluginInterface plugin = new ARTPlugin();
 
   public int bottomTermIndex;
   public int doneTermIndex;
@@ -127,12 +127,12 @@ public abstract class ITerms {
     tt.addAction(-1, (Integer t) -> tt.append(escapeMeta(getTermSymbolString(t)) + (getTermArity(t) == 0 ? "" : "(")), (Integer t) -> tt.append(", "),
         (Integer t) -> tt.append(getTermArity(t) == 0 ? "" : ")"));
 
-    plugin = new ValueUserPlugin();
+    plugin = new ARTPlugin();
     // Try and find a plugin for __user() calls
     Class<?> pluginClass;
     try {
       pluginClass = getClass().getClassLoader().loadClass("ValueUserPlugin");
-      plugin = (ValueUserPluginInterface) pluginClass.getDeclaredConstructor().newInstance();
+      plugin = (ARTPluginInterface) pluginClass.getDeclaredConstructor().newInstance();
     } catch (Exception e) {
       // Silently absorb exception - when the default is used
     }
